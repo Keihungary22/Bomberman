@@ -23,6 +23,7 @@ public class ResultScreen_GUI {
         }
         frame.add(HomeButton);
 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.setResizable(false);
         frame.pack();

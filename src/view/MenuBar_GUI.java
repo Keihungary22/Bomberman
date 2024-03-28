@@ -12,7 +12,7 @@ public class MenuBar_GUI {
 
         JLabel CurrentRound = new JLabel("Round " + Game.current_round);
         JLabel ElapsedTime = new JLabel("Timer: " + GameScreen_GUI.timer.getElapsedTime());
-        JLabel TypeOfMap = new JLabel(Game.type_of_map.getType());
+        JLabel TypeOfMap = new JLabel(Game.map.getType());
 
 
         JButton ContinueButton = new JButton("Continue");
@@ -39,6 +39,7 @@ public class MenuBar_GUI {
         }
         frame.add(EndGameButton);
 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(new Dimension(800, 600));
         frame.setResizable(false);
         frame.pack();

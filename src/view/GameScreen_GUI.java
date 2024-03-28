@@ -14,7 +14,7 @@ public class GameScreen_GUI {
     public GameScreen_GUI() {
         Game.players = new ArrayList<>();
         for(int i = 0; i < Game.number_of_players; i++){
-            Game.players.add(new Player(0,0, i, false));
+            Game.players.add(new Player());
         }
 
         JFrame frame = new JFrame("Bomberman");
@@ -47,6 +47,7 @@ public class GameScreen_GUI {
         frame.add(MenuButton);
         frame.add(FinishRound);
 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.setResizable(false);
         frame.pack();

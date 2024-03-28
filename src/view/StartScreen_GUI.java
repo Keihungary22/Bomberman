@@ -23,10 +23,10 @@ public class StartScreen_GUI {
 
         String[] maps = {"SmallMap", "MediumMap", "LargeMap"};
         JComboBox<String> TypeOfMapBox = new JComboBox<>(maps);
-        TypeOfMapBox.setSelectedItem(Game.type_of_map.getType());
+        TypeOfMapBox.setSelectedItem(Game.map.getType());
         TypeOfMapBox.addActionListener(e -> {
             JComboBox cb = (JComboBox) e.getSource();
-            Game.type_of_map = new Map((String) cb.getSelectedItem());
+            Game.map = new Map((String) cb.getSelectedItem());
         });
 
         Integer[] rounds = {1, 2, 3};
@@ -56,6 +56,7 @@ public class StartScreen_GUI {
         frame.add(ExitButton);
         frame.add(StartGameButton);
 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
         frame.setResizable(false);
         frame.pack();
