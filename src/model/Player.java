@@ -17,7 +17,6 @@ public class Player extends Tile {
         return score;
     }
     private Tile findFreeTile(){
-//        return Game.map.getFreeFields().get(random.nextInt(Game.map.getFreeFields().size()));
-        return Game.map.getFreeFields().get(0);
+        return Game.map.getFreeFields().get(random.nextInt(Game.map.getFreeFields().size()));
     }
 }
