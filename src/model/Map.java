@@ -82,4 +82,12 @@ public class Map {
     public int getSize() {
         return size;
     }
+
+    // Method to remove a tile from the map
+    public void removeTile(Tile tile) {
+        // Logic to remove a specific tile from the map
+        tiles.remove(tile);
+        // If the tile is in the freeFields list, remove it as well
+        freeFields.remove(tile);
+    }
 }
