@@ -15,10 +15,10 @@ public class GameScreen_GUI {
     public static Timer timer = new Timer(60);
 
     public GameScreen_GUI() {
-        Game.players = new ArrayList<>();
-        for(int i = 0; i < Game.number_of_players; i++){
-            Game.players.add(new Player());
-        }
+        // Game.players = new ArrayList<>();
+        // for(int i = 0; i < Game.number_of_players; i++){
+        //     Game.players.add(new Player());
+        // }
 
         JFrame frame = new JFrame("Bomberman");
 
