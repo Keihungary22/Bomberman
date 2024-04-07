@@ -5,66 +5,53 @@ import java.util.List;
 
 public class Map {
     private String type;
-    private int size;
-    private List<Tile> tiles;
-    private List<Tile> freeFields;
+    private static int size;
+    private static List<Tile> tiles;
+    private static List<Tile> freeFields;
+
+    public static void updateMap(){
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (i == 0 || j == 0 || i == size-1 || j == size-1) {
+                    tiles.add(new Brick(i, j));
+                } else if(!Game.players.isEmpty()) {
+                    for(int index = 0; index < Game.number_of_players; index++){
+                        if(Game.players.get(index).getX() == i && Game.players.get(index).getY() == j){
+                            Game.map.getTiles().set(i*Game.map.getSize() + j, Game.players.get(index));
+                        }
+                    }
+                } else {
+                    tiles.add(new Field(i, j));
+                }
+            }
+        }
+
+        freeFields = new ArrayList<>();
+        for (Tile tile : tiles) {
+            if (tile instanceof Field) {
+                freeFields.add(tile);
+            }
+        }
+    }
+
     public Map(String mapType) {
         type = mapType;
+        tiles = new ArrayList<>();
         switch (mapType) {
             case "SmallMap":
-                type = "SmallMap";
-                tiles = new ArrayList<>();
-//                size = 8;
-                size = 4;
-                for (int i = 0; i < size; i++) {
-                    for (int j = 0; j < size; j++) {
-                        if (i == 0 || j == 0 || i == size-1 || j == size-1) {
-                            tiles.add(new Brick(i, j));
-                        } else {
-                            tiles.add(new Field(i, j));
-                        }
-                    }
-                }
+                size = 6;
                 break;
             case "MediumMap":
-                type = "MediumMap";
-                tiles = new ArrayList<>();
-//                size = 10;
-                size = 4;
-                for (int i = 0; i < size; i++) {
-                    for (int j = 0; j < size; j++) {
-                        if (i == 0 || j == 0 || i == size-1 || j == size-1) {
-                            tiles.add(new Brick(i, j));
-                        } else {
-                            tiles.add(new Field(i, j));
-                        }
-                    }
-                }
+                size = 8;
                 break;
             case "LargeMap":
-                type = "LargeMap";
-                tiles = new ArrayList<>();
-//                size = 12;
-                size = 4;
-                for (int i = 0; i < size; i++) {
-                    for (int j = 0; j < size; j++) {
-                        if (i == 0 || j == 0 || i == size-1 || j == size-1) {
-                            tiles.add(new Brick(i, j));
-                        } else {
-                            tiles.add(new Field(i, j));
-                        }
-                    }
-                }
+                size = 12;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid map name: " + type);
         }
-        freeFields = new ArrayList<>();
-        for (Tile tile : tiles) {
-            if (tile instanceof Field && !tile.isBoundary) {
-                freeFields.add(tile);
-            }
-        }
+
+        updateMap();
     }
 
     public String getType() {

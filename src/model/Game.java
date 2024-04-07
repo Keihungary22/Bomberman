@@ -10,6 +10,7 @@ public class Game {
     public static int current_round;
     public static ArrayList<Player> players;
     public static void RefreshMode(){
+        players = new ArrayList<>();
         number_of_players = 2;
         map = new Map("SmallMap");
         number_of_rounds = 1;

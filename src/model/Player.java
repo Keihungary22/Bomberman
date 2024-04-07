@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class Player extends Tile {
@@ -9,10 +10,26 @@ public class Player extends Tile {
         super(0, 0);
         this.x = findFreeTile().x;
         this.y = findFreeTile().y;
-        this.isBoundary = findFreeTile().isBoundary;
         this.destructible = true;
         this.visual = "Player.png";
     }
+    public void keyReleased(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_W:
+                this.y += 1;
+                break;
+            case KeyEvent.VK_S:
+                this.y -= 1;
+                break;
+            case KeyEvent.VK_D:
+                this.x += 1;
+                break;
+            case KeyEvent.VK_A:
+                this.x -= 1;
+                break;
+        }
+    }
+
     public int getScore(){
         return score;
     }
