@@ -2,16 +2,17 @@ package view;
 
 import model.Game;
 import model.Map;
+import model.Player;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class StartScreen_GUI {
     public StartScreen_GUI() {
+        Game.RefreshMode();
+
         JFrame frame = new JFrame("Bomberman");
         JLabel logo = new JLabel("Bomberman");
-
-        Game.RefreshMode();
 
         Integer[] players = {2, 3};
         JComboBox<Integer> NumberOfPlayersBox = new JComboBox<>(players);
@@ -45,6 +46,15 @@ public class StartScreen_GUI {
         JButton StartGameButton = new JButton("START");
         StartGameButton.addActionListener(e -> {
             frame.dispose();
+            while(Game.players.size() < 3){
+                while(true){
+                    Player player = new Player();
+                    if(!Game.players.contains(player)){
+                        Game.players.add(player);
+                        break;
+                    }
+                }
+            }
             new GameScreen_GUI();
         });
 
