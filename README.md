@@ -8,7 +8,7 @@
 ![Alt text](image-2.png)
 - Open it with intellij idea
 start click following icon. terminal window will start.
-![Alt text](image-3.png)
+![Alt text](image-6.png)
 - In the terminal, execute the following code
 - $git branch -b transplant-to-intellij-project origin/transplant-to-intellij-project
 - then you have your new branch in your local git which content is exactory the same as "transplant-to-intellij-project" branch (execute $git branch. then if you can ses as following, you are successful.)
