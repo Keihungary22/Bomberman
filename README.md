@@ -7,12 +7,10 @@
 - you will have "japenko" file
 ![Alt text](image-2.png)
 - Open it with intellij idea
-start click following icon. terminal window will start.
-![Alt text](image-7.png)
+- start terminal window 
 - In the terminal, execute the following code
 - $git branch -b transplant-to-intellij-project origin/transplant-to-intellij-project
 - then you have your new branch in your local git which content is exactory the same as "transplant-to-intellij-project" branch (execute $git branch. then if you can ses as following, you are successful.)
 ![Alt text](image-4.png)
 - click "src/Main" file
 - Run this file. 
-![Alt text](image-5.png)
