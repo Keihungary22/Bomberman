@@ -39,13 +39,13 @@ public class Map {
         tiles = new ArrayList<>();
         switch (mapType) {
             case "SmallMap":
-                size = 6;
+                size = 12;
                 break;
             case "MediumMap":
-                size = 8;
+                size = 15;
                 break;
             case "LargeMap":
-                size = 12;
+                size = 20;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid map name: " + type);

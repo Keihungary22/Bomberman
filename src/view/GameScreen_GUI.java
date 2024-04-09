@@ -51,6 +51,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
                 JLabel tileLabel = new JLabel();
                 ImageIcon icon = new ImageIcon("assets/" + Game.map.getTiles().get(i*Game.map.getSize() + j).getVisual());
                 tileLabel.setIcon(icon);
+                tileLabel.setPreferredSize(new Dimension(30, 30));
                 GameBoard.add(tileLabel);
             }
         }
@@ -58,7 +59,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
         setTitle("BOMBERMAN");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(this.MainPanel);
-        this.setSize(1000, 700);
+        this.setSize(1200, 1200);
         this.setVisible(true);
     }
 
