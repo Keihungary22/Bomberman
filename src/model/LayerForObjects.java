@@ -9,7 +9,7 @@ public class LayerForObjects extends Layer {
     public LayerForObjects(int size) {
         super();
         updateTiles(size);
-        updateLayer();
+        updateLayer(size);
     }
 
 
@@ -24,7 +24,7 @@ public class LayerForObjects extends Layer {
                     this.tiles.add(Game.players.get(index));
                     index++;
                 } else {
-                    this.tiles.add(new Field(i, j));
+                    this.tiles.add(new Empty(i, j));
                 }
             }
         }
@@ -32,9 +32,9 @@ public class LayerForObjects extends Layer {
 
     //based of tiles, generate GridLayout as layer
     @Override
-    protected void updateLayer() {
-        for (int i = 0; i < Game.map.getSize(); i++) {
-            for (int j = 0; j < Game.map.getSize(); j++) {
+    protected void updateLayer(int size) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 JLabel tileLabel = new JLabel();
                 ImageIcon icon = new ImageIcon("assets/" + this.tiles.get(i*Game.map.getSize() + j).getVisual());
                 tileLabel.setIcon(icon);

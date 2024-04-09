@@ -17,7 +17,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
     private JButton btn_menu;
     private JButton btn_finish;
     private JPanel GameBoard;
-    private JButton button1;
     public static Timer timer = new Timer(60);
 
 
@@ -31,8 +30,12 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
         JPanel objectsLayer  = new LayerForObjects(Game.map.getSize()).getLayer();
         objectsLayer.setBounds(0, 0, size, size);
 
+        JPanel backgroundLayer  = new LayerForBackground(Game.map.getSize()).getLayer();
+        backgroundLayer.setBounds(0, 0, size, size);
+
         //region >> add layers into LayeredPane
-        LayeredPane.add(objectsLayer);
+        LayeredPane.add(backgroundLayer, JLayeredPane.DEFAULT_LAYER);
+        LayeredPane.add(objectsLayer, JLayeredPane.PALETTE_LAYER);
         //endregion
         GameBoard.add(LayeredPane);
         // add LayeredPane in GameBoard JPane
