@@ -1,51 +1,135 @@
 package view;
 
-import model.Game;
-import model.Map;
-import model.Player;
+import model.*;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class StartScreen_GUI {
-    public StartScreen_GUI() {
+public class StartScreen_GUI extends JFrame implements ActionListener {
+    //region >> private attributes
+    private JPanel MainPanel;
+    private JButton btn_r1;
+    private JButton btn_r2;
+    private JButton btn_r3;
+    private JButton btn_m1;
+    private JButton btn_m2;
+    private JButton btn_m3;
+    private JButton btn_p2;
+    private JButton btn_p3;
+    private JButton btn_start;
+    private JButton btn_exit;
+    private JLabel TitleLabel;
+    private JTextArea number_of_round;
+    private JTextArea number_of_player;
+    private JTextArea type_of_map;
+    //endregion
+
+    private void update_config_view(){
+        number_of_player.setText(String.valueOf(Game.number_of_players));
+        number_of_round.setText(String.valueOf(Game.number_of_rounds));
+        type_of_map.setText(Game.map.getType());
+    }
+
+    public StartScreen_GUI(){
+
+        //region >> change font size and type of Title (BOMBERMAN!)
+        Font font = new Font("Arial", Font.BOLD, 24);
+        TitleLabel.setFont(font);
+        //endregion
+
+        //region >> Form button groups to control input.
+        ButtonGroup btn_group_round = new ButtonGroup();
+        btn_group_round.add(btn_r1);
+        btn_group_round.add(btn_r2);
+        btn_group_round.add(btn_r3);
+
+        ButtonGroup btn_group_player = new ButtonGroup();
+        btn_group_player.add(btn_p2);
+        btn_group_player.add(btn_p3);
+
+        ButtonGroup btn_group_map = new ButtonGroup();
+        btn_group_player.add(btn_m1);
+        btn_group_player.add(btn_m2);
+        btn_group_player.add(btn_m3);
+        //endregion
+
+        //region >> Register button action listeners
+        btn_p2.addActionListener(this);
+        btn_p3.addActionListener(this);
+        btn_m1.addActionListener(this);
+        btn_m2.addActionListener(this);
+        btn_m3.addActionListener(this);
+        btn_r1.addActionListener(this);
+        btn_r2.addActionListener(this);
+        btn_r3.addActionListener(this);
+        btn_start.addActionListener(this);
+        btn_exit.addActionListener(this);
+        //endregion
+
+        //region >> Eliminate the focus function of all buttons. (Not important)
+        btn_p2.setFocusable(false);
+        btn_p3.setFocusable(false);
+        btn_m1.setFocusable(false);
+        btn_m2.setFocusable(false);
+        btn_m3.setFocusable(false);
+        btn_r1.setFocusable(false);
+        btn_r2.setFocusable(false);
+        btn_r3.setFocusable(false);
+        btn_start.setFocusable(false);
+        btn_exit.setFocusable(false);
+        //endregion
+
+
+        //region >> Game refresh
         Game.RefreshMode();
+        this.update_config_view();
+        //endregion
 
-        JFrame frame = new JFrame("Bomberman");
-        JLabel logo = new JLabel("Bomberman");
+        setTitle("BOMBERMAN");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //The method to set the behavior when the JFrame window is closed by user
 
-        Integer[] players = {2, 3};
-        JComboBox<Integer> NumberOfPlayersBox = new JComboBox<>(players);
-        NumberOfPlayersBox.setSelectedItem(Game.number_of_players);
-        NumberOfPlayersBox.addActionListener(e -> {
-            JComboBox cb = (JComboBox) e.getSource();
-            Game.number_of_players = (Integer) cb.getSelectedItem();
-        });
+//        //region >>  Set Look and feel
+//        try {
+//            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        //endregion
 
-        String[] maps = {"SmallMap", "MediumMap", "LargeMap"};
-        JComboBox<String> TypeOfMapBox = new JComboBox<>(maps);
-        TypeOfMapBox.setSelectedItem(Game.map.getType());
-        TypeOfMapBox.addActionListener(e -> {
-            JComboBox cb = (JComboBox) e.getSource();
-            Game.map = new Map((String) cb.getSelectedItem());
-        });
+        this.setContentPane(this.MainPanel);
+        this.setSize(1000, 700);
+        this.setVisible(true);
+    }
 
-        Integer[] rounds = {1, 2, 3};
-        JComboBox<Integer> NumberOfRoundsBox = new JComboBox<>(rounds);
-        NumberOfRoundsBox.setSelectedItem(Game.number_of_rounds);
-        NumberOfRoundsBox.addActionListener(e -> {
-            JComboBox cb = (JComboBox) e.getSource();
-            Game.number_of_rounds = (Integer) cb.getSelectedItem();
-        });
 
-        JButton ExitButton = new JButton("EXIT");
-        ExitButton.addActionListener(e -> {
-            System.exit(0);
-        });
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btn_m1) {
+            Game.map = new Map("SmallMap");
+        } else if (e.getSource() == btn_m2) {
+            Game.map = new Map("MediumMap");
+        } else if (e.getSource() == btn_m3) {
+            Game.map = new Map("LargeMap");
+        }
 
-        JButton StartGameButton = new JButton("START");
-        StartGameButton.addActionListener(e -> {
-            frame.dispose();
+        if (e.getSource() == btn_p2) {
+            Game.number_of_players = 2;
+        } else if (e.getSource() == btn_p3) {
+            Game.number_of_players = 3;
+        }
+
+        if (e.getSource() == btn_r1) {
+            Game.number_of_rounds = 1;
+        } else if (e.getSource() == btn_r2) {
+            Game.number_of_rounds = 2;
+        } else if (e.getSource() == btn_r3) {
+            Game.number_of_rounds = 3;
+        }
+
+        if(e.getSource() == btn_start){
+            this.dispose();
             while(Game.players.size() < 3){
                 while(true){
                     Player player = new Player();
@@ -56,20 +140,12 @@ public class StartScreen_GUI {
                 }
             }
             new GameScreen_GUI();
-        });
+        }
 
-        frame.setLayout(new FlowLayout());
-        frame.add(logo);
-        frame.add(NumberOfPlayersBox);
-        frame.add(TypeOfMapBox);
-        frame.add(NumberOfRoundsBox);
-        frame.add(ExitButton);
-        frame.add(StartGameButton);
+        if (e.getSource() == btn_exit) {
+            System.exit(0);
+        }
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-        frame.setResizable(false);
-        frame.pack();
-        frame.setVisible(true);
+        this.update_config_view();
     }
 }

@@ -1,32 +1,34 @@
 package view;
 
 import model.Game;
-
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class ResultScreen_GUI {
+public class ResultScreen_GUI extends JFrame implements ActionListener {
+    private JPanel MainPanel;
+    private JButton btn_startsc;
+    private JPanel Player;
+
     public ResultScreen_GUI() {
-        JFrame frame = new JFrame("Bomberman");
+        btn_startsc.addActionListener(this);
+        this.setTitle("RESULT");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        for (int i = 1; i < Game.number_of_players+1; i++) {
+            Player.add(new JLabel("Player " + i + ": " + Game.players.get(i - 1).getScore()));
+        }
 
-        JButton HomeButton = new JButton("HOME");
-        HomeButton.addActionListener(e -> {
-            frame.dispose();
+        this.setContentPane(this.MainPanel);
+        this.setSize(1000, 700);
+        this.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == btn_startsc) {
+            this.dispose();
             Game.RefreshMode();
             new StartScreen_GUI();
-        });
-
-        frame.setLayout(new FlowLayout());
-        for (int i = 1; i < Game.number_of_players+1; i++) {
-            JLabel Player = new JLabel("Player " + i + ": " + Game.players.get(i-1).getScore());
-            frame.add(Player);
         }
-        frame.add(HomeButton);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-        frame.setResizable(false);
-        frame.pack();
-        frame.setVisible(true);
     }
 }

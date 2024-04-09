@@ -1,48 +1,53 @@
 package view;
 
-import model.*;
+import model.Game;
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class MenuBar_GUI {
+public class MenuBar_GUI extends JFrame implements ActionListener{
+    private JPanel MainPanel;
+    private JTextArea CurrentRound;
+    private JTextArea ElapsedTime;
+    private JButton btn_continue;
+    private JButton btn_end;
+    private JPanel Player;
+    private JLabel TypeOfMap;
     private final JFrame gameScreenFrame;
-    public MenuBar_GUI(JFrame gameScreenFrame) {
+
+
+    public MenuBar_GUI(GameScreen_GUI gameScreenFrame) {
+        //region >> Register button action listeners
+        btn_continue.addActionListener(this);
+        btn_end.addActionListener(this);
+        //endregion
+
+
+        ElapsedTime.setText(String.valueOf(GameScreen_GUI.timer.getElapsedTime()));
+        CurrentRound.setText(String.valueOf(Game.current_round));
+        TypeOfMap.setText(Game.map.getType());
+        for (int i = 1; i < Game.number_of_players+1; i++) {
+            Player.add(new JLabel("Player " + i + ": " + Game.players.get(i-1).getScore()));
+        }
         this.gameScreenFrame = gameScreenFrame;
-        JFrame frame = new JFrame("Menu");
+        setTitle("BOMBERMAN");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JLabel CurrentRound = new JLabel("Round " + Game.current_round);
-        JLabel ElapsedTime = new JLabel("Timer: " + GameScreen_GUI.timer.getElapsedTime());
-        JLabel TypeOfMap = new JLabel(Game.map.getType());
+        this.setContentPane(this.MainPanel);
+        this.setSize(1000, 700);
+        this.setVisible(true);
+    }
 
 
-        JButton ContinueButton = new JButton("Continue");
-        ContinueButton.addActionListener(e -> {
-            frame.dispose();
-        });
-
-        JButton EndGameButton = new JButton("End Game");
-        EndGameButton.addActionListener(e -> {
-            frame.dispose();
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == btn_continue){
+            this.dispose();
+        }else if(e.getSource() == btn_end){
             this.gameScreenFrame.dispose();
+            this.dispose();
             Game.RefreshMode();
             new StartScreen_GUI();
-        });
-
-        frame.setLayout(new FlowLayout());
-        frame.add(CurrentRound);
-        frame.add(ElapsedTime);
-        frame.add(TypeOfMap);
-        frame.add(ContinueButton);
-        for (int i = 1; i < Game.number_of_players+1; i++) {
-            JLabel Player = new JLabel("Player " + i + ": " + Game.players.get(i-1).getScore());
-            frame.add(Player);
         }
-        frame.add(EndGameButton);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(800, 600));
-        frame.setResizable(false);
-        frame.pack();
-        frame.setVisible(true);
     }
 }
