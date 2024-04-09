@@ -1,0 +1,5 @@
+- Install Intellij idea
+- https://lp.jetbrains.com/intellij-idea-features-promo/?source=google&medium=cpc&campaign=EMEA_en_EAST_IDEA_Branded&term=intellij%20idea&content=693349187757&gad_source=1&gclid=Cj0KCQjwiMmwBhDmARIsABeQ7xSVroFtUFgELEpe-RUoxyaotyZNDjq6R8ENAccPOXMV6LkbTyurHGYaAhLUEALw_wcB
+- download this file as zip
+- unzip and open it with Intellij idea
+- Run Main class

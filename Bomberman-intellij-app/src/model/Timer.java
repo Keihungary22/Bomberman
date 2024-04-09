@@ -7,6 +7,14 @@ public class Timer {
         elapsed_time = duration;
     }
 
+    public void stop(){
+
+    }
+
+    public void restart(){
+
+    }
+
     public long getElapsedTime() {
         return elapsed_time;
     }
