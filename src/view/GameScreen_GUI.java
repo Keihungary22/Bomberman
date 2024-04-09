@@ -22,24 +22,22 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
 
     private void GenerateGameBoard(){
         int size = Game.map.getSize()*30;
-
         JLayeredPane LayeredPane = new JLayeredPane();
         LayeredPane.setPreferredSize(new Dimension(size, size));
-        GameBoard.setLayout(new BorderLayout());
 
+        //region >> generate layers
         JPanel objectsLayer  = new LayerForObjects(Game.map.getSize()).getLayer();
-        objectsLayer.setBounds(0, 0, size, size);
-
         JPanel backgroundLayer  = new LayerForBackground(Game.map.getSize()).getLayer();
-        backgroundLayer.setBounds(0, 0, size, size);
+        //endregion
 
         //region >> add layers into LayeredPane
         LayeredPane.add(backgroundLayer, JLayeredPane.DEFAULT_LAYER);
         LayeredPane.add(objectsLayer, JLayeredPane.PALETTE_LAYER);
         //endregion
-        GameBoard.add(LayeredPane);
-        // add LayeredPane in GameBoard JPane
 
+        // add LayeredPane in GameBoard JPane
+        GameBoard.setLayout(new BorderLayout());
+        GameBoard.add(LayeredPane);
     }
 
     public GameScreen_GUI() {
