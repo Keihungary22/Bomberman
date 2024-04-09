@@ -19,6 +19,29 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
     private JPanel GameBoard;
     public static Timer timer = new Timer(60);
 
+
+    private void GenerateGameBoard(){
+        int size = Game.map.getSize()*30;
+
+        JLayeredPane LayeredPane = new JLayeredPane();
+        LayeredPane.setPreferredSize(new Dimension(size, size));
+        GameBoard.setLayout(new BorderLayout());
+
+        JPanel objectsLayer  = new LayerForObjects(Game.map.getSize()).getLayer();
+        objectsLayer.setBounds(0, 0, size, size);
+
+        JPanel backgroundLayer  = new LayerForBackground(Game.map.getSize()).getLayer();
+        backgroundLayer.setBounds(0, 0, size, size);
+
+        //region >> add layers into LayeredPane
+        LayeredPane.add(backgroundLayer, JLayeredPane.DEFAULT_LAYER);
+        LayeredPane.add(objectsLayer, JLayeredPane.PALETTE_LAYER);
+        //endregion
+        GameBoard.add(LayeredPane);
+        // add LayeredPane in GameBoard JPane
+
+    }
+
     public GameScreen_GUI() {
         //region >> Register button action listeners
         btn_menu.addActionListener(this);
@@ -44,17 +67,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
             }
         }
         Map.updateMap();
-
-        GameBoard.setLayout(new GridLayout(Game.map.getSize(), Game.map.getSize(), 0, 0));
-        for (int i = 0; i < Game.map.getSize(); i++) {
-            for (int j = 0; j < Game.map.getSize(); j++) {
-                JLabel tileLabel = new JLabel();
-                ImageIcon icon = new ImageIcon("assets/" + Game.map.getTiles().get(i*Game.map.getSize() + j).getVisual());
-                tileLabel.setIcon(icon);
-                tileLabel.setPreferredSize(new Dimension(30, 30));
-                GameBoard.add(tileLabel);
-            }
-        }
+        GenerateGameBoard();
 
         setTitle("BOMBERMAN");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

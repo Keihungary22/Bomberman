@@ -8,6 +8,7 @@ public class Map {
     private static int size;
     private static List<Tile> tiles;
     private static List<Tile> freeFields;
+    private static List<Layer> layers;
 
     public static void updateMap(){
         for (int i = 0; i < size; i++) {
