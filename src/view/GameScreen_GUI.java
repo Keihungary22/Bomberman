@@ -31,13 +31,38 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
         //endregion
 
         //region >> add layers into LayeredPane
-        LayeredPane.add(backgroundLayer, JLayeredPane.DEFAULT_LAYER);
-        LayeredPane.add(objectsLayer, JLayeredPane.PALETTE_LAYER);
+        LayeredPane.add(Game.map.getLayers().get("background").getLayer(), JLayeredPane.DEFAULT_LAYER);
+        LayeredPane.add(Game.map.getLayers().get("object").getLayer(), JLayeredPane.PALETTE_LAYER);
         //endregion
 
         // add LayeredPane in GameBoard JPane
         GameBoard.setLayout(new BorderLayout());
         GameBoard.add(LayeredPane);
+    }
+
+    private void initPlayersPositions(){
+        int index = 0;
+        int x = 1;
+        int y = 1;
+        for(Player player : Game.players){
+            switch (index){
+                case 0:
+                    x = 1;
+                    y = 1;
+                    break;
+                case 1:
+                    x = 1;
+                    y = Game.map.getSize() - 2;
+                    break;
+                case 2:
+                    x = Game.map.getSize() - 2;;
+                    y = 1;
+                    break;
+            }
+            player.setX(x);
+            player.setY(y);
+            index++;
+        }
     }
 
     public GameScreen_GUI() {
@@ -49,21 +74,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
         ElapsedTime.setText(String.valueOf(timer.getElapsedTime()));
         CurrentRound.setText(String.valueOf(Game.current_round));
 
-        for(int index = 0; index < Game.number_of_players; index++) {
-            int x = Game.players.get(index).getX();
-            int y = Game.players.get(index).getY();
-            Game.map.getTiles().set(x * Game.map.getSize() + y, new Field(x,y));
-
-            while(true){
-                Player player = new Player();
-
-                if(!Game.players.contains(player)){
-                    Game.players.get(index).setX(player.getX());
-                    Game.players.get(index).setY(player.getY());
-                    break;
-                }
-            }
-        }
+        initPlayersPositions();
         Map.updateMap();
         GenerateGameBoard();
 
