@@ -31,11 +31,13 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         //region >> generate layers
         JPanel objectsLayer  = new LayerForObjects(Game.map.getSize()).getLayer();
         JPanel backgroundLayer  = new LayerForBackground(Game.map.getSize()).getLayer();
+        JPanel charactersLayer  = new LayerForCharacters(Game.map.getSize()).getLayer();
         //endregion
 
         //region >> add layers into LayeredPane
         LayeredPane.add(Game.map.getLayers().get("background").getLayer(), JLayeredPane.DEFAULT_LAYER);
-        LayeredPane.add(Game.map.getLayers().get("object").getLayer(), JLayeredPane.PALETTE_LAYER);
+        LayeredPane.add(Game.map.getLayers().get("object").getLayer(), JLayeredPane.PALETTE_LAYER, 1);
+        LayeredPane.add(Game.map.getLayers().get("character").getLayer(), JLayeredPane.PALETTE_LAYER, 0);
         //endregion
 
         // add LayeredPane in GameBoard JPane
@@ -118,50 +120,50 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
                 Game.players.get(0).moveUp();
-                Game.map.getLayers().get("object").update();
+                Game.map.getLayers().get("character").update();
                 LayeredPane.revalidate();
                 LayeredPane.repaint();
                 break;
             case KeyEvent.VK_DOWN:
                 Game.players.get(0).moveDown();
-                Game.map.getLayers().get("object").update();
+                Game.map.getLayers().get("character").update();
                 LayeredPane.revalidate();
                 LayeredPane.repaint();
                 break;
             case KeyEvent.VK_RIGHT:
                 Game.players.get(0).moveRight();
-                Game.map.getLayers().get("object").update();
+                Game.map.getLayers().get("character").update();
                 LayeredPane.revalidate();
                 LayeredPane.repaint();
                 break;
             case KeyEvent.VK_LEFT:
                 Game.players.get(0).moveLeft();
-                Game.map.getLayers().get("object").update();
+                Game.map.getLayers().get("character").update();
                 LayeredPane.revalidate();
                 LayeredPane.repaint();
                 break;
 
             case KeyEvent.VK_W:
                 Game.players.get(1).moveUp();
-                Game.map.getLayers().get("object").update();
+                Game.map.getLayers().get("character").update();
                 LayeredPane.revalidate();
                 LayeredPane.repaint();
                 break;
             case KeyEvent.VK_X:
                 Game.players.get(1).moveDown();
-                Game.map.getLayers().get("object").update();
+                Game.map.getLayers().get("character").update();
                 LayeredPane.revalidate();
                 LayeredPane.repaint();
                 break;
             case KeyEvent.VK_D:
                 Game.players.get(1).moveRight();
-                Game.map.getLayers().get("object").update();
+                Game.map.getLayers().get("character").update();
                 LayeredPane.revalidate();
                 LayeredPane.repaint();
                 break;
             case KeyEvent.VK_A:
                 Game.players.get(1).moveLeft();
-                Game.map.getLayers().get("object").update();
+                Game.map.getLayers().get("character").update();
                 LayeredPane.revalidate();
                 LayeredPane.repaint();
                 break;

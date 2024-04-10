@@ -1,6 +1,5 @@
 package model;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;;
@@ -20,11 +19,13 @@ public class Map {
         //region >> generate new layers
         Layer  backgroundLayer  = new LayerForBackground(size);
         Layer objectsLayer  = new LayerForObjects(size);
+        Layer charactorsLayer = new LayerForCharacters(size);
         //endregion
 
         //region >> Add each layer in layers map
         layers.put("background", backgroundLayer);
         layers.put("object", objectsLayer);
+        layers.put("character", charactorsLayer);
         //endregion
     }
 
