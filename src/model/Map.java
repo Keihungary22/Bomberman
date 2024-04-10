@@ -1,5 +1,11 @@
 package model;
 
+import model.Layer.Layer;
+import model.Layer.LayerForBackground;
+import model.Layer.LayerForCharacters;
+import model.Layer.LayerForObjects;
+import model.Tile.Tile;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;;

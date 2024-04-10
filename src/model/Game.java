@@ -1,8 +1,8 @@
 package model;
 
+import model.Tile.Player;
 import view.*;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class Game {
