@@ -48,4 +48,6 @@ public abstract class Layer {
     public JPanel getLayer() {
         return this.layer;
     }
+
+    public List<Tile> getTiles() {return this.tiles;}
 }

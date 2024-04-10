@@ -1,9 +1,9 @@
 package model;
 
 import model.Layer.Layer;
-import model.Layer.LayerForBackground;
-import model.Layer.LayerForCharacters;
-import model.Layer.LayerForObjects;
+import model.Layer.BackgroundLayer;
+import model.Layer.ObjectsLayer;
+import model.Layer.DecorationLayer;
 import model.Tile.Tile;
 
 import java.util.ArrayList;
@@ -14,7 +14,6 @@ public class Map {
     private String type;
     private static int size;
     private static List<Tile> tiles;
-    private static List<Tile> freeFields;
     private static java.util.Map<String, Layer> layers;
 
     public static void updateMap(){
@@ -23,15 +22,15 @@ public class Map {
         //endregion
 
         //region >> generate new layers
-        Layer  backgroundLayer  = new LayerForBackground(size);
-        Layer objectsLayer  = new LayerForObjects(size);
-        Layer charactorsLayer = new LayerForCharacters(size);
+        Layer BackgroundLayer  = new BackgroundLayer(size); //background layer
+        Layer DecorationLayer  = new DecorationLayer(size); //decoration layer
+        Layer ObjectsLayer = new ObjectsLayer(size); //objects layer
         //endregion
 
         //region >> Add each layer in layers map
-        layers.put("background", backgroundLayer);
-        layers.put("object", objectsLayer);
-        layers.put("character", charactorsLayer);
+        layers.put("Background", BackgroundLayer);
+        layers.put("Decoration", DecorationLayer);
+        layers.put("Objects", ObjectsLayer);
         //endregion
     }
 
@@ -61,10 +60,6 @@ public class Map {
         return tiles;
     }
 
-    public List<Tile> getFreeFields() {
-        return freeFields;
-    }
-
     public int getSize() {
         return size;
     }
@@ -78,6 +73,5 @@ public class Map {
         // Logic to remove a specific tile from the map
         tiles.remove(tile);
         // If the tile is in the freeFields list, remove it as well
-        freeFields.remove(tile);
     }
 }
