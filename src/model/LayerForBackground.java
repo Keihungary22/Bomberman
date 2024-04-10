@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class LayerForBackground extends Layer{
     public LayerForBackground(int size) {
-        super();
+        super(size);
         updateTiles(size);
         updateLayer(size);
     }
@@ -25,7 +25,7 @@ public class LayerForBackground extends Layer{
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 JLabel tileLabel = new JLabel();
-                ImageIcon icon = new ImageIcon("assets/" + this.tiles.get(i*Game.map.getSize() + j).getVisual());
+                ImageIcon icon = new ImageIcon("assets/" + this.tiles.get(i*size + j).getVisual());
                 tileLabel.setIcon(icon);
                 tileLabel.setPreferredSize(new Dimension(30, 30));
                 layer.add(tileLabel);

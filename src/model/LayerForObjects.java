@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class LayerForObjects extends Layer {
     public LayerForObjects(int size) {
-        super();
+        super(size);
         updateTiles(size);
         updateLayer(size);
     }
@@ -23,7 +23,10 @@ public class LayerForObjects extends Layer {
                 } else if(index < Game.number_of_players && Game.players.get(index).getX() == i && Game.players.get(index).getY() == j){
                     this.tiles.add(Game.players.get(index));
                     index++;
-                } else {
+                } else if(j % 2 == 0 && i % 2 == 0){
+                    this.tiles.add(new Block(i, j));
+                }
+                else {
                     this.tiles.add(new Empty(i, j));
                 }
             }

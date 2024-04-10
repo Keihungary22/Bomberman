@@ -1,38 +1,31 @@
 package model;
 
+import javax.swing.*;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.List;;
 
 public class Map {
     private String type;
     private static int size;
     private static List<Tile> tiles;
     private static List<Tile> freeFields;
-    private static List<Layer> layers;
+    private static java.util.Map<String, Layer> layers;
 
     public static void updateMap(){
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (i == 0 || j == 0 || i == size-1 || j == size-1) {
-                    tiles.add(new Brick(i, j));
-                } else if(!Game.players.isEmpty()) {
-                    for(int index = 0; index < Game.number_of_players; index++){
-                        if(Game.players.get(index).getX() == i && Game.players.get(index).getY() == j){
-                            Game.map.getTiles().set(i*Game.map.getSize() + j, Game.players.get(index));
-                        }
-                    }
-                } else {
-                    tiles.add(new Field(i, j));
-                }
-            }
-        }
+        //region >> init layers map
+        layers = new HashMap<String, Layer>();
+        //endregion
 
-        freeFields = new ArrayList<>();
-        for (Tile tile : tiles) {
-            if (tile instanceof Field) {
-                freeFields.add(tile);
-            }
-        }
+        //region >> generate new layers
+        Layer  backgroundLayer  = new LayerForBackground(size);
+        Layer objectsLayer  = new LayerForObjects(size);
+        //endregion
+
+        //region >> Add each layer in layers map
+        layers.put("background", backgroundLayer);
+        layers.put("object", objectsLayer);
+        //endregion
     }
 
     public Map(String mapType) {
@@ -51,8 +44,6 @@ public class Map {
             default:
                 throw new IllegalArgumentException("Invalid map name: " + type);
         }
-
-        updateMap();
     }
 
     public String getType() {
@@ -69,6 +60,10 @@ public class Map {
 
     public int getSize() {
         return size;
+    }
+
+    public static java.util.Map<String, Layer> getLayers() {
+        return layers;
     }
 
     // Method to remove a tile from the map
