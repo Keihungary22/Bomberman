@@ -17,6 +17,7 @@ public abstract class Layer {
         grid = new GridLayout(Game.map.getSize(), Game.map.getSize(), 0, 0);
         layer = new JPanel(grid);
         layer.setOpaque(false);
+        layer.setBounds(0, 0, Game.map.getSize()*30, Game.map.getSize()*30);
     }
 
     //fill tiles array
