@@ -10,7 +10,6 @@ public class LayerForBackground extends Layer{
         updateLayer(size);
     }
 
-
     @Override
     protected void updateTiles(int size) {
         for (int i = 0; i < size; i++) {

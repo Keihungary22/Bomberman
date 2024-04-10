@@ -12,7 +12,6 @@ public class LayerForObjects extends Layer {
         updateLayer(size);
     }
 
-
     @Override
     protected void updateTiles(int size) {
         int index = 0;
@@ -20,7 +19,7 @@ public class LayerForObjects extends Layer {
             for (int j = 0; j < size; j++) {
                 if (i == 0 || j == 0 || i == size-1 || j == size-1) {
                     this.tiles.add(new Brick(i, j));
-                } else if(index < Game.number_of_players && Game.players.get(index).getX() == i && Game.players.get(index).getY() == j){
+                } else if(index < Game.number_of_players && Game.players.get(index).getX() == j && Game.players.get(index).getY() == i){
                     this.tiles.add(Game.players.get(index));
                     index++;
                 } else if(j % 2 == 0 && i % 2 == 0){
@@ -41,7 +40,6 @@ public class LayerForObjects extends Layer {
                 JLabel tileLabel = new JLabel();
                 ImageIcon icon = new ImageIcon("assets/" + this.tiles.get(i*Game.map.getSize() + j).getVisual());
                 tileLabel.setIcon(icon);
-                System.out.println(icon);
                 tileLabel.setPreferredSize(new Dimension(30, 30));
                 layer.add(tileLabel);
             }

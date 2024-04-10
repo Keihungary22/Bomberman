@@ -62,7 +62,7 @@ public class Map {
         return size;
     }
 
-    public static java.util.Map<String, Layer> getLayers() {
+    public java.util.Map<String, Layer> getLayers() {
         return layers;
     }
 

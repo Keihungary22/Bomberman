@@ -19,6 +19,14 @@ public abstract class Layer {
         layer.setBounds(0, 0, size*30, size*30);
     }
 
+    //update this layer(e.g, when player move it will be updated)
+    public void update(){
+        this.tiles.clear();
+        this.layer.removeAll();
+        updateTiles(Game.map.getSize());
+        updateLayer(Game.map.getSize());
+    };
+
     //fill tiles array
     protected abstract void updateTiles(int size);
     //based of tiles, fill ImageIcons into layer(GridLayout)

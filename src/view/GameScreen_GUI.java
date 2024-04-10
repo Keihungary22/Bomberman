@@ -3,26 +3,29 @@ package view;
 import model.*;
 import model.Timer;
 
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 
-public class GameScreen_GUI extends JFrame implements ActionListener {
+public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener {
     private JPanel MainPanel;
     private JTextArea ElapsedTime;
     private JTextArea CurrentRound;
     private JButton btn_menu;
     private JButton btn_finish;
     private JPanel GameBoard;
+    private final JLayeredPane LayeredPane;
     public static Timer timer = new Timer(60);
 
 
     private void GenerateGameBoard(){
         int size = Game.map.getSize()*30;
-        JLayeredPane LayeredPane = new JLayeredPane();
         LayeredPane.setPreferredSize(new Dimension(size, size));
 
         //region >> generate layers
@@ -66,9 +69,17 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
     }
 
     public GameScreen_GUI() {
+        LayeredPane = new JLayeredPane();
+
         //region >> Register button action listeners
         btn_menu.addActionListener(this);
         btn_finish.addActionListener(this);
+        //endregion
+
+        //region >> add event listener for keyboard input
+        this.addKeyListener(this);
+        this.setFocusable(true);
+        this.requestFocusInWindow();
         //endregion
 
         ElapsedTime.setText(String.valueOf(timer.getElapsedTime()));
@@ -99,5 +110,69 @@ public class GameScreen_GUI extends JFrame implements ActionListener {
                 new ResultScreen_GUI();
             }
         }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // Processing when the key is released
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_UP:
+                Game.players.get(0).moveUp();
+                Game.map.getLayers().get("object").update();
+                LayeredPane.revalidate();
+                LayeredPane.repaint();
+                break;
+            case KeyEvent.VK_DOWN:
+                Game.players.get(0).moveDown();
+                Game.map.getLayers().get("object").update();
+                LayeredPane.revalidate();
+                LayeredPane.repaint();
+                break;
+            case KeyEvent.VK_RIGHT:
+                Game.players.get(0).moveRight();
+                Game.map.getLayers().get("object").update();
+                LayeredPane.revalidate();
+                LayeredPane.repaint();
+                break;
+            case KeyEvent.VK_LEFT:
+                Game.players.get(0).moveLeft();
+                Game.map.getLayers().get("object").update();
+                LayeredPane.revalidate();
+                LayeredPane.repaint();
+                break;
+
+            case KeyEvent.VK_W:
+                Game.players.get(1).moveUp();
+                Game.map.getLayers().get("object").update();
+                LayeredPane.revalidate();
+                LayeredPane.repaint();
+                break;
+            case KeyEvent.VK_X:
+                Game.players.get(1).moveDown();
+                Game.map.getLayers().get("object").update();
+                LayeredPane.revalidate();
+                LayeredPane.repaint();
+                break;
+            case KeyEvent.VK_D:
+                Game.players.get(1).moveRight();
+                Game.map.getLayers().get("object").update();
+                LayeredPane.revalidate();
+                LayeredPane.repaint();
+                break;
+            case KeyEvent.VK_A:
+                Game.players.get(1).moveLeft();
+                Game.map.getLayers().get("object").update();
+                LayeredPane.revalidate();
+                LayeredPane.repaint();
+                break;
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
     }
 }
