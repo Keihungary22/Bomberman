@@ -1,17 +1,19 @@
 package view;
 
 import model.*;
+import model.Layer.LayerForBackground;
+import model.Layer.LayerForCharacters;
+import model.Layer.LayerForObjects;
+import model.Tile.Player;
 import model.Timer;
 
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 
 public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener {
     private JPanel MainPanel;

@@ -1,6 +1,7 @@
 package view;
 
 import model.*;
+import model.Tile.Player;
 
 import javax.swing.*;
 import java.awt.Font;
