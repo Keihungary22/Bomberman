@@ -1,9 +1,9 @@
 package view;
 
 import model.*;
-import model.Layer.LayerForBackground;
-import model.Layer.LayerForCharacters;
-import model.Layer.LayerForObjects;
+import model.Layer.BackgroundLayer;
+import model.Layer.ObjectsLayer;
+import model.Layer.DecorationLayer;
 import model.Tile.Player;
 import model.Timer;
 
@@ -30,16 +30,10 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         int size = Game.map.getSize()*30;
         LayeredPane.setPreferredSize(new Dimension(size, size));
 
-        //region >> generate layers
-        JPanel objectsLayer  = new LayerForObjects(Game.map.getSize()).getLayer();
-        JPanel backgroundLayer  = new LayerForBackground(Game.map.getSize()).getLayer();
-        JPanel charactersLayer  = new LayerForCharacters(Game.map.getSize()).getLayer();
-        //endregion
-
         //region >> add layers into LayeredPane
-        LayeredPane.add(Game.map.getLayers().get("background").getLayer(), JLayeredPane.DEFAULT_LAYER);
-        LayeredPane.add(Game.map.getLayers().get("object").getLayer(), JLayeredPane.PALETTE_LAYER, 1);
-        LayeredPane.add(Game.map.getLayers().get("character").getLayer(), JLayeredPane.PALETTE_LAYER, 0);
+        LayeredPane.add(Game.map.getLayers().get("Background").getLayer(), JLayeredPane.DEFAULT_LAYER);
+        LayeredPane.add(Game.map.getLayers().get("Decoration").getLayer(), JLayeredPane.PALETTE_LAYER, 1);
+        LayeredPane.add(Game.map.getLayers().get("Objects").getLayer(), JLayeredPane.PALETTE_LAYER, 0);
         //endregion
 
         // add LayeredPane in GameBoard JPane
@@ -118,56 +112,91 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
 
     @Override
     public void keyReleased(KeyEvent e) {
+        int x;
+        int y;
+        int size = Game.map.getSize();
         // Processing when the key is released
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
-                Game.players.get(0).moveUp();
-                Game.map.getLayers().get("character").update();
-                LayeredPane.revalidate();
-                LayeredPane.repaint();
+                x = Game.players.get(0).getX();
+                y = Game.players.get(0).getY();
+                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y-1)+x).getVisual().equals("Empty.png")){
+                    Game.players.get(0).moveUp();
+                    Game.map.getLayers().get("Objects").update();
+                    LayeredPane.revalidate();
+                    LayeredPane.repaint();
+                }
                 break;
             case KeyEvent.VK_DOWN:
-                Game.players.get(0).moveDown();
-                Game.map.getLayers().get("character").update();
-                LayeredPane.revalidate();
-                LayeredPane.repaint();
+                x = Game.players.get(0).getX();
+                y = Game.players.get(0).getY();
+                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y+1)+x).getVisual().equals("Empty.png")) {
+                    Game.players.get(0).moveDown();
+                    Game.map.getLayers().get("Objects").update();
+                    LayeredPane.revalidate();
+                    LayeredPane.repaint();
+                }
                 break;
             case KeyEvent.VK_RIGHT:
-                Game.players.get(0).moveRight();
-                Game.map.getLayers().get("character").update();
-                LayeredPane.revalidate();
-                LayeredPane.repaint();
+                x = Game.players.get(0).getX();
+                y = Game.players.get(0).getY();
+                if(Game.map.getLayers().get("Objects").getTiles().get(size*y+x+1).getVisual().equals("Empty.png")) {
+                    Game.players.get(0).moveRight();
+                    Game.map.getLayers().get("Objects").update();
+                    LayeredPane.revalidate();
+                    LayeredPane.repaint();
+                }
                 break;
             case KeyEvent.VK_LEFT:
-                Game.players.get(0).moveLeft();
-                Game.map.getLayers().get("character").update();
-                LayeredPane.revalidate();
-                LayeredPane.repaint();
+                x = Game.players.get(0).getX();
+                y = Game.players.get(0).getY();
+                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y)+x-1).getVisual().equals("Empty.png")) {
+                    Game.players.get(0).moveLeft();
+                    Game.map.getLayers().get("Objects").update();
+                    LayeredPane.revalidate();
+                    LayeredPane.repaint();
+                }
                 break;
 
             case KeyEvent.VK_W:
-                Game.players.get(1).moveUp();
-                Game.map.getLayers().get("character").update();
-                LayeredPane.revalidate();
-                LayeredPane.repaint();
+                x = Game.players.get(1).getX();
+                y = Game.players.get(1).getY();
+                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y-1)+x).getVisual().equals("Empty.png")){
+                    Game.players.get(1).moveUp();
+                    Game.map.getLayers().get("Objects").update();
+                    LayeredPane.revalidate();
+                    LayeredPane.repaint();
+                }
                 break;
             case KeyEvent.VK_X:
-                Game.players.get(1).moveDown();
-                Game.map.getLayers().get("character").update();
-                LayeredPane.revalidate();
-                LayeredPane.repaint();
+                x = Game.players.get(1).getX();
+                y = Game.players.get(1).getY();
+                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y+1)+x).getVisual().equals("Empty.png")) {
+                    Game.players.get(1).moveDown();
+                    Game.map.getLayers().get("Objects").update();
+                    LayeredPane.revalidate();
+                    LayeredPane.repaint();
+                }
                 break;
             case KeyEvent.VK_D:
-                Game.players.get(1).moveRight();
-                Game.map.getLayers().get("character").update();
-                LayeredPane.revalidate();
-                LayeredPane.repaint();
+                x = Game.players.get(1).getX();
+                y = Game.players.get(1).getY();
+                if(Game.map.getLayers().get("Objects").getTiles().get(size*y+x+1).getVisual().equals("Empty.png")) {
+                    Game.players.get(1).moveRight();
+                    Game.map.getLayers().get("Objects").update();
+                    LayeredPane.revalidate();
+                    LayeredPane.repaint();
+                }
                 break;
             case KeyEvent.VK_A:
-                Game.players.get(1).moveLeft();
-                Game.map.getLayers().get("character").update();
-                LayeredPane.revalidate();
-                LayeredPane.repaint();
+                x = Game.players.get(1).getX();
+                y = Game.players.get(1).getY();
+                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y)+x-1).getVisual().equals("Empty.png")) {
+                    Game.players.get(1).moveLeft();
+                    Game.map.getLayers().get("Objects").update();
+                    LayeredPane.revalidate();
+                    LayeredPane.repaint();
+                }
                 break;
         }
     }

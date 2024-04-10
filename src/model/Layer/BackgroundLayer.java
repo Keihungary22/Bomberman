@@ -2,8 +2,8 @@ package model.Layer;
 
 import model.Tile.Field;
 
-public class LayerForBackground extends Layer{
-    public LayerForBackground(int size) {
+public class BackgroundLayer extends Layer{
+    public BackgroundLayer(int size) {
         super(size);
         updateTiles(size);
         updateLayer(size);
