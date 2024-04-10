@@ -131,14 +131,31 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
 
         if(e.getSource() == btn_start){
             this.dispose();
+            int index = 0;
             while(Game.players.size() < 3){
-                while(true){
-                    Player player = new Player();
-                    if(!Game.players.contains(player)){
-                        Game.players.add(player);
+                switch (index){
+                    case 0:
+                        Player player1 = new Player("Player1.png");
+                        if(!Game.players.contains(player1)){
+                            Game.players.add(player1);
+                            break;
+                        }
                         break;
-                    }
+                    case 1:
+                        Player player2 = new Player("Player2.png");
+                        if(!Game.players.contains(player2)){
+                            Game.players.add(player2);
+                            break;
+                        }
+                        break;
+                    case 2:
+                        Player player3 = new Player("Player3.png");
+                        if(!Game.players.contains(player3)){
+                            Game.players.add(player3);
+                            break;
+                        }
                 }
+                index++;
             }
             new GameScreen_GUI();
         }

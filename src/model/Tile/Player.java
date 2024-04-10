@@ -2,12 +2,12 @@ package model.Tile;
 
 public class Player extends Tile {
     public int score = 0;
-    public Player() {
+    public Player(String visual) {
         super(0, 0);
         this.x = 0;
         this.y = 0;
         this.destructible = true;
-        this.visual = "Player.png";
+        this.visual = visual;
     }
 
     public void moveUp(){

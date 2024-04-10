@@ -1,9 +1,6 @@
 package view;
 
 import model.*;
-import model.Layer.BackgroundLayer;
-import model.Layer.ObjectsLayer;
-import model.Layer.DecorationLayer;
 import model.Tile.Player;
 import model.Timer;
 
