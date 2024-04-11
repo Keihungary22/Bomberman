@@ -5,7 +5,7 @@ stages:
 
 build-my-first-job:
     grade: build
-    script: echo "this is first build job"
+    script: echo "this is first build job."
 
 test-my-first-job:
     grade: test
