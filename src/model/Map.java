@@ -17,7 +17,7 @@ public class Map {
     private static java.util.Map<String, Layer> layers;
 
     public static void updateMap(){
-        //region >> init layers map
+        //region >> init layers hashmap
         layers = new HashMap<String, Layer>();
         //endregion
 
@@ -27,7 +27,7 @@ public class Map {
         Layer ObjectsLayer = new ObjectsLayer(size); //objects layer
         //endregion
 
-        //region >> Add each layer in layers map
+        //region >> Add each layer in layers hashmap
         layers.put("Background", BackgroundLayer);
         layers.put("Decoration", DecorationLayer);
         layers.put("Objects", ObjectsLayer);

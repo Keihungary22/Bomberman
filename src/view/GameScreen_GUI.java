@@ -1,10 +1,9 @@
 package view;
 
 import model.*;
+import model.Tile.Bomb;
 import model.Tile.Player;
 import model.Timer;
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,7 +21,36 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     private final JLayeredPane LayeredPane;
     public static Timer timer = new Timer(60);
 
+    //constructor
+    public GameScreen_GUI() {
+        LayeredPane = new JLayeredPane();
 
+        //region >> Register button action listeners
+        btn_menu.addActionListener(this);
+        btn_finish.addActionListener(this);
+        //endregion
+
+        //region >> add event listener for keyboard input
+        this.addKeyListener(this);
+        this.setFocusable(true);
+        this.requestFocusInWindow();
+        //endregion
+
+        //region >> initiate GUI for game screen
+        setTitle("BOMBERMAN");
+        ElapsedTime.setText(String.valueOf(timer.getElapsedTime()));
+        CurrentRound.setText(String.valueOf(Game.current_round));
+        initPlayersPositions();//Initiate players position and put them on the map
+        Map.updateMap();//Update map class
+        GenerateGameBoard(); //based on the map class, initiate JPanel of the game board
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setContentPane(this.MainPanel);
+        this.setSize(1200, 1200);
+        this.setVisible(true);
+        //endregion
+    }
+
+    //region >> private functions
     private void GenerateGameBoard(){
         int size = Game.map.getSize()*30;
         LayeredPane.setPreferredSize(new Dimension(size, size));
@@ -63,34 +91,57 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         }
     }
 
-    public GameScreen_GUI() {
-        LayeredPane = new JLayeredPane();
+    private void playerMove(int player_id, String direction){
+        int x = Game.players.get(player_id).getX();
+        int y = Game.players.get(player_id).getY();
+        int size = Game.map.getSize();
 
-        //region >> Register button action listeners
-        btn_menu.addActionListener(this);
-        btn_finish.addActionListener(this);
-        //endregion
+        int dx = 0;
+        int dy = 0;
 
-        //region >> add event listener for keyboard input
-        this.addKeyListener(this);
-        this.setFocusable(true);
-        this.requestFocusInWindow();
-        //endregion
+        switch (direction){
+            case "up":
+                dy = -1;
+                break;
+            case "down":
+                dy = 1;
+                break;
+            case "left":
+                dx = -1;
+                break;
+            case "right":
+                dx = 1;
+                break;
+        }
 
-        ElapsedTime.setText(String.valueOf(timer.getElapsedTime()));
-        CurrentRound.setText(String.valueOf(Game.current_round));
+        if(Game.map.getLayers().get("Objects").getTiles().get(size*(y+dy)+x+dx).getVisual().equals("Empty.png")){
+            switch (direction){
+                case "up":
+                    Game.players.get(player_id).moveUp();
+                    break;
+                case "down":
+                    Game.players.get(player_id).moveDown();
+                    break;
+                case "left":
+                    Game.players.get(player_id).moveLeft();
+                    break;
+                case "right":
+                    Game.players.get(player_id).moveRight();
+                    break;
+            }
 
-        initPlayersPositions();
-        Map.updateMap();
-        GenerateGameBoard();
-
-        setTitle("BOMBERMAN");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setContentPane(this.MainPanel);
-        this.setSize(1200, 1200);
-        this.setVisible(true);
+            Game.map.getLayers().get("Objects").update();
+            LayeredPane.revalidate();
+            LayeredPane.repaint();
+        }
     }
+    private Bomb playerPutBomb(int player_id){
+        return Game.players.get(player_id).putBomb();
+    }
+    //endregion
 
+
+    //actions for each button
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btn_menu) {
@@ -107,102 +158,72 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         }
     }
 
+    // player controller
     @Override
     public void keyReleased(KeyEvent e) {
-        int x;
-        int y;
-        int size = Game.map.getSize();
         // Processing when the key is released
         switch (e.getKeyCode()) {
+            //region >> player1 controller
             case KeyEvent.VK_UP:
-                x = Game.players.get(0).getX();
-                y = Game.players.get(0).getY();
-                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y-1)+x).getVisual().equals("Empty.png")){
-                    Game.players.get(0).moveUp();
-                    Game.map.getLayers().get("Objects").update();
-                    LayeredPane.revalidate();
-                    LayeredPane.repaint();
-                }
+                playerMove(0, "up");
                 break;
             case KeyEvent.VK_DOWN:
-                x = Game.players.get(0).getX();
-                y = Game.players.get(0).getY();
-                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y+1)+x).getVisual().equals("Empty.png")) {
-                    Game.players.get(0).moveDown();
-                    Game.map.getLayers().get("Objects").update();
-                    LayeredPane.revalidate();
-                    LayeredPane.repaint();
-                }
+                playerMove(0, "down");
                 break;
             case KeyEvent.VK_RIGHT:
-                x = Game.players.get(0).getX();
-                y = Game.players.get(0).getY();
-                if(Game.map.getLayers().get("Objects").getTiles().get(size*y+x+1).getVisual().equals("Empty.png")) {
-                    Game.players.get(0).moveRight();
-                    Game.map.getLayers().get("Objects").update();
-                    LayeredPane.revalidate();
-                    LayeredPane.repaint();
-                }
+                playerMove(0, "right");
                 break;
             case KeyEvent.VK_LEFT:
-                x = Game.players.get(0).getX();
-                y = Game.players.get(0).getY();
-                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y)+x-1).getVisual().equals("Empty.png")) {
-                    Game.players.get(0).moveLeft();
-                    Game.map.getLayers().get("Objects").update();
-                    LayeredPane.revalidate();
-                    LayeredPane.repaint();
-                }
+                playerMove(0, "left");
                 break;
+            case KeyEvent.VK_SHIFT://put bomb
+                break;
+            //endregion
 
+            //region >> player2 controller
             case KeyEvent.VK_W:
-                x = Game.players.get(1).getX();
-                y = Game.players.get(1).getY();
-                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y-1)+x).getVisual().equals("Empty.png")){
-                    Game.players.get(1).moveUp();
-                    Game.map.getLayers().get("Objects").update();
-                    LayeredPane.revalidate();
-                    LayeredPane.repaint();
-                }
+                playerMove(1, "up");
                 break;
             case KeyEvent.VK_X:
-                x = Game.players.get(1).getX();
-                y = Game.players.get(1).getY();
-                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y+1)+x).getVisual().equals("Empty.png")) {
-                    Game.players.get(1).moveDown();
-                    Game.map.getLayers().get("Objects").update();
-                    LayeredPane.revalidate();
-                    LayeredPane.repaint();
-                }
+                playerMove(1, "down");
                 break;
             case KeyEvent.VK_D:
-                x = Game.players.get(1).getX();
-                y = Game.players.get(1).getY();
-                if(Game.map.getLayers().get("Objects").getTiles().get(size*y+x+1).getVisual().equals("Empty.png")) {
-                    Game.players.get(1).moveRight();
-                    Game.map.getLayers().get("Objects").update();
-                    LayeredPane.revalidate();
-                    LayeredPane.repaint();
-                }
+                playerMove(1, "right");
                 break;
             case KeyEvent.VK_A:
-                x = Game.players.get(1).getX();
-                y = Game.players.get(1).getY();
-                if(Game.map.getLayers().get("Objects").getTiles().get(size*(y)+x-1).getVisual().equals("Empty.png")) {
-                    Game.players.get(1).moveLeft();
-                    Game.map.getLayers().get("Objects").update();
-                    LayeredPane.revalidate();
-                    LayeredPane.repaint();
-                }
+                playerMove(1, "left");
                 break;
+            case KeyEvent.VK_R://put bomb
+                break;
+            //endregion
+
+            //region >> player3 controller
+            case KeyEvent.VK_U:
+                playerMove(2, "up");
+                break;
+            case KeyEvent.VK_M:
+                playerMove(2, "down");
+                break;
+            case KeyEvent.VK_K:
+                playerMove(2, "right");
+                break;
+            case KeyEvent.VK_H:
+                playerMove(2, "left");
+                break;
+            case KeyEvent.VK_O://put bomb
+                break;
+            //endregion
         }
     }
 
+
+    //region >> we don't need to implement it
     @Override
     public void keyTyped(KeyEvent e) {
     }
-
+    //we don't need to implement it
     @Override
     public void keyPressed(KeyEvent e) {
     }
+    //endregion
 }

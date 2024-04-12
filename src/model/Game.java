@@ -1,5 +1,6 @@
 package model;
 
+import model.Tile.Bomb;
 import model.Tile.Player;
 import view.*;
 
@@ -11,15 +12,14 @@ public class Game {
     public static int number_of_rounds;
     public static int current_round;
     public static ArrayList<Player> players;
+    public static ArrayList<Bomb> bombs;
     public static void RefreshMode(){
         players = new ArrayList<>();
+        bombs = new ArrayList<>();
         number_of_players = 2;
         map = new Map("SmallMap");
         number_of_rounds = 1;
         current_round = 1;
     }
     StartScreen_GUI game = new StartScreen_GUI();
-//    public static void main(String[] args) {
-//        StartScreen_GUI game = new StartScreen_GUI();
-//    }
 }
