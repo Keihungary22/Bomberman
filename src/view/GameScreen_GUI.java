@@ -1,10 +1,9 @@
 package view;
 
 import model.*;
+import model.Tile.Bomb;
 import model.Tile.Player;
 import model.Timer;
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,6 +21,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     private final JLayeredPane LayeredPane;
     public static Timer timer = new Timer(60);
 
+    //constructor
     public GameScreen_GUI() {
         LayeredPane = new JLayeredPane();
 
@@ -36,21 +36,21 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         this.requestFocusInWindow();
         //endregion
 
+        //region >> initiate GUI for game screen
+        setTitle("BOMBERMAN");
         ElapsedTime.setText(String.valueOf(timer.getElapsedTime()));
         CurrentRound.setText(String.valueOf(Game.current_round));
-
-        initPlayersPositions();
-        Map.updateMap();
-        GenerateGameBoard();
-
-        setTitle("BOMBERMAN");
+        initPlayersPositions();//Initiate players position and put them on the map
+        Map.updateMap();//Update map class
+        GenerateGameBoard(); //based on the map class, initiate JPanel of the game board
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(this.MainPanel);
         this.setSize(1200, 1200);
         this.setVisible(true);
+        //endregion
     }
 
-
+    //region >> private functions
     private void GenerateGameBoard(){
         int size = Game.map.getSize()*30;
         LayeredPane.setPreferredSize(new Dimension(size, size));
@@ -135,7 +135,13 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             LayeredPane.repaint();
         }
     }
+    private Bomb playerPutBomb(int player_id){
+        return Game.players.get(player_id).putBomb();
+    }
+    //endregion
 
+
+    //actions for each button
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btn_menu) {
@@ -152,10 +158,12 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         }
     }
 
+    // player controller
     @Override
     public void keyReleased(KeyEvent e) {
         // Processing when the key is released
         switch (e.getKeyCode()) {
+            //region >> player1 controller
             case KeyEvent.VK_UP:
                 playerMove(0, "up");
                 break;
@@ -168,7 +176,11 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             case KeyEvent.VK_LEFT:
                 playerMove(0, "left");
                 break;
+            case KeyEvent.VK_SHIFT://put bomb
+                break;
+            //endregion
 
+            //region >> player2 controller
             case KeyEvent.VK_W:
                 playerMove(1, "up");
                 break;
@@ -181,14 +193,37 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             case KeyEvent.VK_A:
                 playerMove(1, "left");
                 break;
+            case KeyEvent.VK_R://put bomb
+                break;
+            //endregion
+
+            //region >> player3 controller
+            case KeyEvent.VK_U:
+                playerMove(2, "up");
+                break;
+            case KeyEvent.VK_M:
+                playerMove(2, "down");
+                break;
+            case KeyEvent.VK_K:
+                playerMove(2, "right");
+                break;
+            case KeyEvent.VK_H:
+                playerMove(2, "left");
+                break;
+            case KeyEvent.VK_O://put bomb
+                break;
+            //endregion
         }
     }
 
+
+    //region >> we don't need to implement it
     @Override
     public void keyTyped(KeyEvent e) {
     }
-
+    //we don't need to implement it
     @Override
     public void keyPressed(KeyEvent e) {
     }
+    //endregion
 }
