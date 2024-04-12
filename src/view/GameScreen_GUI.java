@@ -56,8 +56,9 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.setPreferredSize(new Dimension(size, size));
 
         //region >> add layers into LayeredPane
-        LayeredPane.add(Game.map.getLayers().get("Background").getLayer(), JLayeredPane.DEFAULT_LAYER);
-        LayeredPane.add(Game.map.getLayers().get("Decoration").getLayer(), JLayeredPane.PALETTE_LAYER, 1);
+        LayeredPane.add(Game.map.getLayers().get("Background").getLayer(), JLayeredPane.DEFAULT_LAYER, 1);
+        LayeredPane.add(Game.map.getLayers().get("Decoration").getLayer(), JLayeredPane.DEFAULT_LAYER, 0);
+        LayeredPane.add(Game.map.getLayers().get("Bombs").getLayer(), JLayeredPane.PALETTE_LAYER, 1);
         LayeredPane.add(Game.map.getLayers().get("Objects").getLayer(), JLayeredPane.PALETTE_LAYER, 0);
         //endregion
 
@@ -135,9 +136,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             LayeredPane.repaint();
         }
     }
-    private Bomb playerPutBomb(int player_id){
-        return Game.players.get(player_id).putBomb();
-    }
     //endregion
 
 
@@ -177,6 +175,10 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 playerMove(0, "left");
                 break;
             case KeyEvent.VK_SHIFT://put bomb
+                Game.players.get(0).putBomb();
+                Game.map.getLayers().get("Bombs").update();
+                LayeredPane.revalidate();
+                LayeredPane.repaint();
                 break;
             //endregion
 

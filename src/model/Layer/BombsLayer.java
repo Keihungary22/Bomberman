@@ -1,16 +1,19 @@
+//package model.Layer;
+//
+//public class BombLayer extends Layer{
+//
+//}
 package model.Layer;
 
 import model.Game;
-import model.Tile.Block;
-import model.Tile.Brick;
 import model.Tile.Empty;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ObjectsLayer extends Layer{
-    public ObjectsLayer(int size) {
+public class BombsLayer extends Layer{
+    public BombsLayer(int size) {
         super(size);
         updateTiles(size);
         updateLayer(size);
@@ -20,8 +23,8 @@ public class ObjectsLayer extends Layer{
     protected void updateTiles(int size) {
         Map<Integer, Point> coordinates = new HashMap<>();
 
-        for (int i = 0; i < Game.number_of_players; i++) {
-            Point newPoint = new Point(Game.players.get(i).getX(), Game.players.get(i).getY());
+        for (int i = 0; i < Game.bombs.size(); i++) {
+            Point newPoint = new Point(Game.bombs.get(i).getX(), Game.bombs.get(i).getY());
             coordinates.put(i, newPoint);
         }
 
@@ -30,15 +33,9 @@ public class ObjectsLayer extends Layer{
                 if (coordinates.containsValue(new Point(j, i))) {
                     for(int l = 0; l < coordinates.size(); l++) {
                         if(coordinates.get(l).equals(new Point(j, i))){
-                            this.tiles.add(Game.players.get(l));
+                            this.tiles.add(Game.bombs.get(l));
                         }
                     }
-                }
-                else  if (i == 0 || j == 0 || i == size-1 || j == size-1) {
-                    this.tiles.add(new Brick(j, i));
-                }
-                else if(j % 2 == 0 && i % 2 == 0){
-                    this.tiles.add(new Block(j, i));
                 }
                 else {
                     this.tiles.add(new Empty(j, i));

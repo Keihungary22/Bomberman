@@ -1,5 +1,7 @@
 package model.Tile;
 
+import model.Game;
+
 import javax.swing.plaf.TreeUI;
 
 public class Player extends Tile {
@@ -14,6 +16,7 @@ public class Player extends Tile {
         this.visual = visual;
     }
 
+    //region >> movement
     public void moveUp(){
         this.y -= 1;
     }
@@ -26,9 +29,22 @@ public class Player extends Tile {
     public void moveLeft(){
         this.x -= 1;
     }
-    public Bomb putBomb(){
+    //endregion
+
+    //region >> bomb action
+    private boolean isABombAtMyFeet(){
+        return !Game.map.getLayers().get("Bombs").getTiles().get(Game.map.getSize()*this.y + x).getVisual().equals("Empty.png");
+    }
+    private Bomb generateBomb(){
         return new Bomb(this.x,this.y);
     }
+    public void putBomb(){
+        //if there is not a bomb in the same cell, player can put new bomb
+        if(!isABombAtMyFeet()){
+            Game.bombs.add(generateBomb());
+        }
+    }
+    //endregion
 
     public int getScore(){
         return score;

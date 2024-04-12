@@ -1,9 +1,6 @@
 package model;
 
-import model.Layer.Layer;
-import model.Layer.BackgroundLayer;
-import model.Layer.ObjectsLayer;
-import model.Layer.DecorationLayer;
+import model.Layer.*;
 import model.Tile.Tile;
 
 import java.util.ArrayList;
@@ -23,13 +20,15 @@ public class Map {
 
         //region >> generate new layers
         Layer BackgroundLayer  = new BackgroundLayer(size); //background layer
-        Layer DecorationLayer  = new DecorationLayer(size); //decoration layer
+        Layer DecorationLayer  = new DecorationLayer(size); //decoration
+        Layer BombsLayer = new BombsLayer(size);
         Layer ObjectsLayer = new ObjectsLayer(size); //objects layer
         //endregion
 
         //region >> Add each layer in layers hashmap
         layers.put("Background", BackgroundLayer);
         layers.put("Decoration", DecorationLayer);
+        layers.put("Bombs", BombsLayer);
         layers.put("Objects", ObjectsLayer);
         //endregion
     }
