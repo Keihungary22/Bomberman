@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener {
+public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener {
     private JPanel MainPanel;
     private JTextArea ElapsedTime;
     private JTextArea CurrentRound;
@@ -56,8 +56,9 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.setPreferredSize(new Dimension(size, size));
 
         //region >> add layers into LayeredPane
-        LayeredPane.add(Game.map.getLayers().get("Background").getLayer(), JLayeredPane.DEFAULT_LAYER);
-        LayeredPane.add(Game.map.getLayers().get("Decoration").getLayer(), JLayeredPane.PALETTE_LAYER, 1);
+        LayeredPane.add(Game.map.getLayers().get("Background").getLayer(), JLayeredPane.DEFAULT_LAYER, 1);
+        LayeredPane.add(Game.map.getLayers().get("Decoration").getLayer(), JLayeredPane.DEFAULT_LAYER, 0);
+        LayeredPane.add(Game.map.getLayers().get("Bombs").getLayer(), JLayeredPane.PALETTE_LAYER, 1);
         LayeredPane.add(Game.map.getLayers().get("Objects").getLayer(), JLayeredPane.PALETTE_LAYER, 0);
         //endregion
 
@@ -135,8 +136,13 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             LayeredPane.repaint();
         }
     }
+
     private Bomb playerPutBomb(int player_id){
-        return Game.players.get(player_id).putBomb();
+        Bomb newBomb = Game.players.get(player_id).putBomb();
+        Game.map.getLayers().get("Bombs").update();
+        LayeredPane.revalidate();
+        LayeredPane.repaint();
+        return newBomb;
     }
     //endregion
 
@@ -176,7 +182,10 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             case KeyEvent.VK_LEFT:
                 playerMove(0, "left");
                 break;
-            case KeyEvent.VK_SHIFT://put bomb
+            case KeyEvent.VK_SHIFT:
+                if(Game.players.get(0).isBombPlaceable()){
+                    playerPutBomb(0).setBombExplodeListener(this);   //put bomb
+                }
                 break;
             //endregion
 
@@ -184,7 +193,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             case KeyEvent.VK_W:
                 playerMove(1, "up");
                 break;
-            case KeyEvent.VK_X:
+            case KeyEvent.VK_S:
                 playerMove(1, "down");
                 break;
             case KeyEvent.VK_D:
@@ -194,6 +203,9 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 playerMove(1, "left");
                 break;
             case KeyEvent.VK_R://put bomb
+                if(Game.players.get(1).isBombPlaceable()) {
+                    playerPutBomb(1).setBombExplodeListener(this);
+                }
                 break;
             //endregion
 
@@ -211,10 +223,28 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 playerMove(2, "left");
                 break;
             case KeyEvent.VK_O://put bomb
+                if(Game.players.get(2).isBombPlaceable()) {
+                    playerPutBomb(2).setBombExplodeListener(this);
+                }
                 break;
             //endregion
         }
     }
+
+    // Implementation of explosion event listeners
+    @Override
+    public void bombExploded() {
+        Game.map.getLayers().get("Bombs").update();
+        LayeredPane.revalidate();
+        LayeredPane.repaint();
+    }
+
+
+
+
+
+
+
 
 
     //region >> we don't need to implement it

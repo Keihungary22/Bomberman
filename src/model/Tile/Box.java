@@ -31,11 +31,11 @@ public class Box extends Tile {
             // Logic to spawn a power-up
         }
         // Implement logic to remove the box from the game
-        Game.map.removeTile(this);
+//        Game.map.removeTile(this);
     }
     
     private void removeFromGame() {
         // Logic to remove this box from the game
-        Game.map.removeTile(this);
+//        Game.map.removeTile(this);
     }
 }
