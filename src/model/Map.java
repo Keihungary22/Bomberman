@@ -10,7 +10,6 @@ import java.util.List;;
 public class Map {
     private String type;
     private static int size;
-    private static List<Tile> tiles;
     private static java.util.Map<String, Layer> layers;
 
     public static void updateMap(){
@@ -35,7 +34,6 @@ public class Map {
 
     public Map(String mapType) {
         type = mapType;
-        tiles = new ArrayList<>();
         switch (mapType) {
             case "SmallMap":
                 size = 13;
@@ -55,10 +53,6 @@ public class Map {
         return type;
     }
 
-    public List<Tile> getTiles() {
-        return tiles;
-    }
-
     public int getSize() {
         return size;
     }
@@ -67,10 +61,4 @@ public class Map {
         return layers;
     }
 
-    // Method to remove a tile from the map
-    public void removeTile(Tile tile) {
-        // Logic to remove a specific tile from the map
-        tiles.remove(tile);
-        // If the tile is in the freeFields list, remove it as well
-    }
 }

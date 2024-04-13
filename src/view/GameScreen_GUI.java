@@ -193,7 +193,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             case KeyEvent.VK_W:
                 playerMove(1, "up");
                 break;
-            case KeyEvent.VK_X:
+            case KeyEvent.VK_S:
                 playerMove(1, "down");
                 break;
             case KeyEvent.VK_D:
@@ -203,7 +203,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 playerMove(1, "left");
                 break;
             case KeyEvent.VK_R://put bomb
-                if(Game.players.get(0).isBombPlaceable()) {
+                if(Game.players.get(1).isBombPlaceable()) {
                     playerPutBomb(1).setBombExplodeListener(this);
                 }
                 break;
@@ -223,7 +223,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 playerMove(2, "left");
                 break;
             case KeyEvent.VK_O://put bomb
-                if(Game.players.get(0).isBombPlaceable()) {
+                if(Game.players.get(2).isBombPlaceable()) {
                     playerPutBomb(2).setBombExplodeListener(this);
                 }
                 break;
@@ -238,6 +238,13 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.revalidate();
         LayeredPane.repaint();
     }
+
+
+
+
+
+
+
 
 
     //region >> we don't need to implement it
