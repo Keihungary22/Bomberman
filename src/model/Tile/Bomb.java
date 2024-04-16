@@ -5,6 +5,9 @@ import model.Game;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import java.util.EventListener;
 import model.BombExplodeListener;
@@ -16,6 +19,7 @@ public class Bomb extends Tile {
     private final Timer exp_timer = new Timer();
     private final Player owner;
     private ArrayList<Explosion> explosions = new ArrayList<>();
+    private ArrayList<Bomb> bomb_chain_queue = new ArrayList<>();
     private int power;
     private BombExplodeListener bombExplodeListener;
 
@@ -47,6 +51,12 @@ public class Bomb extends Tile {
         explosionsTimer();//Count down will start. And explosions area will be disappeared when timer is over.
     }
 
+    public void explodeByChain(){
+        explode();
+        this.timer.cancel();
+    }
+
+    //explosions will be disappeared in specific time.(in 2 sec as a default)
     public void explosionsTimer(){
         exp_timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -64,7 +74,8 @@ public class Bomb extends Tile {
         Explosion center = new Explosion(this.x, this.y, "exp_center.png");
         Game.explosions.add(center);
         this.explosions.add(center);
-        //region generate row-explosions
+
+        //region >> generate row-explosions
         for(int i = -this.power; i <= this.power; i++){
             String visual = "";
             if(i == 0){
@@ -82,10 +93,20 @@ public class Bomb extends Tile {
             Explosion newExp = new Explosion(this.x + i, this.y, visual);
             Game.explosions.add(newExp);
             this.explosions.add(newExp);
+
+            //region >> If there exist a bomb at this coordinate, add that bomb into bomb_chain_queue list.
+            for (int index = 0; index < Game.bombs.size(); index++){
+                if(Game.bombs.get(index).getX() == this.x + i && Game.bombs.get(index).getY() == this.y){
+                    if(!bomb_chain_queue.contains(Game.bombs.get(index))){
+                        bomb_chain_queue.add(Game.bombs.get(index));
+                    }
+                }
+            }
+            //endregion
         }
         //endregion
 
-        //region generate col-explosions
+        //region >> generate col-explosions
         for(int i = -this.power; i <= this.power; i++){
             String visual = "";
             if(i == 0){
@@ -103,20 +124,30 @@ public class Bomb extends Tile {
             Explosion newExp = new Explosion(this.x, this.y + i, visual);
             Game.explosions.add(newExp);
             this.explosions.add(newExp);
+
+            //region >> If there exist a bomb at this coordinate, add that bomb into bomb_chain_queue list.
+            for (int index = 0; index < Game.bombs.size(); index++){
+                if(Game.bombs.get(index).getX() == this.x && Game.bombs.get(index).getY() == this.y + i){
+                    if(!bomb_chain_queue.contains(Game.bombs.get(index))){
+                        bomb_chain_queue.add(Game.bombs.get(index));
+                    }
+                }
+            }
+            //endregion
+        }
+        //endregion
+
+        //explosion chain
+        //region >> explode bombs those are in the queue.
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        for(Bomb bomb_in_queue : this.bomb_chain_queue){
+            scheduler.schedule(bomb_in_queue::explodeByChain, 100, TimeUnit.MILLISECONDS);
         }
         //endregion
     }
 
 
     private void finishExplosionsEvent(){
-//        ArrayList<Explosion> removes_bomb = new ArrayList<>();
-//        for(Explosion game_exp : Game.explosions){
-//            for(Explosion this_exp : this.explosions){
-//                if(game_exp.equals(this_exp) && game_exp.getVisual().equals(this_exp.getVisual())){
-//                    removes_bomb.add(this_exp);
-//                }
-//            }
-//        }
         for(Explosion explosion : this.explosions){
             Game.explosions.remove(explosion);
         }
@@ -146,4 +177,17 @@ public class Bomb extends Tile {
         return owner;
     }
     //endregion
+
+
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj){
+            return true;
+        }
+        if(!(obj instanceof Bomb)){
+            return false;
+        }
+        Bomb other = (Bomb) obj;
+        return this.x == other.x && this.y == other.y;
+    }
 }
