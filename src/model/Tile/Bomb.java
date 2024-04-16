@@ -109,15 +109,17 @@ public class Bomb extends Tile {
 
 
     private void finishExplosionsEvent(){
-        ArrayList<Explosion> removes = new ArrayList<>();
-        for(Explosion game_exp : Game.explosions){
-            for(Explosion this_exp : this.explosions){
-                if(game_exp.equals(this_exp) && game_exp.getVisual().equals(this_exp.getVisual())){
-                    removes.add(this_exp);
-                }
-            }
+//        ArrayList<Explosion> removes_bomb = new ArrayList<>();
+//        for(Explosion game_exp : Game.explosions){
+//            for(Explosion this_exp : this.explosions){
+//                if(game_exp.equals(this_exp) && game_exp.getVisual().equals(this_exp.getVisual())){
+//                    removes_bomb.add(this_exp);
+//                }
+//            }
+//        }
+        for(Explosion explosion : this.explosions){
+            Game.explosions.remove(explosion);
         }
-        Game.explosions.removeAll(removes); //remove explosions from ArrayList
         if(bombExplodeListener != null){
             bombExplodeListener.bombFinishExplosion();
         }
