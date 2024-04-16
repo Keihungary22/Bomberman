@@ -21,7 +21,7 @@ public abstract class Layer {
     }
 
     //update this layer(e.g, when player move it will be updated)
-    public void update(){
+    public void  update(){
         this.tiles.clear();
         this.layer.removeAll();
         updateTiles(Game.map.getSize());
