@@ -8,8 +8,8 @@ public class Player extends Tile {
     private int score = 0;
     private boolean is_alive = true;
     private int current_number_of_bomb = 0;
-    private int max_number_of_bombs = 1;
-    private int power_of_bombs = 1;
+    private int max_number_of_bombs = 2;
+    private int power_of_bombs = 2;
 
     public Player(String visual) {
         super(0, 0);

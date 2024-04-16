@@ -2,14 +2,11 @@ package model.Tile;
 
 import model.Game;
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import java.util.EventListener;
 import model.BombExplodeListener;
 
 public class Bomb extends Tile {
@@ -71,32 +68,37 @@ public class Bomb extends Tile {
         Game.explosions.add(center);
         this.explosions.add(center);
 
-        //region >> generate row-explosions
-        for(int i = -this.power; i <= this.power; i++){
-            String visual = "";
-            if(i == 0){
-                continue; //center explosion was generated already
+        List<Tile> objects_tiles = Game.map.getLayers().get("Objects").getTiles();
+        String visual = "";
+        boolean obstacleCollision = false;
+        //region >> generate left-explosions
+        for(int i = -1; i >= -this.power && !obstacleCollision; i--){
+            for (Tile objectsTile : objects_tiles) {
+                if (objectsTile.getX() == this.x + i && objectsTile.getY() == this.y) {
+                    if (objectsTile.getVisual().equals("Block.png") || objectsTile.getVisual().equals("Brick.png") || objectsTile.getVisual().equals("Box.png")) {
+                        obstacleCollision = true;
+                    }
+                }
             }
-            else if(i == -this.power){
-                visual = "exp_end_left.png";
-            }
-            else if(i == this.power){
-                visual = "exp_end_right.png";
-            }
-            else{
-                visual = "exp_row.png";
-            }
-            Explosion newExp = new Explosion(this.x + i, this.y, visual);
-            Game.explosions.add(newExp);
-            this.explosions.add(newExp);
+            if(!obstacleCollision){
+                if(i == -this.power){
+                    visual = "exp_end_left.png";
+                }
+                else{
+                    visual = "exp_row.png";
+                }
+                Explosion newExp = new Explosion(this.x + i, this.y, visual);
+                Game.explosions.add(newExp);
+                this.explosions.add(newExp);
 
-            //region >> If there exist a bomb at this coordinate, add that bomb into bomb_chain_queue list.
-            for (int index = 0; index < Game.bombs.size(); index++){
-                if(Game.bombs.get(index).getX() == this.x + i && Game.bombs.get(index).getY() == this.y){
-                    if(!bomb_chain_queue.contains(Game.bombs.get(index)) && !Game.bombs.get(index).isExploded()){
-                        bomb_chain_queue.add(Game.bombs.get(index));
-                        Game.bombs.get(index).setExploded(true);
-                        Game.bombs.get(index).timer.cancel();//Cancel the timer of added bomb
+                //region >> If there exist a bomb at this coordinate, add that bomb into bomb_chain_queue list.
+                for (int index = 0; index < Game.bombs.size(); index++){
+                    if(Game.bombs.get(index).getX() == this.x + i && Game.bombs.get(index).getY() == this.y){
+                        if(!bomb_chain_queue.contains(Game.bombs.get(index)) && !Game.bombs.get(index).isExploded()){
+                            bomb_chain_queue.add(Game.bombs.get(index));
+                            Game.bombs.get(index).setExploded(true);
+                            Game.bombs.get(index).timer.cancel();//Cancel the timer of added bomb
+                        }
                     }
                 }
             }
@@ -104,32 +106,111 @@ public class Bomb extends Tile {
         }
         //endregion
 
-        //region >> generate col-explosions
-        for(int i = -this.power; i <= this.power; i++){
-            String visual = "";
-            if(i == 0){
-                continue; //center explosion was generated already
+        obstacleCollision = false;
+        visual = "";
+        //region >> generate right-explosions
+        for(int i = 1; i <= this.power && !obstacleCollision; i++){
+            for (Tile objectsTile : objects_tiles) {
+                if (objectsTile.getX() == this.x + i && objectsTile.getY() == this.y) {
+                    if (objectsTile.getVisual().equals("Block.png") || objectsTile.getVisual().equals("Brick.png") || objectsTile.getVisual().equals("Box.png")) {
+                        obstacleCollision = true;
+                    }
+                }
             }
-            else if(i == -this.power){
-                visual = "exp_end_top.png";
-            }
-            else if(i == this.power){
-                visual = "exp_end_bottom.png";
-            }
-            else{
-                visual = "exp_col.png";
-            }
-            Explosion newExp = new Explosion(this.x, this.y + i, visual);
-            Game.explosions.add(newExp);
-            this.explosions.add(newExp);
+            if(!obstacleCollision){
+                if(i == this.power){
+                    visual = "exp_end_right.png";
+                }
+                else{
+                    visual = "exp_row.png";
+                }
+                Explosion newExp = new Explosion(this.x + i, this.y, visual);
+                Game.explosions.add(newExp);
+                this.explosions.add(newExp);
 
-            //region >> If there exist a bomb at this coordinate, add that bomb into bomb_chain_queue list.
-            for (int index = 0; index < Game.bombs.size(); index++){
-                if(Game.bombs.get(index).getX() == this.x && Game.bombs.get(index).getY() == this.y + i){
-                    if(!bomb_chain_queue.contains(Game.bombs.get(index)) && !Game.bombs.get(index).isExploded()){
-                        bomb_chain_queue.add(Game.bombs.get(index));
-                        Game.bombs.get(index).setExploded(true);
-                        Game.bombs.get(index).timer.cancel();//Cancel the timer of added bomb
+                //region >> If there exist a bomb at this coordinate, add that bomb into bomb_chain_queue list.
+                for (int index = 0; index < Game.bombs.size(); index++){
+                    if(Game.bombs.get(index).getX() == this.x + i && Game.bombs.get(index).getY() == this.y){
+                        if(!bomb_chain_queue.contains(Game.bombs.get(index)) && !Game.bombs.get(index).isExploded()){
+                            bomb_chain_queue.add(Game.bombs.get(index));
+                            Game.bombs.get(index).setExploded(true);
+                            Game.bombs.get(index).timer.cancel();//Cancel the timer of added bomb
+                        }
+                    }
+                }
+                //endregion
+            }
+        }
+        //endregion
+
+        obstacleCollision = false;
+        visual = "";
+        //region >> generate top-explosions
+        for(int i = -1; i >= -this.power && !obstacleCollision; i--){
+            for (Tile objectsTile : objects_tiles) {
+                if (objectsTile.getX() == this.x && objectsTile.getY() == this.y + i) {
+                    if (objectsTile.getVisual().equals("Block.png") || objectsTile.getVisual().equals("Brick.png") || objectsTile.getVisual().equals("Box.png")) {
+                        obstacleCollision = true;
+                    }
+                }
+            }
+            if(!obstacleCollision){
+                if(i == -this.power){
+                    visual = "exp_end_top.png";
+                }
+                else{
+                    visual = "exp_col.png";
+                }
+                Explosion newExp = new Explosion(this.x, this.y + i, visual);
+                Game.explosions.add(newExp);
+                this.explosions.add(newExp);
+
+                //region >> If there exist a bomb at this coordinate, add that bomb into bomb_chain_queue list.
+                for (int index = 0; index < Game.bombs.size(); index++){
+                    if(Game.bombs.get(index).getX() == this.x && Game.bombs.get(index).getY() == this.y + i){
+                        if(!bomb_chain_queue.contains(Game.bombs.get(index)) && !Game.bombs.get(index).isExploded()){
+                            bomb_chain_queue.add(Game.bombs.get(index));
+                            Game.bombs.get(index).setExploded(true);
+                            Game.bombs.get(index).timer.cancel();//Cancel the timer of added bomb
+                        }
+                    }
+                }
+            }
+
+            //endregion
+        }
+        //endregion
+
+        obstacleCollision = false;
+        visual = "";
+        //region >> generate bottom-explosions
+        for(int i = 1; i <= this.power && !obstacleCollision; i++){
+            for (Tile objectsTile : objects_tiles) {
+                if (objectsTile.getX() == this.x && objectsTile.getY() == this.y + i) {
+                    if (objectsTile.getVisual().equals("Block.png") || objectsTile.getVisual().equals("Brick.png") || objectsTile.getVisual().equals("Box.png")) {
+                        obstacleCollision = true;
+                    }
+                }
+            }
+            if(!obstacleCollision){
+                if(i == this.power){
+                    visual = "exp_end_bottom.png";
+                }
+                else{
+                    visual = "exp_col.png";
+                }
+                Explosion newExp = new Explosion(this.x, this.y + i, visual);
+                Game.explosions.add(newExp);
+                this.explosions.add(newExp);
+
+                //region >> If there exist a bomb at this coordinate, add that bomb into bomb_chain_queue list.
+                for (int index = 0; index < Game.bombs.size(); index++){
+                    if(Game.bombs.get(index).getX() == this.x && Game.bombs.get(index).getY() == this.y + i){
+                        if(!bomb_chain_queue.contains(Game.bombs.get(index)) && !Game.bombs.get(index).isExploded()){
+                            bomb_chain_queue.add(Game.bombs.get(index));
+                            Game.bombs.get(index).setExploded(true);
+                            Game.bombs.get(index).timer.cancel();//Cancel the timer of added bomb
+                        }
                     }
                 }
             }
