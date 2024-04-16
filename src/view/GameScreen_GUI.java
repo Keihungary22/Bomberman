@@ -239,7 +239,13 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.repaint();
     }
 
-
+    //Implementation of finish-explosion event listeners
+    @Override
+    public void bombFinishExplosion(){
+        Game.map.getLayers().get("Bombs").update();
+        LayeredPane.revalidate();
+        LayeredPane.repaint();
+    }
 
 
 
