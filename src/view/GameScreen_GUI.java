@@ -20,6 +20,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
 
     //constructor
     public GameScreen_GUI() {
+        Game.musicPlayer.battleMusicStart();
         Game.refreshForRound();
 
         LayeredPane = new JLayeredPane();

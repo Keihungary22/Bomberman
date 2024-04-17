@@ -34,6 +34,7 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
     }
 
     public StartScreen_GUI(){
+        Game.musicPlayer.titleMusicStart();
 
         //region >> change font size and type of Title (BOMBERMAN!)
         ImageIcon title_icon = new ImageIcon("assets/title.png");
@@ -92,13 +93,6 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
         setTitle("BOMBERMAN");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //The method to set the behavior when the JFrame window is closed by user
 
-//        //region >>  Set Look and feel
-//        try {
-//            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        //endregion
 
         this.setContentPane(this.MainPanel);
         this.setSize(1000, 700);
