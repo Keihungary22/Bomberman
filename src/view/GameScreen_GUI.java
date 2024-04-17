@@ -1,8 +1,8 @@
 package view;
 
 import model.*;
-import model.Tile.Bomb;
-import model.Tile.Player;
+import model.Tile.*;
+import model.Tile.Box;
 import model.Timer;
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener {
+public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener {
     private JPanel MainPanel;
     private JTextArea ElapsedTime;
     private JTextArea CurrentRound;
@@ -23,6 +23,8 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
 
     //constructor
     public GameScreen_GUI() {
+        Game.refreshForRound();
+
         LayeredPane = new JLayeredPane();
 
         //region >> Register button action listeners
@@ -34,6 +36,12 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         this.addKeyListener(this);
         this.setFocusable(true);
         this.requestFocusInWindow();
+        //endregion
+
+        //region >> add event listener for PlayerDieListener
+        for(Player player : Game.players){
+            player.setPlayerDieListener(this);
+        }
         //endregion
 
         //region >> initiate GUI for game screen
@@ -93,44 +101,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     }
 
     private void playerMove(int player_id, String direction){
-        int x = Game.players.get(player_id).getX();
-        int y = Game.players.get(player_id).getY();
-        int size = Game.map.getSize();
-
-        int dx = 0;
-        int dy = 0;
-
-        switch (direction){
-            case "up":
-                dy = -1;
-                break;
-            case "down":
-                dy = 1;
-                break;
-            case "left":
-                dx = -1;
-                break;
-            case "right":
-                dx = 1;
-                break;
-        }
-
-        if(Game.map.getLayers().get("Objects").getTiles().get(size*(y+dy)+x+dx).getVisual().equals("Empty.png")){
-            switch (direction){
-                case "up":
-                    Game.players.get(player_id).moveUp();
-                    break;
-                case "down":
-                    Game.players.get(player_id).moveDown();
-                    break;
-                case "left":
-                    Game.players.get(player_id).moveLeft();
-                    break;
-                case "right":
-                    Game.players.get(player_id).moveRight();
-                    break;
-            }
-
+        if(Game.players.get(player_id).move(direction)){
             Game.map.getLayers().get("Objects").update();
             LayeredPane.revalidate();
             LayeredPane.repaint();
@@ -168,63 +139,100 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     @Override
     public void keyReleased(KeyEvent e) {
         // Processing when the key is released
+        Bomb newBomb;
         switch (e.getKeyCode()) {
             //region >> player1 controller
             case KeyEvent.VK_UP:
-                playerMove(0, "up");
+                if(Game.players.get(0).isAlive()){
+                    playerMove(0, "up");
+                }
                 break;
             case KeyEvent.VK_DOWN:
-                playerMove(0, "down");
+                if(Game.players.get(0).isAlive()){
+                    playerMove(0, "down");
+                }
                 break;
             case KeyEvent.VK_RIGHT:
-                playerMove(0, "right");
+                if(Game.players.get(0).isAlive()){
+                    playerMove(0, "right");
+                }
                 break;
             case KeyEvent.VK_LEFT:
-                playerMove(0, "left");
+                if(Game.players.get(0).isAlive()){
+                    playerMove(0, "left");
+                }
                 break;
             case KeyEvent.VK_SHIFT:
-                if(Game.players.get(0).isBombPlaceable()){
-                    playerPutBomb(0).setBombExplodeListener(this);   //put bomb
+                if(Game.players.get(0).isAlive() && Game.players.get(0).isBombPlaceable()) {
+                    newBomb = playerPutBomb(0);
+                    newBomb.setBombExplodeListener(this);
+                    for(Player player: Game.players){
+                        newBomb.setBombExplodeListener(player);
+                    }
                 }
                 break;
             //endregion
 
             //region >> player2 controller
             case KeyEvent.VK_W:
-                playerMove(1, "up");
+                if(Game.players.get(1).isAlive()){
+                    playerMove(1, "up");
+                }
                 break;
             case KeyEvent.VK_S:
-                playerMove(1, "down");
+                if(Game.players.get(1).isAlive()){
+                    playerMove(1, "down");
+                }
                 break;
             case KeyEvent.VK_D:
-                playerMove(1, "right");
+                if(Game.players.get(1).isAlive()){
+                    playerMove(1, "right");
+                }
                 break;
             case KeyEvent.VK_A:
-                playerMove(1, "left");
+                if(Game.players.get(1).isAlive()){
+                    playerMove(1, "left");
+                }
                 break;
-            case KeyEvent.VK_R://put bomb
-                if(Game.players.get(1).isBombPlaceable()) {
-                    playerPutBomb(1).setBombExplodeListener(this);
+            case KeyEvent.VK_R:
+                if(Game.players.get(1).isAlive() && Game.players.get(1).isBombPlaceable()) {
+                    newBomb = playerPutBomb(1);
+                    newBomb.setBombExplodeListener(this);
+                    for(Player player: Game.players){
+                        newBomb.setBombExplodeListener(player);
+                    }
                 }
                 break;
             //endregion
 
             //region >> player3 controller
             case KeyEvent.VK_U:
-                playerMove(2, "up");
+                if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
+                    playerMove(2, "up");
+                }
                 break;
-            case KeyEvent.VK_M:
-                playerMove(2, "down");
+            case KeyEvent.VK_J:
+                if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
+                    playerMove(2, "down");
+                }
                 break;
             case KeyEvent.VK_K:
-                playerMove(2, "right");
+                if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
+                    playerMove(2, "right");
+                }
                 break;
             case KeyEvent.VK_H:
-                playerMove(2, "left");
+                if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
+                    playerMove(2, "left");
+                }
                 break;
-            case KeyEvent.VK_O://put bomb
-                if(Game.players.get(2).isBombPlaceable()) {
-                    playerPutBomb(2).setBombExplodeListener(this);
+            case KeyEvent.VK_O:
+                if(Game.number_of_players == 3 && Game.players.get(2).isAlive() && Game.players.get(2).isBombPlaceable()) {
+                    newBomb = playerPutBomb(2);
+                    newBomb.setBombExplodeListener(this);
+                    for(Player player: Game.players){
+                        newBomb.setBombExplodeListener(player);
+                    }
                 }
                 break;
             //endregion
@@ -248,10 +256,23 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     }
 
 
-
-
-
-
+    @Override
+    public void playerDie() {
+        Game.map.getLayers().get("Objects").update();
+        LayeredPane.revalidate();
+        LayeredPane.repaint();
+        System.out.println(Game.getNumberOfAlivePlayers());
+        if(Game.getNumberOfAlivePlayers() <= 1){
+            this.dispose();
+            Game.current_round++;
+            if(Game.current_round <= Game.number_of_rounds){
+                new GameScreen_GUI();
+            }
+            else{
+                new ResultScreen_GUI();
+            }
+        }
+    }
 
     //region >> we don't need to implement it
     @Override

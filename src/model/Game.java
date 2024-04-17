@@ -24,5 +24,32 @@ public class Game {
         number_of_rounds = 1;
         current_round = 1;
     }
-    StartScreen_GUI game = new StartScreen_GUI();
+
+    public static void refreshForRound(){
+        for(Player p : players){
+            p.setAlive(true);
+        }
+        for(Bomb bomb : bombs){
+            bomb.getTimer().cancel();
+        }
+        for(Explosion exp : explosions){
+            exp.getOwner_bomb().getExp_timer().cancel();
+        }
+        bombs.clear();
+        explosions.clear();
+    }
+
+    public static int getNumberOfAlivePlayers(){
+        int alivePlayers = 0;
+        for(Player player : Game.players){
+            if(player.isAlive()){
+                alivePlayers++;
+            }
+        }
+        return alivePlayers;
+    }
+
+    public Game(){
+        StartScreen_GUI game = new StartScreen_GUI();
+    }
 }

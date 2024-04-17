@@ -132,7 +132,7 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
         if(e.getSource() == btn_start){
             this.dispose();
             int index = 0;
-            while(Game.players.size() < 3){
+            while(index < Game.number_of_players){
                 switch (index){
                     case 0:
                         Player player1 = new Player("Player1.png");
