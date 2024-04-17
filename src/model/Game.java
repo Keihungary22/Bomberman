@@ -16,6 +16,9 @@ public class Game {
     public static ArrayList<Box> boxes;
     public static ArrayList<Treasure> treasures;
     public static boolean is_paused = false;
+    public static SFXPlayer sfxPlayer;
+    public static MusicPlayer musicPlayer;
+    public static boolean sound_on = true;
     public static void RefreshMode(){
         players = new ArrayList<>();
         bombs = new ArrayList<>();
@@ -65,6 +68,8 @@ public class Game {
     }
 
     public Game(){
+        musicPlayer = new MusicPlayer();
+        sfxPlayer = new SFXPlayer();
         StartScreen_GUI game = new StartScreen_GUI();
     }
 }

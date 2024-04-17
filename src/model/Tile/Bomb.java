@@ -44,6 +44,7 @@ public class Bomb extends Tile {
     }
 
     public void explode(){
+        Game.sfxPlayer.play("assets/sound/bombExplode.wav");
         this.owner.setCurrent_number_of_bomb(this.owner.getCurrent_number_of_bomb()-1);//decrease owner-player's number of bomb
         Game.bombs.remove(this);//Remove self from bombs list of Game object
         generateExplosions();

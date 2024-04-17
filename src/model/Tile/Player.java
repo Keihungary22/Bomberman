@@ -113,6 +113,7 @@ public class Player extends Tile implements BombExplodeListener {
                 max_number_of_bombs++;
                 break;
         }
+        Game.sfxPlayer.play("assets/sound/itemGet.wav");
         Game.treasures.remove(treasure);
     }
 
@@ -126,6 +127,7 @@ public class Player extends Tile implements BombExplodeListener {
             Bomb newBomb = generateBomb();
             Game.bombs.add(newBomb);
             current_number_of_bomb++;
+            Game.sfxPlayer.play("assets/sound/placeBomb.wav");
             return newBomb;
         }
         return null;
