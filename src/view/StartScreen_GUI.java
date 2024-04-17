@@ -21,10 +21,10 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
     private JButton btn_p3;
     private JButton btn_start;
     private JButton btn_exit;
-    private JLabel TitleLabel;
     private JTextArea number_of_round;
     private JTextArea number_of_player;
     private JTextArea type_of_map;
+    private JPanel Title;
     //endregion
 
     private void update_config_view(){
@@ -36,8 +36,9 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
     public StartScreen_GUI(){
 
         //region >> change font size and type of Title (BOMBERMAN!)
-        Font font = new Font("Arial", Font.BOLD, 24);
-        TitleLabel.setFont(font);
+        ImageIcon title_icon = new ImageIcon("assets/title.png");
+        JLabel title_label = new JLabel(title_icon);
+        Title.add(title_label);
         //endregion
 
         //region >> Form button groups to control input.
