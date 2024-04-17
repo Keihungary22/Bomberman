@@ -1,9 +1,6 @@
 package model;
 
-import model.Tile.Bomb;
-import model.Tile.Box;
-import model.Tile.Explosion;
-import model.Tile.Player;
+import model.Tile.*;
 import view.*;
 
 import java.util.ArrayList;
@@ -17,11 +14,13 @@ public class Game {
     public static ArrayList<Bomb> bombs;
     public static ArrayList<Explosion> explosions;
     public static ArrayList<Box> boxes;
+    public static ArrayList<Treasure> treasures;
     public static void RefreshMode(){
         players = new ArrayList<>();
         bombs = new ArrayList<>();
         explosions = new ArrayList<>();
         boxes = new ArrayList<>();
+        treasures = new ArrayList<>();
         number_of_players = 2;
         map = new Map("SmallMap");
         number_of_rounds = 1;
@@ -31,6 +30,9 @@ public class Game {
     public static void refreshForRound(){
         for(Player p : players){
             p.setAlive(true);
+            p.setPower_of_bombs(1);
+            p.setMax_number_of_bombs(1);
+            p.setCurrent_number_of_bomb(0);
         }
         for(Bomb bomb : bombs){
             bomb.getTimer().cancel();
@@ -41,10 +43,14 @@ public class Game {
         bombs.clear();
         explosions.clear();
         boxes.clear();
-        boxes.add(new Box(5, 5));
-        boxes.add(new Box(5, 7));
-        boxes.add(new Box(7, 5));
-        boxes.add(new Box(7, 7));
+        treasures.clear();
+        //region >> set boxes on new map
+        for(int i = 3; i < Game.map.getSize() - 2; i+=2){
+            for(int j = 3; j < Game.map.getSize() - 2; j+=2){
+                boxes.add(new Box(i, j));
+            }
+        }
+        //endregion
     }
 
     public static int getNumberOfAlivePlayers(){

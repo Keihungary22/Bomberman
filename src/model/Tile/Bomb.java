@@ -81,7 +81,6 @@ public class Bomb extends Tile {
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
-                            Game.boxes.remove((Box) objectsTile);
                             destroyedBox = true;
                         }
                     }
@@ -123,7 +122,6 @@ public class Bomb extends Tile {
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
-                            Game.boxes.remove((Box) objectsTile);
                             destroyedBox = true;
                         }
                     }
@@ -165,7 +163,6 @@ public class Bomb extends Tile {
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
-                            Game.boxes.remove((Box) objectsTile);
                             destroyedBox = true;
                         }
                     }
@@ -208,7 +205,6 @@ public class Bomb extends Tile {
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
-                            Game.boxes.remove((Box) objectsTile);
                             destroyedBox = true;
                         }
                     }
