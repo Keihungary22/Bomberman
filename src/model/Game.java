@@ -1,6 +1,7 @@
 package model;
 
 import model.Tile.Bomb;
+import model.Tile.Box;
 import model.Tile.Explosion;
 import model.Tile.Player;
 import view.*;
@@ -15,10 +16,12 @@ public class Game {
     public static ArrayList<Player> players;
     public static ArrayList<Bomb> bombs;
     public static ArrayList<Explosion> explosions;
+    public static ArrayList<Box> boxes;
     public static void RefreshMode(){
         players = new ArrayList<>();
         bombs = new ArrayList<>();
         explosions = new ArrayList<>();
+        boxes = new ArrayList<>();
         number_of_players = 2;
         map = new Map("SmallMap");
         number_of_rounds = 1;
@@ -37,6 +40,11 @@ public class Game {
         }
         bombs.clear();
         explosions.clear();
+        boxes.clear();
+        boxes.add(new Box(5, 5));
+        boxes.add(new Box(5, 7));
+        boxes.add(new Box(7, 5));
+        boxes.add(new Box(7, 7));
     }
 
     public static int getNumberOfAlivePlayers(){

@@ -196,9 +196,15 @@ public class Player extends Tile implements BombExplodeListener {
 
 
 
-    //we don't need to implement anything in inside.(we only need to override it for BombExplodeListener)
+    //region >> we don't need to implement anything in inside.(we only need to override it for BombExplodeListener)
     @Override
     public void bombFinishExplosion() {
 
     }
+
+    @Override
+    public void bombDestroyedBox() {
+
+    }
+    //endregion
 }

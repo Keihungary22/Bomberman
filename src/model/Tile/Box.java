@@ -27,11 +27,12 @@ public class Box extends Tile {
     
     // Method that gets called when the box is destroyed
     public void destroy() {
-        if (containsPowerUp) {
-            // Logic to spawn a power-up
-        }
+//        if (containsPowerUp) {
+//            // Logic to spawn a power-up
+//        }
         // Implement logic to remove the box from the game
 //        Game.map.removeTile(this);
+        System.out.println(this.visual + " destroyed");
     }
     
     private void removeFromGame() {
