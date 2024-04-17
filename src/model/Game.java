@@ -15,6 +15,7 @@ public class Game {
     public static ArrayList<Explosion> explosions;
     public static ArrayList<Box> boxes;
     public static ArrayList<Treasure> treasures;
+    public static boolean is_paused = false;
     public static void RefreshMode(){
         players = new ArrayList<>();
         bombs = new ArrayList<>();

@@ -32,10 +32,12 @@ public class Bomb extends Tile {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                time--;
-                if (time <= 0) {//it the time is over
-                    explode();
-                    timer.cancel(); // stop timer
+                if(!Game.is_paused){
+                    time--;
+                    if (time <= 0) {//it the time is over
+                        explode();
+                        timer.cancel(); // stop timer
+                    }
                 }
             }
         }, 1000, 1000);// Execute the task once 1 second later, and then every second thereafter.
@@ -54,10 +56,12 @@ public class Bomb extends Tile {
         exp_timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                exp_time--;
-                if (exp_time <= 0) {//it the time is over
-                    finishExplosionsEvent();
-                    exp_timer.cancel(); // stop timer
+                if(!Game.is_paused){
+                    exp_time--;
+                    if (exp_time <= 0) {//it the time is over
+                        finishExplosionsEvent();
+                        exp_timer.cancel(); // stop timer
+                    }
                 }
             }
         }, 1000, 1000);

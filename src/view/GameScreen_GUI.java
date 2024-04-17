@@ -6,10 +6,7 @@ import model.Tile.Box;
 import model.Timer;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 
 public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener {
     private JPanel MainPanel;
@@ -128,7 +125,16 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btn_menu) {
-            new MenuBar_GUI(this);
+            Game.is_paused = true;
+            MenuBar_GUI menuBarGUI =  new MenuBar_GUI(this);
+            menuBarGUI.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    // メニュー画面が閉じた後に、ゲーム画面にフォーカスを戻す
+                    requestFocus();
+                    Game.is_paused = false;
+                }
+            });
         }else if(e.getSource() == btn_finish) {
             this.dispose();
             Game.current_round++;
