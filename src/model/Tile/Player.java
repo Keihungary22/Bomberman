@@ -1,15 +1,18 @@
 package model.Tile;
 
+import model.BombExplodeListener;
 import model.Game;
+import model.PlayerDieListener;
 
 import javax.swing.plaf.TreeUI;
 
-public class Player extends Tile {
+public class Player extends Tile implements BombExplodeListener {
     private int score = 0;
     private boolean is_alive = true;
     private int current_number_of_bomb = 0;
     private int max_number_of_bombs = 2;
     private int power_of_bombs = 2;
+    private PlayerDieListener playerDieListener;
 
     public Player(String visual) {
         super(0, 0);
@@ -20,22 +23,85 @@ public class Player extends Tile {
     }
 
     //region >> movement
-    public void moveUp(){
+    private void moveUp(){
         this.y -= 1;
     }
-    public void moveDown(){
+    private void moveDown(){
         this.y += 1;
     }
-    public void moveRight(){
+    private void moveRight(){
         this.x += 1;
     }
-    public void moveLeft(){
+    private void moveLeft(){
         this.x -= 1;
+    }
+
+    public boolean move(String direction){
+        int x = this.x;
+        int y = this.y;
+        int size = Game.map.getSize();
+
+        int dx = 0;
+        int dy = 0;
+
+        switch (direction){
+            case "up":
+                dy = -1;
+                break;
+            case "down":
+                dy = 1;
+                break;
+            case "left":
+                dx = -1;
+                break;
+            case "right":
+                dx = 1;
+                break;
+        }
+
+        Tile next_objects_tile = Game.map.getLayers().get("Objects").getTiles().get(size*(y+dy)+x+dx);
+        Tile next_bombs_tile = Game.map.getLayers().get("Bombs").getTiles().get(size*(y+dy)+x+dx);
+        if(
+                !(next_objects_tile instanceof Block)
+                &&
+                !(next_objects_tile instanceof Brick)
+                &&
+                !(next_objects_tile instanceof Player)
+                &&
+                !(next_objects_tile instanceof Box)
+                &&
+                !(next_bombs_tile instanceof Bomb)
+        ){
+            switch (direction){
+                case "up":
+                    this.moveUp();
+                    break;
+                case "down":
+                    this.moveDown();
+                    break;
+                case "left":
+                    this.moveLeft();
+                    break;
+                case "right":
+                    this.moveRight();
+                    break;
+            }
+
+            int new_x = this.x;
+            int new_y = this.y;
+            if(Game.map.getLayers().get("Bombs").getTiles().get(size*new_y+new_x) instanceof Explosion){
+                System.out.println("Move into explosion and die " + this.visual);
+                die();
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     //endregion
 
     //region >> bomb
-
     private Bomb generateBomb(){
         return new Bomb(this.x,this.y, this);
     }
@@ -58,6 +124,18 @@ public class Player extends Tile {
     }
     //endregion
 
+    private void die(){
+        is_alive = false;
+        firePlayerDieEvent();
+    }
+
+    public void setPlayerDieListener(PlayerDieListener listener){
+        this.playerDieListener = listener;
+    }
+
+    private void firePlayerDieEvent(){
+        playerDieListener.playerDie();
+    }
 
     //region >> getter/setter
     public int getScore(){
@@ -95,4 +173,32 @@ public class Player extends Tile {
         return current_number_of_bomb;
     }
     //endregion
+
+
+    //we need to implement this so that Player can be noticed when bombs explode and can check if he is inside of explosion or not.
+    @Override
+    public void bombExploded() {
+        for(Explosion explosion : Game.explosions){
+            if(explosion.getX() == this.x && explosion.getY() == this.y){
+                System.out.println("Die " + this.getVisual());
+                die();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    //we don't need to implement anything in inside.(we only need to override it for BombExplodeListener)
+    @Override
+    public void bombFinishExplosion() {
+
+    }
 }

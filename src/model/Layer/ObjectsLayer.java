@@ -30,7 +30,11 @@ public class ObjectsLayer extends Layer{
                 if (coordinates.containsValue(new Point(j, i))) {
                     for(int l = 0; l < coordinates.size(); l++) {
                         if(coordinates.get(l).equals(new Point(j, i))){
-                            this.tiles.add(Game.players.get(l));
+                            if(Game.players.get(l).isAlive()){
+                                this.tiles.add(Game.players.get(l));
+                            }else{
+                                this.tiles.add(new Empty(j, i));
+                            }
                         }
                     }
                 }

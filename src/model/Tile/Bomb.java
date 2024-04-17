@@ -19,7 +19,7 @@ public class Bomb extends Tile {
     private ArrayList<Bomb> bomb_chain_queue = new ArrayList<>();
     private int power;
     private boolean exploded = false;
-    private BombExplodeListener bombExplodeListener;
+    private List<BombExplodeListener> bombExplodeListeners = new ArrayList<>();;
 
     public Bomb(int x, int y, Player owner) {
         super(x, y);
@@ -64,7 +64,7 @@ public class Bomb extends Tile {
     }
 
     private void generateExplosions(){
-        Explosion center = new Explosion(this.x, this.y, "exp_center.png");
+        Explosion center = new Explosion(this.x, this.y, this,"exp_center.png");
         Game.explosions.add(center);
         this.explosions.add(center);
 
@@ -87,7 +87,7 @@ public class Bomb extends Tile {
                 else{
                     visual = "exp_row.png";
                 }
-                Explosion newExp = new Explosion(this.x + i, this.y, visual);
+                Explosion newExp = new Explosion(this.x + i, this.y,this, visual);
                 Game.explosions.add(newExp);
                 this.explosions.add(newExp);
 
@@ -124,7 +124,7 @@ public class Bomb extends Tile {
                 else{
                     visual = "exp_row.png";
                 }
-                Explosion newExp = new Explosion(this.x + i, this.y, visual);
+                Explosion newExp = new Explosion(this.x + i, this.y,this, visual);
                 Game.explosions.add(newExp);
                 this.explosions.add(newExp);
 
@@ -161,7 +161,7 @@ public class Bomb extends Tile {
                 else{
                     visual = "exp_col.png";
                 }
-                Explosion newExp = new Explosion(this.x, this.y + i, visual);
+                Explosion newExp = new Explosion(this.x, this.y + i, this, visual);
                 Game.explosions.add(newExp);
                 this.explosions.add(newExp);
 
@@ -199,7 +199,7 @@ public class Bomb extends Tile {
                 else{
                     visual = "exp_col.png";
                 }
-                Explosion newExp = new Explosion(this.x, this.y + i, visual);
+                Explosion newExp = new Explosion(this.x, this.y + i, this, visual);
                 Game.explosions.add(newExp);
                 this.explosions.add(newExp);
 
@@ -233,19 +233,19 @@ public class Bomb extends Tile {
             Game.explosions.remove(explosion);
         }
 
-        if(bombExplodeListener != null){
-            bombExplodeListener.bombFinishExplosion();
+        for (BombExplodeListener listener : bombExplodeListeners) {
+            listener.bombFinishExplosion();
         }
     }
 
     private void fireBombExplodeEvent(){
-        if(bombExplodeListener != null){
-            bombExplodeListener.bombExploded();
+        for (BombExplodeListener listener : bombExplodeListeners) {
+            listener.bombExploded();
         }
     }
 
     public void setBombExplodeListener(BombExplodeListener listener) {
-        this.bombExplodeListener = listener;
+        this.bombExplodeListeners.add(listener);
     }
 
 
@@ -257,6 +257,13 @@ public class Bomb extends Tile {
 
     public Player getOwner() {
         return owner;
+    }
+
+    public Timer getTimer(){
+        return timer;
+    }
+    public Timer getExp_timer(){
+        return exp_timer;
     }
 
     public void setExploded(boolean exploded) {
