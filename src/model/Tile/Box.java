@@ -5,15 +5,20 @@ import model.Game;
 import java.util.Random;
 
 public class Box extends Tile {
-    private boolean containsPowerUp;
+    private enum Content {
+        BOMB_POWER_UP,
+        BOMB_INCREASE,
+    };
+    private Content content;
     private int hitPoints; // The durability of the box
 
     public Box(int x, int y) {
         super(x, y);
         this.destructible = true;
         this.visual = "Box.png";
-        // Randomly determine whether the box contains a power-up
-        this.containsPowerUp = new Random().nextBoolean();
+        // Randomly determine the contents of this box
+        Random random = new Random();
+        this.content = Content.values()[random.nextInt(Content.values().length)];
         this.hitPoints = 1; // Set to be destroyed with one hit as an example
     }
     
@@ -27,11 +32,13 @@ public class Box extends Tile {
     
     // Method that gets called when the box is destroyed
     public void destroy() {
-        if (containsPowerUp) {
-            // Logic to spawn a power-up
-        }
-        // Implement logic to remove the box from the game
-//        Game.map.removeTile(this);
+        String visual = switch (content) {
+            case BOMB_POWER_UP -> "item_bomb_power_up.png";
+            case BOMB_INCREASE -> "item_bomb_increase.png";
+        };
+        Treasure newTreasure = new Treasure(x, y, visual);
+        Game.treasures.add(newTreasure);
+        Game.boxes.remove(this);
     }
     
     private void removeFromGame() {

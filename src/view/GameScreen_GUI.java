@@ -54,8 +54,14 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(this.MainPanel);
         this.setSize(1200, 1200);
-        this.setVisible(true);
         //endregion
+
+        //region >> These codes are just for in case of displaying new stage correctly when new round starts
+        Game.refreshForRound();
+        Game.map.getLayers().get("Bombs").update();
+        //endregion
+
+        this.setVisible(true);
     }
 
     //region >> private functions
@@ -255,6 +261,12 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.repaint();
     }
 
+    @Override
+    public void bombDestroyedBox() {
+        Game.map.getLayers().get("Objects").update();
+        LayeredPane.revalidate();
+        LayeredPane.repaint();
+    }
 
     @Override
     public void playerDie() {
@@ -262,7 +274,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.revalidate();
         LayeredPane.repaint();
         System.out.println(Game.getNumberOfAlivePlayers());
-        if(Game.getNumberOfAlivePlayers() <= 1){
+        if(Game.getNumberOfAlivePlayers() == 1){
             this.dispose();
             Game.current_round++;
             if(Game.current_round <= Game.number_of_rounds){

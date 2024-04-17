@@ -72,6 +72,9 @@ public class Player extends Tile implements BombExplodeListener {
                 &&
                 !(next_bombs_tile instanceof Bomb)
         ){
+            if(next_objects_tile instanceof Treasure){
+                getTreasure((Treasure) next_objects_tile);
+            }
             switch (direction){
                 case "up":
                     this.moveUp();
@@ -100,6 +103,18 @@ public class Player extends Tile implements BombExplodeListener {
         }
     }
     //endregion
+
+    private void getTreasure(Treasure treasure){
+        switch (treasure.getVisual()){
+            case "item_bomb_power_up.png":
+                power_of_bombs++;
+                break;
+            case "item_bomb_increase.png":
+                max_number_of_bombs++;
+                break;
+        }
+        Game.treasures.remove(treasure);
+    }
 
     //region >> bomb
     private Bomb generateBomb(){
@@ -152,11 +167,11 @@ public class Player extends Tile implements BombExplodeListener {
         this.is_alive = is_alive;
     }
 
-    public int getNumber_of_bombs() {
+    public int getMax_number_of_bombs(){
         return max_number_of_bombs;
     }
-    public void setNumber_of_bombs(int number_of_bombs) {
-        this.max_number_of_bombs = number_of_bombs;
+    public void setMax_number_of_bombs(int max_number_of_bombs){
+        this.max_number_of_bombs = max_number_of_bombs;
     }
 
     public void setPower_of_bombs(int power_of_bombs) {
@@ -196,9 +211,15 @@ public class Player extends Tile implements BombExplodeListener {
 
 
 
-    //we don't need to implement anything in inside.(we only need to override it for BombExplodeListener)
+    //region >> we don't need to implement anything in inside.(we only need to override it for BombExplodeListener)
     @Override
     public void bombFinishExplosion() {
 
     }
+
+    @Override
+    public void bombDestroyedBox() {
+
+    }
+    //endregion
 }

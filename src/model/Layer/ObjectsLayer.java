@@ -18,23 +18,45 @@ public class ObjectsLayer extends Layer{
 
     @Override
     protected void updateTiles(int size) {
-        Map<Integer, Point> coordinates = new HashMap<>();
+        Map<Integer, Point> player_coordinates = new HashMap<>();
+        Map<Integer, Point> box_coordinates = new HashMap<>();
+        Map<Integer, Point> treasure_coordinates = new HashMap<>();
 
         for (int i = 0; i < Game.number_of_players; i++) {
             Point newPoint = new Point(Game.players.get(i).getX(), Game.players.get(i).getY());
-            coordinates.put(i, newPoint);
+            player_coordinates.put(i, newPoint);
+        }
+        for (int i = 0; i < Game.boxes.size(); i++) {
+            Point newPoint = new Point(Game.boxes.get(i).getX(), Game.boxes.get(i).getY());
+            box_coordinates.put(i, newPoint);
+        }
+        for (int i = 0; i < Game.treasures.size(); i++) {
+            Point newPoint = new Point(Game.treasures.get(i).getX(), Game.treasures.get(i).getY());
+            treasure_coordinates.put(i, newPoint);
         }
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (coordinates.containsValue(new Point(j, i))) {
-                    for(int l = 0; l < coordinates.size(); l++) {
-                        if(coordinates.get(l).equals(new Point(j, i))){
+                if (player_coordinates.containsValue(new Point(j, i))) {
+                    for(int l = 0; l < player_coordinates.size(); l++) {
+                        if(player_coordinates.get(l).equals(new Point(j, i))){
                             if(Game.players.get(l).isAlive()){
                                 this.tiles.add(Game.players.get(l));
                             }else{
                                 this.tiles.add(new Empty(j, i));
                             }
+                        }
+                    }
+                } else if (box_coordinates.containsValue(new Point(j, i))) {
+                    for(int l = 0; l < box_coordinates.size(); l++) {
+                        if(box_coordinates.get(l).equals(new Point(j, i))){
+                            this.tiles.add(Game.boxes.get(l));
+                        }
+                    }
+                }else if (treasure_coordinates.containsValue(new Point(j, i))) {
+                    for(int l = 0; l < treasure_coordinates.size(); l++) {
+                        if(treasure_coordinates.get(l).equals(new Point(j, i))){
+                            this.tiles.add(Game.treasures.get(l));
                         }
                     }
                 }

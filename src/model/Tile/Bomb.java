@@ -68,6 +68,8 @@ public class Bomb extends Tile {
         Game.explosions.add(center);
         this.explosions.add(center);
 
+        boolean destroyedBox = false;
+
         List<Tile> objects_tiles = Game.map.getLayers().get("Objects").getTiles();
         String visual = "";
         boolean obstacleCollision = false;
@@ -75,8 +77,12 @@ public class Bomb extends Tile {
         for(int i = -1; i >= -this.power && !obstacleCollision; i--){
             for (Tile objectsTile : objects_tiles) {
                 if (objectsTile.getX() == this.x + i && objectsTile.getY() == this.y) {
-                    if (objectsTile.getVisual().equals("Block.png") || objectsTile.getVisual().equals("Brick.png") || objectsTile.getVisual().equals("Box.png")) {
+                    if ((objectsTile instanceof Block) || (objectsTile instanceof Brick ) || (objectsTile instanceof Box)) {
                         obstacleCollision = true;
+                        if(objectsTile instanceof Box){
+                            ((Box) objectsTile).destroy();
+                            destroyedBox = true;
+                        }
                     }
                 }
             }
@@ -112,8 +118,12 @@ public class Bomb extends Tile {
         for(int i = 1; i <= this.power && !obstacleCollision; i++){
             for (Tile objectsTile : objects_tiles) {
                 if (objectsTile.getX() == this.x + i && objectsTile.getY() == this.y) {
-                    if (objectsTile.getVisual().equals("Block.png") || objectsTile.getVisual().equals("Brick.png") || objectsTile.getVisual().equals("Box.png")) {
+                    if ((objectsTile instanceof Block) || (objectsTile instanceof Brick ) || (objectsTile instanceof Box)) {
                         obstacleCollision = true;
+                        if(objectsTile instanceof Box){
+                            ((Box) objectsTile).destroy();
+                            destroyedBox = true;
+                        }
                     }
                 }
             }
@@ -149,8 +159,12 @@ public class Bomb extends Tile {
         for(int i = -1; i >= -this.power && !obstacleCollision; i--){
             for (Tile objectsTile : objects_tiles) {
                 if (objectsTile.getX() == this.x && objectsTile.getY() == this.y + i) {
-                    if (objectsTile.getVisual().equals("Block.png") || objectsTile.getVisual().equals("Brick.png") || objectsTile.getVisual().equals("Box.png")) {
+                    if ((objectsTile instanceof Block) || (objectsTile instanceof Brick ) || (objectsTile instanceof Box)) {
                         obstacleCollision = true;
+                        if(objectsTile instanceof Box){
+                            ((Box) objectsTile).destroy();
+                            destroyedBox = true;
+                        }
                     }
                 }
             }
@@ -187,8 +201,12 @@ public class Bomb extends Tile {
         for(int i = 1; i <= this.power && !obstacleCollision; i++){
             for (Tile objectsTile : objects_tiles) {
                 if (objectsTile.getX() == this.x && objectsTile.getY() == this.y + i) {
-                    if (objectsTile.getVisual().equals("Block.png") || objectsTile.getVisual().equals("Brick.png") || objectsTile.getVisual().equals("Box.png")) {
+                    if ((objectsTile instanceof Block) || (objectsTile instanceof Brick ) || (objectsTile instanceof Box)) {
                         obstacleCollision = true;
+                        if(objectsTile instanceof Box){
+                            ((Box) objectsTile).destroy();
+                            destroyedBox = true;
+                        }
                     }
                 }
             }
@@ -225,6 +243,12 @@ public class Bomb extends Tile {
             scheduler.schedule(bomb_in_queue::explode, 100, TimeUnit.MILLISECONDS);
         }
         //endregion
+
+        //region >> remove destroyed boxed from gui
+        if(destroyedBox){
+            fireBombDestroyBoxEvent();
+        }
+        //endregion
     }
 
 
@@ -241,6 +265,12 @@ public class Bomb extends Tile {
     private void fireBombExplodeEvent(){
         for (BombExplodeListener listener : bombExplodeListeners) {
             listener.bombExploded();
+        }
+    }
+
+    private void fireBombDestroyBoxEvent(){
+        for (BombExplodeListener listener : bombExplodeListeners) {
+            listener.bombDestroyedBox();
         }
     }
 
