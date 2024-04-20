@@ -1,17 +1,15 @@
 package model.Tile;
 
-import model.BombExplodeListener;
+import model.EventListener.BombExplodeListener;
 import model.Game;
-import model.PlayerDieListener;
-
-import javax.swing.plaf.TreeUI;
+import model.EventListener.PlayerDieListener;
 
 public class Player extends Tile implements BombExplodeListener {
     private int score = 0;
     private boolean is_alive = true;
     private int current_number_of_bomb = 0;
-    private int max_number_of_bombs = 2;
-    private int power_of_bombs = 2;
+    private int max_number_of_bombs = 1;
+    private int power_of_bombs = 1;
     private PlayerDieListener playerDieListener;
 
     public Player(String visual) {

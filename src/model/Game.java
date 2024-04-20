@@ -1,24 +1,34 @@
 package model;
 
+import model.Audio.MusicPlayer;
+import model.Audio.SFXPlayer;
 import model.Tile.*;
 import view.*;
 
 import java.util.ArrayList;
 
 public class Game {
-    public static int number_of_players;
     public static Map map;
-    public static int number_of_rounds;
-    public static int current_round;
+    public static SFXPlayer sfxPlayer;
+    public static MusicPlayer musicPlayer;
     public static ArrayList<Player> players;
     public static ArrayList<Bomb> bombs;
     public static ArrayList<Explosion> explosions;
     public static ArrayList<Box> boxes;
     public static ArrayList<Treasure> treasures;
+    public static int number_of_players;
+    public static int number_of_rounds;
+    public static int current_round;
     public static boolean is_paused = false;
-    public static SFXPlayer sfxPlayer;
-    public static MusicPlayer musicPlayer;
     public static boolean sound_on = true;
+
+    //constructor
+    public Game(){
+        musicPlayer = new MusicPlayer();
+        sfxPlayer = new SFXPlayer();
+        StartScreen_GUI game = new StartScreen_GUI();
+    }
+
     public static void RefreshMode(){
         players = new ArrayList<>();
         bombs = new ArrayList<>();
@@ -65,11 +75,5 @@ public class Game {
             }
         }
         return alivePlayers;
-    }
-
-    public Game(){
-        musicPlayer = new MusicPlayer();
-        sfxPlayer = new SFXPlayer();
-        StartScreen_GUI game = new StartScreen_GUI();
     }
 }

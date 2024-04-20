@@ -8,11 +8,28 @@ import java.util.HashMap;
 import java.util.List;;
 
 public class Map {
-    private String type;
-    private static int size;
-    private static java.util.Map<String, Layer> layers;
+    private final String type;
+    private final int size;
+    private java.util.Map<String, Layer> layers;
 
-    public static void updateMap(){
+    public Map(String mapType) {
+        type = mapType;
+        switch (mapType) {
+            case "SmallMap":
+                size = 13;
+                break;
+            case "MediumMap":
+                size = 15;
+                break;
+            case "LargeMap":
+                size = 19;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid map name: " + type);
+        }
+    }
+
+    public void updateMap(){
         //region >> init layers hashmap
         layers = new HashMap<String, Layer>();
         //endregion
@@ -30,23 +47,6 @@ public class Map {
         layers.put("Bombs", BombsLayer);
         layers.put("Objects", ObjectsLayer);
         //endregion
-    }
-
-    public Map(String mapType) {
-        type = mapType;
-        switch (mapType) {
-            case "SmallMap":
-                size = 13;
-                break;
-            case "MediumMap":
-                size = 15;
-                break;
-            case "LargeMap":
-                size = 19;
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid map name: " + type);
-        }
     }
 
     public String getType() {

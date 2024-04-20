@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import model.BombExplodeListener;
+import model.EventListener.BombExplodeListener;
 
 public class Bomb extends Tile {
     private int time = 5;
@@ -285,15 +285,6 @@ public class Bomb extends Tile {
 
 
     //region >> getter/setter
-    public int getTime() {
-        return time;
-    }
-    public void setTime(int time) {}
-
-    public Player getOwner() {
-        return owner;
-    }
-
     public Timer getTimer(){
         return timer;
     }
