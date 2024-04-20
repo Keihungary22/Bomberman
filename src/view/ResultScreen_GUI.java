@@ -24,7 +24,7 @@ public class ResultScreen_GUI extends JFrame implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e)   {
         if (e.getSource() == btn_startsc) {
             this.dispose();
             Game.RefreshMode();

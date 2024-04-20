@@ -3,7 +3,13 @@ package model.Tile;
 import java.util.Random;
 
 public class Monster extends Tile {
-    
+    private enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
+        STOP // Also add a stop state
+    }
     private int speed;
     private Direction direction;
     private Random random = new Random();
@@ -106,13 +112,4 @@ public class Monster extends Tile {
     public int getSpeed() {
         return speed;
     }
-}
-
-// Enum to represent directions
-enum Direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    STOP // Also add a stop state
 }

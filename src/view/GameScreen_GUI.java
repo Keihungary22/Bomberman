@@ -1,8 +1,9 @@
 package view;
 
 import model.*;
+import model.EventListener.BombExplodeListener;
+import model.EventListener.PlayerDieListener;
 import model.Tile.*;
-import model.Tile.Box;
 import model.Timer;
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +48,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         ElapsedTime.setText(String.valueOf(timer.getElapsedTime()));
         CurrentRound.setText(String.valueOf(Game.current_round));
         initPlayersPositions();//Initiate players position and put them on the map
-        Map.updateMap();//Update map class
+        Game.map.updateMap();//Update map class
         GenerateGameBoard(); //based on the map class, initiate JPanel of the game board
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(this.MainPanel);
