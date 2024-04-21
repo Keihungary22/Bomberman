@@ -10,6 +10,7 @@ public class Player extends Tile implements BombExplodeListener {
     private int current_number_of_bomb = 0;
     private int max_number_of_bombs = 1;
     private int power_of_bombs = 1;
+    private String displayName;
     private PlayerDieListener playerDieListener;
 
     public Player(String visual) {
@@ -18,6 +19,7 @@ public class Player extends Tile implements BombExplodeListener {
         this.y = 0;
         this.destructible = true;
         this.visual = visual;
+        this.displayName = visual.substring(0, visual.lastIndexOf("."));
     }
 
     //region >> movement
@@ -159,6 +161,9 @@ public class Player extends Tile implements BombExplodeListener {
     public void setScore(int score){
         this.score = score;
     }
+    public void increaseScore(){
+        this.score++;
+    }
 
     public boolean isAlive() {
         return is_alive;
@@ -187,6 +192,10 @@ public class Player extends Tile implements BombExplodeListener {
     public int getCurrent_number_of_bomb() {
         return current_number_of_bomb;
     }
+
+    public String getDisplayName(){
+        return this.displayName;
+    }
     //endregion
 
 
@@ -200,7 +209,6 @@ public class Player extends Tile implements BombExplodeListener {
             }
         }
     }
-
 
 
 

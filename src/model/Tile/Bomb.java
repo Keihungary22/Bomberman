@@ -10,7 +10,8 @@ import java.util.concurrent.TimeUnit;
 import model.EventListener.BombExplodeListener;
 
 public class Bomb extends Tile {
-    private int time = 5;
+    public static int time_until_explode = 4;
+    private int time = time_until_explode;
     private int exp_time = 1;
     private final Timer timer = new Timer();
     private final Timer exp_timer = new Timer();
@@ -34,7 +35,7 @@ public class Bomb extends Tile {
             public void run() {
                 if(!Game.is_paused){
                     time--;
-                    if (time <= 0) {//it the time is over
+                    if (time <= 0) {//if the time is over
                         explode();
                         timer.cancel(); // stop timer
                     }

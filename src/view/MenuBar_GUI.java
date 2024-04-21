@@ -23,7 +23,6 @@ public class MenuBar_GUI extends JFrame implements ActionListener{
         //endregion
 
 
-        ElapsedTime.setText(String.valueOf(GameScreen_GUI.timer.getElapsedTime()));
         CurrentRound.setText(String.valueOf(Game.current_round));
         TypeOfMap.setText(Game.map.getType());
         for (int i = 1; i < Game.number_of_players+1; i++) {

@@ -4,10 +4,15 @@ import model.*;
 import model.EventListener.BombExplodeListener;
 import model.EventListener.PlayerDieListener;
 import model.Tile.*;
-import model.Timer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener {
     private JPanel MainPanel;
@@ -17,7 +22,8 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     private JButton btn_finish;
     private JPanel GameBoard;
     private final JLayeredPane LayeredPane;
-    public static Timer timer = new Timer(60);
+    private final Timer timer = new Timer();
+    private int short_time = Bomb.time_until_explode;
 
     //constructor
     public GameScreen_GUI() {
@@ -45,7 +51,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
 
         //region >> initiate GUI for game screen
         setTitle("BOMBERMAN");
-        ElapsedTime.setText(String.valueOf(timer.getElapsedTime()));
         CurrentRound.setText(String.valueOf(Game.current_round));
         initPlayersPositions();//Initiate players position and put them on the map
         Game.map.updateMap();//Update map class
@@ -283,15 +288,28 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.repaint();
         System.out.println(Game.getNumberOfAlivePlayers());
         if(Game.getNumberOfAlivePlayers() == 1){
-            this.dispose();
-            Game.current_round++;
-            if(Game.current_round <= Game.number_of_rounds){
-                new GameScreen_GUI();
-            }
-            else{
-                new ResultScreen_GUI();
-            }
+            short_timer_start();
         }
+    }
+
+    private void short_timer_start() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (short_time <= 0) {
+                    // short_timeが0になったらGameScreen_GUIを閉じる
+                    dispose();
+                    timer.cancel();
+                    new RoundResultScreen_GUI();
+                } else {
+                    // short_timeを減らす
+                    short_time--;
+                }
+            }
+        };
+
+        // タイマーを1秒ごとに実行する
+        timer.scheduleAtFixedRate(task, 0, 1000);
     }
 
     //region >> we don't need to implement it

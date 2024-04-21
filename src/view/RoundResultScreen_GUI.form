@@ -74,6 +74,7 @@
                   <component id="90d3c" class="javax.swing.JTextField" binding="WinnerField">
                     <constraints/>
                     <properties>
+                      <editable value="false"/>
                       <text value="winner name"/>
                     </properties>
                   </component>
@@ -96,7 +97,10 @@
                 <children>
                   <component id="3fe3b" class="javax.swing.JTextField" binding="p1WinCount">
                     <constraints border-constraint="South"/>
-                    <properties/>
+                    <properties>
+                      <editable value="false"/>
+                      <horizontalAlignment value="0"/>
+                    </properties>
                   </component>
                   <component id="a63a5" class="javax.swing.JLabel">
                     <constraints border-constraint="North"/>
@@ -121,7 +125,10 @@
                   </component>
                   <component id="c00f7" class="javax.swing.JTextField" binding="p2WinCount">
                     <constraints border-constraint="South"/>
-                    <properties/>
+                    <properties>
+                      <editable value="false"/>
+                      <horizontalAlignment value="0"/>
+                    </properties>
                   </component>
                 </children>
               </grid>
@@ -132,7 +139,10 @@
                 <children>
                   <component id="528d" class="javax.swing.JTextField" binding="p3WinCount">
                     <constraints border-constraint="South"/>
-                    <properties/>
+                    <properties>
+                      <editable value="false"/>
+                      <horizontalAlignment value="0"/>
+                    </properties>
                   </component>
                   <component id="ec225" class="javax.swing.JLabel">
                     <constraints border-constraint="North"/>

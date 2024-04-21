@@ -6,9 +6,13 @@
 package model.Layer;
 
 import model.Game;
+import model.Tile.Bomb;
 import model.Tile.Empty;
+import model.Tile.Explosion;
 
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,22 +25,22 @@ public class BombsLayer extends Layer{
 
     @Override
     protected void updateTiles(int size) {
-        Map<Integer, Point> bombs_coordinates = new HashMap<>();
-        Map<Integer, Point> explosions_coordinates = new HashMap<>();
+        ArrayList<Point> bombs_coordinates = new ArrayList<>();
+        ArrayList<Point> explosions_coordinates = new ArrayList<>();
 
-        for (int i = 0; i < Game.bombs.size(); i++) {
-            Point newPoint = new Point(Game.bombs.get(i).getX(), Game.bombs.get(i).getY());
-            bombs_coordinates.put(i, newPoint);
+        for(Bomb bomb : Game.bombs){
+            Point newPoint = new Point(bomb.getX(), bomb.getY());
+            bombs_coordinates.add(newPoint);
         }
-        for (int i = 0; i < Game.explosions.size(); i++) {
-            Point newPoint = new Point(Game.explosions.get(i).getX(), Game.explosions.get(i).getY());
-            explosions_coordinates.put(i, newPoint);
+        for(Explosion explosion : Game.explosions){
+            Point newPoint = new Point(explosion.getX(), explosion.getY());
+            explosions_coordinates.add(newPoint);
         }
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 //add bombs
-                if (bombs_coordinates.containsValue(new Point(j, i))) {
+                if (bombs_coordinates.contains(new Point(j, i))) {
                     for(int l = 0; l < bombs_coordinates.size(); l++) {
                         if(bombs_coordinates.get(l).equals(new Point(j, i))){
                             this.tiles.add(Game.bombs.get(l));
@@ -44,7 +48,7 @@ public class BombsLayer extends Layer{
                     }
                 }
                 //add explosions
-                else if(explosions_coordinates.containsValue(new Point(j, i))) {
+                else if(explosions_coordinates.contains(new Point(j, i))) {
                     for(int l = 0; l < explosions_coordinates.size(); l++) {
                         if(explosions_coordinates.get(l).equals(new Point(j, i))){
                             if(this.tiles.contains(Game.explosions.get(l))){
