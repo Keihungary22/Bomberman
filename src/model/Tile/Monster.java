@@ -12,7 +12,7 @@ public class Monster extends Tile {
     }
     private int speed;
     private Direction direction;
-    private Random random = new Random();
+    private final Random random = new Random();
     
     // Added: Player's position
     private int playerX;
@@ -28,17 +28,12 @@ public class Monster extends Tile {
 
     // Method to update the monster's movement
     public void updateMovement(Player player) {
-        // Get the current position of the player
-        setPlayerPosition(player.getX(), player.getY());
-
-        // Add logic here to randomly choose the monster's direction of movement
-        // Also consider changing direction based on the player's position
-        if (random.nextBoolean()) { // Randomly choose to move in a random direction or towards the player
-            // Move in a random direction
-            Direction[] directions = Direction.values();
-            this.direction = directions[random.nextInt(directions.length)];
-        } else {
-            // Move towards the player
+        int decision = random.nextInt(100);
+        if (decision < 20) {  // 20% probability to change direction randomly
+            this.direction = Direction.values()[random.nextInt(Direction.values().length)];
+        } else if (decision < 40) {  // 20% probability to stop or reconsider strategy
+            this.direction = Direction.STOP;
+        } else {  // 60% probability to move towards the player
             if (playerX > this.getX()) {
                 this.direction = Direction.RIGHT;
             } else if (playerX < this.getX()) {
@@ -94,13 +89,20 @@ public class Monster extends Tile {
         // Implement interaction logic here
         // For example, check if tile is an instance of Player and perform specific actions
         if (tile instanceof Player) {
-            // Process interaction with the player
+            // Assuming Player has a method to handle death
+            ((Player)tile).die();
+            System.out.println("Player has been killed by a monster.");
         } else if (tile instanceof Monster) {
-            // Process interaction with another monster
-        } else if (tile instanceof Brick) {
-            // Process interaction with a brick
+            // Both monsters change direction to avoid overlap or conflict
+            this.setDirection(Direction.values()[random.nextInt(Direction.values().length)]);
+            ((Monster)tile).setDirection(Direction.values()[random.nextInt(Direction.values().length)]);
+            System.out.println("Two monsters have encountered and changed their directions.");
         }
-        // ... Other interactions
+        else if (tile instanceof Brick) {
+            // The monster changes direction upon hitting a brick
+            this.setDirection(Direction.values()[random.nextInt(Direction.values().length)]);
+            System.out.println("Monster hit a brick and changed direction.");
+        }
     }
 
     // Method to set the monster's speed
