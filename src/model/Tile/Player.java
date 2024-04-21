@@ -12,6 +12,13 @@ public class Player extends Tile implements BombExplodeListener {
     private int power_of_bombs = 1;
     private String displayName;
     private PlayerDieListener playerDieListener;
+    private int speed = 2;
+    private boolean is_invincible_mode = false;
+    private boolean is_detonator_mode = false;
+    private boolean is_obstacle_mode = false;
+    private boolean is_roller_skate_mode = false;
+    private boolean is_ghost_mode = false;
+
 
     public Player(String visual) {
         super(0, 0);
@@ -112,6 +119,16 @@ public class Player extends Tile implements BombExplodeListener {
             case "item_bomb_increase.png":
                 max_number_of_bombs++;
                 break;
+            case "item_invincibility.png":
+                break;
+            case "item_rollerskate.png":
+                break;
+            case "item_obstacle.png":
+                break;
+            case "item_ghost.png":
+                break;
+            case "item_detonator.png":
+                break;
         }
         Game.sfxPlayer.play("assets/sound/itemGet.wav");
         Game.treasures.remove(treasure);
@@ -195,6 +212,16 @@ public class Player extends Tile implements BombExplodeListener {
 
     public String getDisplayName(){
         return this.displayName;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+    public void increaseSpeed(){
+        this.speed++;
+    }
+    public void decreaseSpeed(){
+        this.speed--;
     }
     //endregion
 

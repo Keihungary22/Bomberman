@@ -8,6 +8,11 @@ public class Box extends Tile {
     private enum Content {
         BOMB_POWER_UP,
         BOMB_INCREASE,
+        INVINCIBILITY,
+        GHOST,
+        DETONATOR,
+        ROLLERSKATE,
+        OBSTACLE
     };
     private Content content;
 
@@ -25,6 +30,11 @@ public class Box extends Tile {
         String visual = switch (content) {
             case BOMB_POWER_UP -> "item_bomb_power_up.png";
             case BOMB_INCREASE -> "item_bomb_increase.png";
+            case INVINCIBILITY -> "item_invincibility.png";
+            case GHOST -> "item_ghost.png";
+            case DETONATOR -> "item_detonator.png";
+            case ROLLERSKATE -> "item_rollerskate.png";
+            case OBSTACLE -> "item_obstacle.png";
         };
         Treasure newTreasure = new Treasure(x, y, visual);
         Game.treasures.add(newTreasure);
