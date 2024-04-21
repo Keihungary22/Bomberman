@@ -141,7 +141,7 @@ public class Player extends Tile implements BombExplodeListener {
     }
     //endregion
 
-    private void die(){
+    void die(){
         is_alive = false;
         firePlayerDieEvent();
     }
