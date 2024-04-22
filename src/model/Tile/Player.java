@@ -3,12 +3,7 @@ package model.Tile;
 import model.EventListener.BombExplodeListener;
 import model.Game;
 import model.EventListener.PlayerDieListener;
-import view.RoundResultScreen_GUI;
-
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Player extends Tile implements BombExplodeListener {
     private int score = 0;
@@ -16,7 +11,7 @@ public class Player extends Tile implements BombExplodeListener {
     private int current_number_of_bomb = 0;
     private int max_number_of_bombs = 1;
     private int power_of_bombs = 1;
-    private String displayName;
+    private final String displayName;
     private PlayerDieListener playerDieListener;
     private int speed = 2;
     //region >> status for power-ups
@@ -35,11 +30,11 @@ public class Player extends Tile implements BombExplodeListener {
     private int ghost_time = power_up_time;
     //endregion
     //region >> Timers for each time-limited power-ups
-    private final Timer invincible_timer = new Timer();
-    private final Timer detonator_timer = new Timer();
-    private final Timer obstacle_timer = new Timer();
-    private final Timer roller_skate_timer = new Timer();
-    private final Timer ghost_timer = new Timer();
+    private Timer invincible_timer = new Timer();
+    private Timer detonator_timer = new Timer();
+    private Timer obstacle_timer = new Timer();
+    private Timer roller_skate_timer = new Timer();
+    private Timer ghost_timer = new Timer();
     //endregion
 
 
@@ -180,6 +175,13 @@ public class Player extends Tile implements BombExplodeListener {
 
     private void be_invincible(){
         is_invincible_mode = true;
+        //region >> Update the timer once canceled to a new instance
+        if (invincible_timer != null) {
+            invincible_timer.cancel();
+            invincible_timer = null;
+        }
+        invincible_timer = new Timer();
+        //endregion
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -198,6 +200,13 @@ public class Player extends Tile implements BombExplodeListener {
 
     private void be_detonator_setter(){
         is_detonator_mode = true;
+        //region >> Update the timer once canceled to a new instance
+        if (detonator_timer != null) {
+            detonator_timer.cancel();
+            detonator_timer = null;
+        }
+        detonator_timer = new Timer();
+        //endregion
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -216,6 +225,13 @@ public class Player extends Tile implements BombExplodeListener {
 
     private void be_obstacle_setter(){
         is_obstacle_mode = true;
+        //region >> Update the timer once canceled to a new instance
+        if (obstacle_timer != null) {
+            obstacle_timer.cancel();
+            obstacle_timer = null;
+        }
+        obstacle_timer = new Timer();
+        //endregion
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -234,6 +250,13 @@ public class Player extends Tile implements BombExplodeListener {
 
     private void be_ghost(){
         is_ghost_mode = true;
+        //region >> Update the timer once canceled to a new instance
+        if (ghost_timer != null) {
+            ghost_timer.cancel();
+            ghost_timer = null;
+        }
+        ghost_timer = new Timer();
+        //endregion
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -252,6 +275,13 @@ public class Player extends Tile implements BombExplodeListener {
 
     private void use_roller_skate(){
         is_roller_skate_mode = true;
+        //region >> Update the timer once canceled to a new instance
+        if (roller_skate_timer != null) {
+            roller_skate_timer.cancel();
+            roller_skate_timer = null;
+        }
+        roller_skate_timer = new Timer();
+        //endregion
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
