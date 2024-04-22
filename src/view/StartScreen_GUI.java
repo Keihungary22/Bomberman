@@ -127,6 +127,7 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
         if(e.getSource() == btn_start){
             this.dispose();
             int index = 0;
+            //Players object should be generated here since they will be used in the whole game.
             while(index < Game.number_of_players){
                 switch (index){
                     case 0:
