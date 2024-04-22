@@ -10,9 +10,6 @@ import java.awt.event.*;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener {
     private JPanel MainPanel;
@@ -52,7 +49,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         //region >> initiate GUI for game screen
         setTitle("BOMBERMAN");
         CurrentRound.setText(String.valueOf(Game.current_round));
-        initPlayersPositions();//Initiate players position and put them on the map
+        initPlayersPositions();//Initiate players position and put them on the map for each round
         Game.map.updateMap();//Update map class
         GenerateGameBoard(); //based on the map class, initiate JPanel of the game board
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

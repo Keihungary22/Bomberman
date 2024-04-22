@@ -3,6 +3,12 @@ package model.Tile;
 import model.EventListener.BombExplodeListener;
 import model.Game;
 import model.EventListener.PlayerDieListener;
+import view.RoundResultScreen_GUI;
+
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Player extends Tile implements BombExplodeListener {
     private int score = 0;
@@ -13,11 +19,28 @@ public class Player extends Tile implements BombExplodeListener {
     private String displayName;
     private PlayerDieListener playerDieListener;
     private int speed = 2;
+    //region >> status for power-ups
     private boolean is_invincible_mode = false;
     private boolean is_detonator_mode = false;
     private boolean is_obstacle_mode = false;
     private boolean is_roller_skate_mode = false;
     private boolean is_ghost_mode = false;
+    //endregion
+    //region >> power-up times for each power-ups
+    private final int power_up_time = 15;
+    private int invincible_time = power_up_time;
+    private int detonator_time = power_up_time;
+    private int obstacle_time = power_up_time;
+    private int roller_skate_time = power_up_time;
+    private int ghost_time = power_up_time;
+    //endregion
+    //region >> Timers for each time-limited power-ups
+    private final Timer invincible_timer = new Timer();
+    private final Timer detonator_timer = new Timer();
+    private final Timer obstacle_timer = new Timer();
+    private final Timer roller_skate_timer = new Timer();
+    private final Timer ghost_timer = new Timer();
+    //endregion
 
 
     public Player(String visual) {
@@ -27,6 +50,11 @@ public class Player extends Tile implements BombExplodeListener {
         this.destructible = true;
         this.visual = visual;
         this.displayName = visual.substring(0, visual.lastIndexOf("."));
+    }
+
+    void die(){
+        is_alive = false;
+        firePlayerDieEvent();
     }
 
     //region >> movement
@@ -111,6 +139,7 @@ public class Player extends Tile implements BombExplodeListener {
     }
     //endregion
 
+    //region >> get treasure
     private void getTreasure(Treasure treasure){
         switch (treasure.getVisual()){
             case "item_bomb_power_up.png":
@@ -120,19 +149,125 @@ public class Player extends Tile implements BombExplodeListener {
                 max_number_of_bombs++;
                 break;
             case "item_invincibility.png":
+                if(!is_invincible_mode){
+                    be_invincible();
+                }
                 break;
             case "item_rollerskate.png":
+                if(!is_roller_skate_mode){
+                    use_roller_skate();
+                }
                 break;
             case "item_obstacle.png":
+                if(!is_ghost_mode){
+                    be_obstacle_setter();
+                }
                 break;
             case "item_ghost.png":
+                if(!is_ghost_mode){
+                    be_ghost();
+                }
                 break;
             case "item_detonator.png":
+                if(is_detonator_mode){
+                    be_detonator_setter();
+                }
                 break;
         }
         Game.sfxPlayer.play("assets/sound/itemGet.wav");
         Game.treasures.remove(treasure);
     }
+
+    private void be_invincible(){
+        is_invincible_mode = true;
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (invincible_time <= 0) {
+                    invincible_timer.cancel();
+                    invincible_time = power_up_time;
+                    is_invincible_mode = false;
+                } else {
+                    invincible_time--;
+                }
+            }
+        };
+
+        invincible_timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    private void be_detonator_setter(){
+        is_detonator_mode = true;
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (detonator_time <= 0) {
+                    detonator_timer.cancel();
+                    detonator_time = power_up_time;
+                    is_detonator_mode = false;
+                }else{
+                    detonator_time--;
+                }
+            }
+        };
+
+        detonator_timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    private void be_obstacle_setter(){
+        is_obstacle_mode = true;
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (obstacle_time <= 0) {
+                    obstacle_timer.cancel();
+                    obstacle_time = power_up_time;
+                    is_obstacle_mode = false;
+                }else{
+                    obstacle_time--;
+                }
+            }
+        };
+
+        obstacle_timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    private void be_ghost(){
+        is_ghost_mode = true;
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (ghost_time <= 0) {
+                    ghost_timer.cancel();
+                    ghost_time = power_up_time;
+                    is_ghost_mode = false;
+                }else{
+                    ghost_time--;
+                }
+            }
+        };
+
+        ghost_timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    private void use_roller_skate(){
+        is_roller_skate_mode = true;
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (roller_skate_time <= 0) {
+                    roller_skate_time = power_up_time;
+                    is_roller_skate_mode = false;
+                    is_detonator_mode = false;
+                }else{
+                    roller_skate_time--;
+                }
+            }
+        };
+
+        roller_skate_timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+    //endregion
 
     //region >> bomb
     private Bomb generateBomb(){
@@ -158,11 +293,7 @@ public class Player extends Tile implements BombExplodeListener {
     }
     //endregion
 
-    void die(){
-        is_alive = false;
-        firePlayerDieEvent();
-    }
-
+    //region >> player die event listener
     public void setPlayerDieListener(PlayerDieListener listener){
         this.playerDieListener = listener;
     }
@@ -170,6 +301,7 @@ public class Player extends Tile implements BombExplodeListener {
     private void firePlayerDieEvent(){
         playerDieListener.playerDie();
     }
+    //endregion
 
     //region >> getter/setter
     public int getScore(){
