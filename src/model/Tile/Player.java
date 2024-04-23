@@ -1,11 +1,15 @@
 package model.Tile;
 
 import model.EventListener.BombExplodeListener;
+import model.EventListener.PlayerStatusChangeListener;
 import model.Game;
 import model.EventListener.PlayerDieListener;
+import model.TreasureType;
+
 import java.util.*;
 
 public class Player extends Tile implements BombExplodeListener {
+    private final int id;
     private int score = 0;
     private boolean is_alive = true;
     private int current_number_of_bomb = 0;
@@ -13,6 +17,7 @@ public class Player extends Tile implements BombExplodeListener {
     private int power_of_bombs = 1;
     private final String displayName;
     private PlayerDieListener playerDieListener;
+    private PlayerStatusChangeListener playerStatusChangeListener;
     private int speed = 2;
     //region >> status for power-ups
     private boolean is_invincible_mode = false;
@@ -38,8 +43,9 @@ public class Player extends Tile implements BombExplodeListener {
     //endregion
 
 
-    public Player(String visual) {
+    public Player(String visual, int id) {
         super(0, 0);
+        this.id = id;
         this.x = 0;
         this.y = 0;
         this.destructible = true;
@@ -66,7 +72,7 @@ public class Player extends Tile implements BombExplodeListener {
         this.x -= 1;
     }
 
-    public boolean move(String direction){
+    public boolean move(String direction) throws Exception {
         int x = this.x;
         int y = this.y;
         int size = Game.map.getSize();
@@ -134,41 +140,42 @@ public class Player extends Tile implements BombExplodeListener {
     }
     //endregion
 
-    //region >> get treasure
-    private void getTreasure(Treasure treasure){
-        switch (treasure.getVisual()){
-            case "item_bomb_power_up.png":
+    //region >> status change
+    private void getTreasure(Treasure treasure) throws Exception {
+        switch (treasure.getType()){
+            case BOMB_POWER_UP:
                 power_of_bombs++;
                 break;
-            case "item_bomb_increase.png":
+            case BOMB_INCREASE:
                 max_number_of_bombs++;
                 break;
-            case "item_invincibility.png":
+            case INVINCIBILITY:
                 if(!is_invincible_mode){
                     be_invincible();
                 }
                 break;
-            case "item_rollerskate.png":
+            case ROLLERSKATE:
                 if(!is_roller_skate_mode){
                     use_roller_skate();
                 }
                 break;
-            case "item_obstacle.png":
-                if(!is_ghost_mode){
+            case OBSTACLE:
+                if(!is_obstacle_mode){
                     be_obstacle_setter();
                 }
                 break;
-            case "item_ghost.png":
+            case GHOST:
                 if(!is_ghost_mode){
                     be_ghost();
                 }
                 break;
-            case "item_detonator.png":
+            case DETONATOR:
                 if(is_detonator_mode){
                     be_detonator_setter();
                 }
                 break;
         }
+        firePlayerStatusChange(this.id, treasure.getType());
         Game.sfxPlayer.play("assets/sound/itemGet.wav");
         Game.treasures.remove(treasure);
     }
@@ -323,7 +330,15 @@ public class Player extends Tile implements BombExplodeListener {
     }
     //endregion
 
-    //region >> player die event listener
+    //region >> player event listener
+    public void setPlayerStatusChangeListener(PlayerStatusChangeListener listener){
+        this.playerStatusChangeListener = listener;
+    }
+
+    public void firePlayerStatusChange(int player_id, TreasureType treasure_type) throws Exception {
+        playerStatusChangeListener.PlayerStatusChanged(player_id, treasure_type);
+    }
+
     public void setPlayerDieListener(PlayerDieListener listener){
         this.playerDieListener = listener;
     }
