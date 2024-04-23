@@ -131,21 +131,21 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
             while(index < Game.number_of_players){
                 switch (index){
                     case 0:
-                        Player player1 = new Player("Player1.png");
+                        Player player1 = new Player("Player1.png", 1);
                         if(!Game.players.contains(player1)){
                             Game.players.add(player1);
                             break;
                         }
                         break;
                     case 1:
-                        Player player2 = new Player("Player2.png");
+                        Player player2 = new Player("Player2.png", 2);
                         if(!Game.players.contains(player2)){
                             Game.players.add(player2);
                             break;
                         }
                         break;
                     case 2:
-                        Player player3 = new Player("Player3.png");
+                        Player player3 = new Player("Player3.png", 3);
                         if(!Game.players.contains(player3)){
                             Game.players.add(player3);
                             break;

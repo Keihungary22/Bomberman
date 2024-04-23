@@ -3,6 +3,7 @@ package view;
 import model.*;
 import model.EventListener.BombExplodeListener;
 import model.EventListener.PlayerDieListener;
+import model.EventListener.PlayerStatusChangeListener;
 import model.Tile.*;
 import javax.swing.*;
 import java.awt.*;
@@ -11,13 +12,37 @@ import java.awt.event.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener {
+public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener, PlayerStatusChangeListener {
     private JPanel MainPanel;
     private JTextArea ElapsedTime;
     private JTextArea CurrentRound;
-    private JButton btn_menu;
-    private JButton btn_finish;
+    private JButton MenuButton;
+    private JButton FinishButton;
     private JPanel GameBoard;
+    private JPanel Player3StatusPanel;
+    private JLabel Player1Image;
+    private JLabel Player3Image;
+    private JLabel Player2Image;
+    private JPanel Player1Status;
+    private JPanel Player2Status;
+    private JPanel Player3Status;
+    private JLabel Player1Ghost;
+    private JLabel Player2Ghost;
+    private JLabel Player3Ghost;
+    private JLabel Player1RollerSkate;
+    private JLabel Player2RollerSkate;
+    private JLabel Player3RollerSkate;
+    private JLabel Player1Obstacle;
+    private JLabel Player2Obstacle;
+    private JLabel Player3Obstacle;
+    private JLabel Player1Detonator;
+    private JLabel Player2Detonator;
+    private JLabel Player3Detonator;
+    private JLabel Player1Invincibility;
+    private JLabel Player2Invincibility;
+    private JLabel Player3Invincibility;
+    private JPanel Player1StatusPanel;
+    private JPanel Player2StatusPanel;
     private final JLayeredPane LayeredPane;
     private final Timer timer = new Timer();
     private int short_time = Bomb.time_until_explode;
@@ -26,12 +51,12 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     public GameScreen_GUI() {
         Game.musicPlayer.battleMusicStart();
         Game.refreshForRound();
-
         LayeredPane = new JLayeredPane();
-
+        initPlayerStatusImage();
+//
         //region >> Register button action listeners
-        btn_menu.addActionListener(this);
-        btn_finish.addActionListener(this);
+        MenuButton.addActionListener(this);
+        FinishButton.addActionListener(this);
         //endregion
 
         //region >> add event listener for keyboard input
@@ -43,6 +68,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         //region >> add event listener for PlayerDieListener
         for(Player player : Game.players){
             player.setPlayerDieListener(this);
+            player.setPlayerStatusChangeListener(this);
         }
         //endregion
 
@@ -65,6 +91,36 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         this.setVisible(true);
     }
 
+    public void PlayerStatusImageAdd(int player_id, TreasureType treasure_type) throws Exception {
+        String image_path = switch(treasure_type){
+            case BOMB_POWER_UP -> "assets/item_bomb_power_up.png";
+            case BOMB_INCREASE -> "assets/item_bomb_increase.png";
+            case INVINCIBILITY -> "assets/item_invincibility.png";
+            case ROLLERSKATE -> "assets/item_roller_skate.png";
+            case OBSTACLE -> "assets/item_obstacle.png";
+            case GHOST -> "assets/item_ghost.png";
+            case DETONATOR -> "assets/item_detonator.png";
+        };
+
+        try{
+            JLabel target_label = getTargetStatusLabel(player_id, treasure_type);
+            target_label.setIcon(new ImageIcon(image_path));
+        }
+        catch (Exception e){
+            System.err.println("error: " + e.getMessage());
+        }
+    }
+
+    public void PlayerStatusImageRemove(int player_id, TreasureType treasure_type){
+        try{
+            JLabel target_label = getTargetStatusLabel(player_id, treasure_type);
+            target_label.setIcon(null);
+        }
+        catch (Exception e){
+            System.err.println("error: " + e.getMessage());
+        }
+    }
+
     //region >> private functions
     private void GenerateGameBoard(){
         int size = Game.map.getSize()*30;
@@ -80,6 +136,57 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         // add LayeredPane in GameBoard JPane
         GameBoard.setLayout(new BorderLayout());
         GameBoard.add(LayeredPane);
+    }
+
+    private void initPlayerStatusImage(){
+        //region >> display player image
+        ImageIcon player1Image = new ImageIcon("assets/player1.png");
+        Player1Image.setIcon(player1Image);
+        ImageIcon player2Image = new ImageIcon("assets/player2.png");
+        Player2Image.setIcon(player2Image);
+        if(Game.number_of_players == 3){
+            ImageIcon player3Image = new ImageIcon("assets/player3.png");
+            Player3Image.setIcon(player3Image);
+        }else{
+            Player3StatusPanel.setVisible(false);
+        }
+        //endregion
+    }
+
+    private JLabel getTargetStatusLabel(int player_id, TreasureType treasure_type) throws Exception {
+        JLabel target_label;
+        if(player_id == 1){
+            target_label = switch (treasure_type){
+                case GHOST -> Player1Ghost;
+                case ROLLERSKATE -> Player1RollerSkate;
+                case OBSTACLE -> Player1Obstacle;
+                case INVINCIBILITY -> Player1Invincibility;
+                case DETONATOR -> Player1Detonator;
+                default -> throw new Exception("Invalid Treasure type : " + treasure_type);
+            };
+        }else if(player_id == 2){
+            target_label = switch (treasure_type){
+                case GHOST -> Player2Ghost;
+                case ROLLERSKATE -> Player2RollerSkate;
+                case OBSTACLE -> Player2Obstacle;
+                case INVINCIBILITY -> Player2Invincibility;
+                case DETONATOR -> Player2Detonator;
+                default -> throw new Exception("Invalid Treasure type : " + treasure_type);
+            };
+        } else if (player_id == 3) {
+            target_label = switch (treasure_type){
+                case GHOST -> Player3Ghost;
+                case ROLLERSKATE -> Player3RollerSkate;
+                case OBSTACLE -> Player3Obstacle;
+                case INVINCIBILITY -> Player3Invincibility;
+                case DETONATOR -> Player3Detonator;
+                default -> throw new Exception("Invalid Treasure type : " + treasure_type);
+            };
+        }else{
+            throw new Exception("Invalid player ID: " + player_id);
+        }
+
+        return target_label;
     }
 
     private void initPlayersPositions(){
@@ -107,7 +214,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         }
     }
 
-    private void playerMove(int player_id, String direction){
+    private void playerMove(int player_id, String direction) throws Exception {
         if(Game.players.get(player_id).move(direction)){
             Game.map.getLayers().get("Objects").update();
             LayeredPane.revalidate();
@@ -122,13 +229,33 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.repaint();
         return newBomb;
     }
+
+    private void short_timer_start() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (short_time <= 0) {
+                    // short_timeが0になったらGameScreen_GUIを閉じる
+                    dispose();
+                    timer.cancel();
+                    new RoundResultScreen_GUI();
+                } else {
+                    // short_timeを減らす
+                    short_time--;
+                }
+            }
+        };
+
+        // タイマーを1秒ごとに実行する
+        timer.scheduleAtFixedRate(task, 0, 1000);
+    }
     //endregion
 
 
     //actions for each button
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btn_menu) {
+        if(e.getSource() == MenuButton) {
             Game.is_paused = true;
             MenuBar_GUI menuBarGUI =  new MenuBar_GUI(this);
             menuBarGUI.addWindowListener(new WindowAdapter() {
@@ -139,7 +266,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                     Game.is_paused = false;
                 }
             });
-        }else if(e.getSource() == btn_finish) {
+        }else if(e.getSource() == FinishButton) {
             this.dispose();
             Game.current_round++;
             if(Game.current_round <= Game.number_of_rounds){
@@ -160,22 +287,38 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             //region >> player1 controller
             case KeyEvent.VK_UP:
                 if(Game.players.get(0).isAlive()){
-                    playerMove(0, "up");
+                    try {
+                        playerMove(0, "up");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_DOWN:
                 if(Game.players.get(0).isAlive()){
-                    playerMove(0, "down");
+                    try {
+                        playerMove(0, "down");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_RIGHT:
                 if(Game.players.get(0).isAlive()){
-                    playerMove(0, "right");
+                    try {
+                        playerMove(0, "right");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_LEFT:
                 if(Game.players.get(0).isAlive()){
-                    playerMove(0, "left");
+                    try {
+                        playerMove(0, "left");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_SHIFT:
@@ -192,22 +335,38 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             //region >> player2 controller
             case KeyEvent.VK_W:
                 if(Game.players.get(1).isAlive()){
-                    playerMove(1, "up");
+                    try {
+                        playerMove(1, "up");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_S:
                 if(Game.players.get(1).isAlive()){
-                    playerMove(1, "down");
+                    try {
+                        playerMove(1, "down");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_D:
                 if(Game.players.get(1).isAlive()){
-                    playerMove(1, "right");
+                    try {
+                        playerMove(1, "right");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_A:
                 if(Game.players.get(1).isAlive()){
-                    playerMove(1, "left");
+                    try {
+                        playerMove(1, "left");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_R:
@@ -224,22 +383,38 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             //region >> player3 controller
             case KeyEvent.VK_U:
                 if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
-                    playerMove(2, "up");
+                    try {
+                        playerMove(2, "up");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_J:
                 if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
-                    playerMove(2, "down");
+                    try {
+                        playerMove(2, "down");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_K:
                 if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
-                    playerMove(2, "right");
+                    try {
+                        playerMove(2, "right");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_H:
                 if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
-                    playerMove(2, "left");
+                    try {
+                        playerMove(2, "left");
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 break;
             case KeyEvent.VK_O:
@@ -289,25 +464,11 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         }
     }
 
-    private void short_timer_start() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (short_time <= 0) {
-                    // short_timeが0になったらGameScreen_GUIを閉じる
-                    dispose();
-                    timer.cancel();
-                    new RoundResultScreen_GUI();
-                } else {
-                    // short_timeを減らす
-                    short_time--;
-                }
-            }
-        };
-
-        // タイマーを1秒ごとに実行する
-        timer.scheduleAtFixedRate(task, 0, 1000);
+    @Override
+    public void PlayerStatusChanged(int player_id, TreasureType treasure_type) throws Exception {
+        PlayerStatusImageAdd(player_id, treasure_type);
     }
+
 
     //region >> we don't need to implement it
     @Override
@@ -317,5 +478,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     @Override
     public void keyPressed(KeyEvent e) {
     }
+
     //endregion
 }
