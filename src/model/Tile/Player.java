@@ -52,10 +52,23 @@ public class Player extends Tile implements BombExplodeListener {
         this.visual = visual;
         this.displayName = visual.substring(0, visual.lastIndexOf("."));
     }
-
-    void die(){
+    public void die(){
         is_alive = false;
         firePlayerDieEvent();
+    }
+    public Bomb putBomb(){
+        //if there is not a bomb in the same cell, player can put new bomb
+        if(isBombPlaceable()){
+            Bomb newBomb = generateBomb();
+            Game.bombs.add(newBomb);
+            current_number_of_bomb++;
+            Game.sfxPlayer.play("assets/sound/placeBomb.wav");
+            return newBomb;
+        }
+        return null;
+    }
+    public boolean isBombPlaceable(){
+        return !isABombAtMyFeet() && (current_number_of_bomb < max_number_of_bombs);
     }
 
     //region >> movement
@@ -170,7 +183,7 @@ public class Player extends Tile implements BombExplodeListener {
                 }
                 break;
             case DETONATOR:
-                if(is_detonator_mode){
+                if(!is_detonator_mode){
                     be_detonator_setter();
                 }
                 break;
@@ -179,9 +192,10 @@ public class Player extends Tile implements BombExplodeListener {
         Game.sfxPlayer.play("assets/sound/itemGet.wav");
         Game.treasures.remove(treasure);
     }
-
     private void be_invincible(){
         is_invincible_mode = true;
+        String temp_visual = visual;
+        visual = "invincibilityModePlayer.png";
         //region >> Update the timer once canceled to a new instance
         if (invincible_timer != null) {
             invincible_timer.cancel();
@@ -196,6 +210,13 @@ public class Player extends Tile implements BombExplodeListener {
                     invincible_timer.cancel();
                     invincible_time = power_up_time;
                     is_invincible_mode = false;
+                    visual = temp_visual;
+                    System.out.println("invincibility finish");
+                    try {
+                        firePlayerStatusChangeTimeUp(id, TreasureType.INVINCIBILITY);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 } else {
                     invincible_time--;
                 }
@@ -204,7 +225,6 @@ public class Player extends Tile implements BombExplodeListener {
 
         invincible_timer.scheduleAtFixedRate(task, 0, 1000);
     }
-
     private void be_detonator_setter(){
         is_detonator_mode = true;
         //region >> Update the timer once canceled to a new instance
@@ -221,6 +241,11 @@ public class Player extends Tile implements BombExplodeListener {
                     detonator_timer.cancel();
                     detonator_time = power_up_time;
                     is_detonator_mode = false;
+                    try {
+                        firePlayerStatusChangeTimeUp(id, TreasureType.DETONATOR);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }else{
                     detonator_time--;
                 }
@@ -229,7 +254,6 @@ public class Player extends Tile implements BombExplodeListener {
 
         detonator_timer.scheduleAtFixedRate(task, 0, 1000);
     }
-
     private void be_obstacle_setter(){
         is_obstacle_mode = true;
         //region >> Update the timer once canceled to a new instance
@@ -246,6 +270,12 @@ public class Player extends Tile implements BombExplodeListener {
                     obstacle_timer.cancel();
                     obstacle_time = power_up_time;
                     is_obstacle_mode = false;
+                    System.out.println("obstacle finish");
+                    try {
+                        firePlayerStatusChangeTimeUp(id, TreasureType.OBSTACLE);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }else{
                     obstacle_time--;
                 }
@@ -254,7 +284,6 @@ public class Player extends Tile implements BombExplodeListener {
 
         obstacle_timer.scheduleAtFixedRate(task, 0, 1000);
     }
-
     private void be_ghost(){
         is_ghost_mode = true;
         //region >> Update the timer once canceled to a new instance
@@ -271,6 +300,11 @@ public class Player extends Tile implements BombExplodeListener {
                     ghost_timer.cancel();
                     ghost_time = power_up_time;
                     is_ghost_mode = false;
+                    try {
+                        firePlayerStatusChangeTimeUp(id, TreasureType.GHOST);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }else{
                     ghost_time--;
                 }
@@ -279,7 +313,6 @@ public class Player extends Tile implements BombExplodeListener {
 
         ghost_timer.scheduleAtFixedRate(task, 0, 1000);
     }
-
     private void use_roller_skate(){
         is_roller_skate_mode = true;
         //region >> Update the timer once canceled to a new instance
@@ -295,7 +328,11 @@ public class Player extends Tile implements BombExplodeListener {
                 if (roller_skate_time <= 0) {
                     roller_skate_time = power_up_time;
                     is_roller_skate_mode = false;
-                    is_detonator_mode = false;
+                    try {
+                        firePlayerStatusChangeTimeUp(id, TreasureType.ROLLERSKATE);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }else{
                     roller_skate_time--;
                 }
@@ -310,23 +347,8 @@ public class Player extends Tile implements BombExplodeListener {
     private Bomb generateBomb(){
         return new Bomb(this.x,this.y, this);
     }
-    public Bomb putBomb(){
-        //if there is not a bomb in the same cell, player can put new bomb
-        if(isBombPlaceable()){
-            Bomb newBomb = generateBomb();
-            Game.bombs.add(newBomb);
-            current_number_of_bomb++;
-            Game.sfxPlayer.play("assets/sound/placeBomb.wav");
-            return newBomb;
-        }
-        return null;
-    }
-
     private boolean isABombAtMyFeet(){
         return !Game.map.getLayers().get("Bombs").getTiles().get(Game.map.getSize()*this.y + x).getVisual().equals("Empty.png");
-    }
-    public boolean isBombPlaceable(){
-        return !isABombAtMyFeet() && (current_number_of_bomb < max_number_of_bombs);
     }
     //endregion
 
@@ -334,15 +356,15 @@ public class Player extends Tile implements BombExplodeListener {
     public void setPlayerStatusChangeListener(PlayerStatusChangeListener listener){
         this.playerStatusChangeListener = listener;
     }
-
-    public void firePlayerStatusChange(int player_id, TreasureType treasure_type) throws Exception {
-        playerStatusChangeListener.PlayerStatusChanged(player_id, treasure_type);
-    }
-
     public void setPlayerDieListener(PlayerDieListener listener){
         this.playerDieListener = listener;
     }
-
+    private void firePlayerStatusChange(int player_id, TreasureType treasure_type) throws Exception {
+        playerStatusChangeListener.PlayerStatusChanged(player_id, treasure_type);
+    }
+    private void firePlayerStatusChangeTimeUp(int player_id, TreasureType treasure_type) throws Exception {
+        playerStatusChangeListener.PlayerStatusChangedTimeUp(player_id, treasure_type);
+    };
     private void firePlayerDieEvent(){
         playerDieListener.playerDie();
     }
@@ -358,39 +380,33 @@ public class Player extends Tile implements BombExplodeListener {
     public void increaseScore(){
         this.score++;
     }
-
     public boolean isAlive() {
         return is_alive;
     }
     public void setAlive(boolean is_alive) {
         this.is_alive = is_alive;
     }
-
     public int getMax_number_of_bombs(){
         return max_number_of_bombs;
     }
     public void setMax_number_of_bombs(int max_number_of_bombs){
         this.max_number_of_bombs = max_number_of_bombs;
     }
-
     public void setPower_of_bombs(int power_of_bombs) {
         this.power_of_bombs = power_of_bombs;
     }
     public int getPower_of_bombs() {
         return power_of_bombs;
     }
-
     public void setCurrent_number_of_bomb(int current_number_of_bomb){
         this.current_number_of_bomb = current_number_of_bomb;
     }
     public int getCurrent_number_of_bomb() {
         return current_number_of_bomb;
     }
-
     public String getDisplayName(){
         return this.displayName;
     }
-
     public int getSpeed() {
         return speed;
     }
@@ -401,7 +417,6 @@ public class Player extends Tile implements BombExplodeListener {
         this.speed--;
     }
     //endregion
-
 
     //we need to implement this so that Player can be noticed when bombs explode and can check if he is inside of explosion or not.
     @Override
@@ -428,7 +443,6 @@ public class Player extends Tile implements BombExplodeListener {
     public void bombFinishExplosion() {
 
     }
-
     @Override
     public void bombDestroyedBox() {
 

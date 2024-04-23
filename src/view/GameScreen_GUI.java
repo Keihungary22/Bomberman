@@ -91,6 +91,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         this.setVisible(true);
     }
 
+    //region >> public method
     public void PlayerStatusImageAdd(int player_id, TreasureType treasure_type) throws Exception {
         String image_path = switch(treasure_type){
             case BOMB_POWER_UP -> "assets/item_bomb_power_up.png";
@@ -110,7 +111,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             System.err.println("error: " + e.getMessage());
         }
     }
-
     public void PlayerStatusImageRemove(int player_id, TreasureType treasure_type){
         try{
             JLabel target_label = getTargetStatusLabel(player_id, treasure_type);
@@ -120,6 +120,8 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             System.err.println("error: " + e.getMessage());
         }
     }
+    //endregion
+
 
     //region >> private functions
     private void GenerateGameBoard(){
@@ -137,7 +139,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         GameBoard.setLayout(new BorderLayout());
         GameBoard.add(LayeredPane);
     }
-
     private void initPlayerStatusImage(){
         //region >> display player image
         ImageIcon player1Image = new ImageIcon("assets/player1.png");
@@ -152,7 +153,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         }
         //endregion
     }
-
     private JLabel getTargetStatusLabel(int player_id, TreasureType treasure_type) throws Exception {
         JLabel target_label;
         if(player_id == 1){
@@ -188,7 +188,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
 
         return target_label;
     }
-
     private void initPlayersPositions(){
         int index = 0;
         int x = 1;
@@ -213,7 +212,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             index++;
         }
     }
-
     private void playerMove(int player_id, String direction) throws Exception {
         if(Game.players.get(player_id).move(direction)){
             Game.map.getLayers().get("Objects").update();
@@ -221,7 +219,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             LayeredPane.repaint();
         }
     }
-
     private Bomb playerPutBomb(int player_id){
         Bomb newBomb = Game.players.get(player_id).putBomb();
         Game.map.getLayers().get("Bombs").update();
@@ -229,7 +226,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.repaint();
         return newBomb;
     }
-
     private void short_timer_start() {
         TimerTask task = new TimerTask() {
             @Override
@@ -249,8 +245,12 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         // タイマーを1秒ごとに実行する
         timer.scheduleAtFixedRate(task, 0, 1000);
     }
+    private void updateLayer(String layer_name){
+        Game.map.getLayers().get(layer_name).update();
+        LayeredPane.revalidate();
+        LayeredPane.repaint();
+    }
     //endregion
-
 
     //actions for each button
     @Override
@@ -277,7 +277,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             }
         }
     }
-
     // player controller
     @Override
     public void keyReleased(KeyEvent e) {
@@ -429,7 +428,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             //endregion
         }
     }
-
     // Implementation of explosion event listeners
     @Override
     public void bombExploded() {
@@ -437,7 +435,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.revalidate();
         LayeredPane.repaint();
     }
-
     //Implementation of finish-explosion event listeners
     @Override
     public void bombFinishExplosion(){
@@ -445,30 +442,30 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.revalidate();
         LayeredPane.repaint();
     }
-
     @Override
     public void bombDestroyedBox() {
         Game.map.getLayers().get("Objects").update();
         LayeredPane.revalidate();
         LayeredPane.repaint();
     }
-
     @Override
     public void playerDie() {
-        Game.map.getLayers().get("Objects").update();
-        LayeredPane.revalidate();
-        LayeredPane.repaint();
+        updateLayer("Objects");
         System.out.println(Game.getNumberOfAlivePlayers());
         if(Game.getNumberOfAlivePlayers() == 1){
             short_timer_start();
         }
     }
-
     @Override
     public void PlayerStatusChanged(int player_id, TreasureType treasure_type) throws Exception {
         PlayerStatusImageAdd(player_id, treasure_type);
+        updateLayer("Objects");
     }
-
+    @Override
+    public void PlayerStatusChangedTimeUp(int player_id, TreasureType treasure_type) throws Exception {
+        PlayerStatusImageRemove(player_id, treasure_type);
+        updateLayer("Objects");
+    }
 
     //region >> we don't need to implement it
     @Override
