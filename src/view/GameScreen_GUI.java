@@ -3,7 +3,9 @@ package view;
 import model.*;
 import model.EventListener.BombExplodeListener;
 import model.EventListener.PlayerDieListener;
+import model.EventListener.PlayerGetTreasureListener;
 import model.EventListener.PlayerStatusChangeListener;
+import model.Layer.Layer;
 import model.Tile.*;
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +14,7 @@ import java.awt.event.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener, PlayerStatusChangeListener {
+public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener, PlayerStatusChangeListener, PlayerGetTreasureListener {
     private JPanel MainPanel;
     private JTextArea ElapsedTime;
     private JTextArea CurrentRound;
@@ -69,6 +71,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         for(Player player : Game.players){
             player.setPlayerDieListener(this);
             player.setPlayerStatusChangeListener(this);
+            player.setPlayerGetTreasureListener(this);
         }
         //endregion
 
@@ -83,10 +86,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         this.setSize(1200, 1200);
         //endregion
 
-        //region >> These codes are just for in case of displaying new stage correctly when new round starts
-        Game.refreshForRound();
-        Game.map.getLayers().get("Bombs").update();
-        //endregion
+//        Game.map.getLayers().get("Bombs").update();
 
         this.setVisible(true);
     }
@@ -131,8 +131,9 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         //region >> add layers into LayeredPane
         LayeredPane.add(Game.map.getLayers().get("Background").getLayer(), JLayeredPane.DEFAULT_LAYER, 1);
         LayeredPane.add(Game.map.getLayers().get("Decoration").getLayer(), JLayeredPane.DEFAULT_LAYER, 0);
-        LayeredPane.add(Game.map.getLayers().get("Bombs").getLayer(), JLayeredPane.PALETTE_LAYER, 1);
-        LayeredPane.add(Game.map.getLayers().get("Objects").getLayer(), JLayeredPane.PALETTE_LAYER, 0);
+        LayeredPane.add(Game.map.getLayers().get("Bombs").getLayer(), JLayeredPane.PALETTE_LAYER, 2);
+        LayeredPane.add(Game.map.getLayers().get("Objects").getLayer(), JLayeredPane.PALETTE_LAYER, 1);
+        LayeredPane.add(Game.map.getLayers().get("Players").getLayer(), JLayeredPane.PALETTE_LAYER, 0);
         //endregion
 
         // add LayeredPane in GameBoard JPane
@@ -214,7 +215,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     }
     private void playerMove(int player_id, String direction) throws Exception {
         if(Game.players.get(player_id).move(direction)){
-            Game.map.getLayers().get("Objects").update();
+            Game.map.getLayers().get("Players").update();
             LayeredPane.revalidate();
             LayeredPane.repaint();
         }
@@ -462,7 +463,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     }
     @Override
     public void playerDie() {
-        updateLayer("Objects");
+        updateLayer("Players");
         System.out.println(Game.getNumberOfAlivePlayers());
         if(Game.getNumberOfAlivePlayers() == 1){
             short_timer_start();
@@ -471,11 +472,15 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     @Override
     public void PlayerStatusChanged(int player_id, TreasureType treasure_type) throws Exception {
         PlayerStatusImageAdd(player_id, treasure_type);
-        updateLayer("Objects");
+        updateLayer("Players");
     }
     @Override
     public void PlayerStatusChangedTimeUp(int player_id, TreasureType treasure_type) throws Exception {
         PlayerStatusImageRemove(player_id, treasure_type);
+        updateLayer("Players");
+    }
+    @Override
+    public void PlayerGetTreasure(){
         updateLayer("Objects");
     }
 

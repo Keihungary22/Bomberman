@@ -63,6 +63,7 @@ public class Game {
                 boxes.add(new Box(i, j));
             }
         }
+        System.out.println("Game: refreshForRound");
         //endregion
     }
 

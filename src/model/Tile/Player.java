@@ -1,6 +1,7 @@
 package model.Tile;
 
 import model.EventListener.BombExplodeListener;
+import model.EventListener.PlayerGetTreasureListener;
 import model.EventListener.PlayerStatusChangeListener;
 import model.Game;
 import model.EventListener.PlayerDieListener;
@@ -18,6 +19,7 @@ public class Player extends Tile implements BombExplodeListener {
     private final String displayName;
     private PlayerDieListener playerDieListener;
     private PlayerStatusChangeListener playerStatusChangeListener;
+    private PlayerGetTreasureListener playerGetTreasureListener;
     private int speed = 2;
     private DetonatorBomb currentDetonatorBomb;
     private final String originalVisual;
@@ -108,7 +110,7 @@ public class Player extends Tile implements BombExplodeListener {
         currentDetonatorBomb = null;
     }
     public boolean isBombPlaceable(){
-        return !isABombAtMyFeet() && (current_number_of_bomb < max_number_of_bombs);
+        return !isSomethingAtMyFeet() && (current_number_of_bomb < max_number_of_bombs);
     }
 
     //region >> movement
@@ -150,6 +152,7 @@ public class Player extends Tile implements BombExplodeListener {
 
         Tile next_objects_tile = Game.map.getLayers().get("Objects").getTiles().get(size*(y+dy)+x+dx);
         Tile next_bombs_tile = Game.map.getLayers().get("Bombs").getTiles().get(size*(y+dy)+x+dx);
+        Tile next_players_tile = Game.map.getLayers().get("Players").getTiles().get(size*(y+dy)+x+dx);
         if(
                 (
                     !is_ghost_mode
@@ -158,15 +161,15 @@ public class Player extends Tile implements BombExplodeListener {
                     &&
                     !(next_objects_tile instanceof Brick)
                     &&
-                    !(next_objects_tile instanceof Player)
-                    &&
                     !(next_objects_tile instanceof Box)
                     &&
                     !(next_bombs_tile instanceof Bomb)
+                    &&
+                    !(next_players_tile instanceof Player)
                 )
                 ||
                 (
-                    is_ghost_mode && !(next_objects_tile instanceof Brick) && !(next_objects_tile instanceof Player)
+                    is_ghost_mode && !(next_objects_tile instanceof Brick) && !(next_players_tile instanceof Player)
                 )
         ){
             if(next_objects_tile instanceof Treasure){
@@ -236,9 +239,10 @@ public class Player extends Tile implements BombExplodeListener {
                 }
                 break;
         }
-        firePlayerStatusChange(this.id, treasure.getType());
         Game.sfxPlayer.play("assets/sound/itemGet.wav");
         Game.treasures.remove(treasure);
+        firePlayerStatusChange(this.id, treasure.getType());
+        firePlayerGetTreasure();
     }
     private void be_invincible(){
         is_invincible_mode = true;
@@ -348,6 +352,9 @@ public class Player extends Tile implements BombExplodeListener {
                     ghost_timer.cancel();
                     ghost_time = power_up_time;
                     is_ghost_mode = false;
+                    if(isObjectsAtMyFeet()){
+                        die();
+                    }
                     try {
                         firePlayerStatusChangeTimeUp(id, TreasureType.GHOST);
                     } catch (Exception e) {
@@ -399,7 +406,13 @@ public class Player extends Tile implements BombExplodeListener {
             return new NormalBomb(this.x,this.y, this);
         }
     }
-    private boolean isABombAtMyFeet(){
+    private boolean isSomethingAtMyFeet(){
+        return isObjectsAtMyFeet() || isBombAtMyFeet();
+    }
+    private boolean isObjectsAtMyFeet(){
+        return !Game.map.getLayers().get("Objects").getTiles().get(Game.map.getSize()*this.y + x).getVisual().equals("Empty.png");
+    }
+    private boolean isBombAtMyFeet(){
         return !Game.map.getLayers().get("Bombs").getTiles().get(Game.map.getSize()*this.y + x).getVisual().equals("Empty.png");
     }
     //endregion
@@ -411,6 +424,9 @@ public class Player extends Tile implements BombExplodeListener {
     public void setPlayerDieListener(PlayerDieListener listener){
         this.playerDieListener = listener;
     }
+    public void setPlayerGetTreasureListener(PlayerGetTreasureListener listener){
+        this.playerGetTreasureListener = listener;
+    }
     private void firePlayerStatusChange(int player_id, TreasureType treasure_type) throws Exception {
         playerStatusChangeListener.PlayerStatusChanged(player_id, treasure_type);
     }
@@ -419,6 +435,9 @@ public class Player extends Tile implements BombExplodeListener {
     };
     private void firePlayerDieEvent(){
         playerDieListener.playerDie();
+    }
+    private void firePlayerGetTreasure(){
+        playerGetTreasureListener.PlayerGetTreasure();
     }
     //endregion
 
