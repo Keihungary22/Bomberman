@@ -258,7 +258,12 @@ public class Bomb extends Tile{
         //region >> explode bombs those are in the queue.
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         for(Bomb bomb_in_queue : this.bomb_chain_queue){
-            scheduler.schedule(bomb_in_queue::explode, 100, TimeUnit.MILLISECONDS);
+            if(bomb_in_queue instanceof DetonatorBomb){
+                scheduler.schedule(bomb_in_queue.getOwner()::explodeDetonatorBomb, 100, TimeUnit.MILLISECONDS);
+            }
+            else{
+                scheduler.schedule(bomb_in_queue::explode, 100, TimeUnit.MILLISECONDS);
+            }
         }
         //endregion
 
@@ -293,6 +298,9 @@ public class Bomb extends Tile{
         this.bombExplodeListeners.add(listener);
     }
 
+    public Player getOwner(){
+        return this.owner;
+    }
 
     @Override
     public boolean equals(Object obj){

@@ -63,7 +63,7 @@ public class Player extends Tile implements BombExplodeListener {
         max_number_of_obstacles = 0;
         current_number_of_bomb = 0;
         current_number_of_obstacle = 0;
-        speed = 1;
+        speed = 2;
         current_detonator_bomb = null;
         is_cooling_down = false;
 
@@ -75,9 +75,9 @@ public class Player extends Tile implements BombExplodeListener {
         visual = original_visual;
 
         is_invincible_mode = false;
-        is_detonator_mode = false;
+        is_detonator_mode = true;
         is_obstacle_mode = false;
-        is_roller_skate_mode = false;
+        is_roller_skate_mode = true;
         is_ghost_mode = false;
     }
     public void die(){
@@ -111,7 +111,6 @@ public class Player extends Tile implements BombExplodeListener {
         return current_detonator_bomb != null;
     }
     public void explodeDetonatorBomb(){
-        System.out.println(hasDetonatorBomb());
         current_detonator_bomb.explode();
         current_detonator_bomb = null;
     }
