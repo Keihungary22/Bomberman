@@ -373,11 +373,15 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_R:
-                if(Game.players.get(1).isAlive() && Game.players.get(1).isBombPlaceable()) {
-                    newBomb = playerPutBomb(1);
-                    newBomb.setBombExplodeListener(this);
-                    for(Player player: Game.players){
-                        newBomb.setBombExplodeListener(player);
+                if(Game.players.get(1).isAlive()){
+                    if(Game.players.get(1).hasDetonatorBomb()){
+                        Game.players.get(1).explodeDetonatorBomb();
+                    }else if (Game.players.get(1).isBombPlaceable()){
+                        newBomb = playerPutBomb(1);
+                        newBomb.setBombExplodeListener(this);
+                        for(Player player: Game.players){
+                            newBomb.setBombExplodeListener(player);
+                        }
                     }
                 }
                 break;
@@ -421,11 +425,15 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_O:
-                if(Game.number_of_players == 3 && Game.players.get(2).isAlive() && Game.players.get(2).isBombPlaceable()) {
-                    newBomb = playerPutBomb(2);
-                    newBomb.setBombExplodeListener(this);
-                    for(Player player: Game.players){
-                        newBomb.setBombExplodeListener(player);
+                if(Game.players.get(2).isAlive()){
+                    if(Game.players.get(2).hasDetonatorBomb()){
+                        Game.players.get(2).explodeDetonatorBomb();
+                    }else if (Game.players.get(2).isBombPlaceable()){
+                        newBomb = playerPutBomb(2);
+                        newBomb.setBombExplodeListener(this);
+                        for(Player player: Game.players){
+                            newBomb.setBombExplodeListener(player);
+                        }
                     }
                 }
                 break;

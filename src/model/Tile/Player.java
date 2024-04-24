@@ -20,7 +20,7 @@ public class Player extends Tile implements BombExplodeListener {
     private PlayerStatusChangeListener playerStatusChangeListener;
     private int speed = 2;
     private DetonatorBomb currentDetonatorBomb;
-    private String originalVisual;
+    private final String originalVisual;
     //region >> status for power-ups
     private boolean is_invincible_mode = false;
     private boolean is_detonator_mode = false;
@@ -55,8 +55,7 @@ public class Player extends Tile implements BombExplodeListener {
         this.originalVisual = visual;
         this.displayName = visual.substring(0, visual.lastIndexOf("."));
     }
-    public void refreshForNewRound()
-    {
+    public void refreshForNewRound() {
         is_alive = true;
         power_of_bombs = 1;
         max_number_of_bombs = 1;
@@ -152,15 +151,23 @@ public class Player extends Tile implements BombExplodeListener {
         Tile next_objects_tile = Game.map.getLayers().get("Objects").getTiles().get(size*(y+dy)+x+dx);
         Tile next_bombs_tile = Game.map.getLayers().get("Bombs").getTiles().get(size*(y+dy)+x+dx);
         if(
-                !(next_objects_tile instanceof Block)
-                &&
-                !(next_objects_tile instanceof Brick)
-                &&
-                !(next_objects_tile instanceof Player)
-                &&
-                !(next_objects_tile instanceof Box)
-                &&
-                !(next_bombs_tile instanceof Bomb)
+                (
+                    !is_ghost_mode
+                    &&
+                    !(next_objects_tile instanceof Block)
+                    &&
+                    !(next_objects_tile instanceof Brick)
+                    &&
+                    !(next_objects_tile instanceof Player)
+                    &&
+                    !(next_objects_tile instanceof Box)
+                    &&
+                    !(next_bombs_tile instanceof Bomb)
+                )
+                ||
+                (
+                    is_ghost_mode && !(next_objects_tile instanceof Brick) && !(next_objects_tile instanceof Player)
+                )
         ){
             if(next_objects_tile instanceof Treasure){
                 getTreasure((Treasure) next_objects_tile);
