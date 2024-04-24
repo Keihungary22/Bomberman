@@ -66,7 +66,7 @@ public class Bomb extends Tile{
         Game.explosions.add(center);
         this.explosions.add(center);
 
-        boolean destroyedBox = false;
+        boolean destroyBox = false;
 
         List<Tile> objects_tiles = Game.map.getLayers().get("Objects").getTiles();
         String visual = "";
@@ -79,7 +79,7 @@ public class Bomb extends Tile{
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
-                            destroyedBox = true;
+                            destroyBox = true;
                         }
                     }
                 }
@@ -122,7 +122,7 @@ public class Bomb extends Tile{
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
-                            destroyedBox = true;
+                            destroyBox = true;
                         }
                     }
                 }
@@ -165,7 +165,7 @@ public class Bomb extends Tile{
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
-                            destroyedBox = true;
+                            destroyBox = true;
                         }
                     }
                 }
@@ -209,7 +209,7 @@ public class Bomb extends Tile{
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
-                            destroyedBox = true;
+                            destroyBox = true;
                         }
                     }
                 }
@@ -251,7 +251,8 @@ public class Bomb extends Tile{
         //endregion
 
         //region >> remove destroyed boxed from gui
-        if(destroyedBox){
+        if(destroyBox){
+            System.out.println("event box destroyed");
             fireBombDestroyBoxEvent();
         }
         //endregion

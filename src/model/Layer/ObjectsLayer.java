@@ -15,15 +15,9 @@ public class ObjectsLayer extends Layer{
 
     @Override
     protected void updateTiles(int size) {
-        ArrayList<Player> living_players = new ArrayList<>();
         ArrayList<Point> box_coordinates = new ArrayList<>();
         ArrayList<Point> treasure_coordinates = new ArrayList<>();
 
-        for(Player player : Game.players){
-            if(player.isAlive()){
-                living_players.add(player);
-            }
-        }
         for(Box box : Game.boxes){
             Point newPoint = new Point(box.getX(), box.getY());
             box_coordinates.add(newPoint);
@@ -35,36 +29,27 @@ public class ObjectsLayer extends Layer{
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                boolean is_player_exists = false;
-                for(Player player : living_players){
-                    if(player.getX() == j && player.getY() == i){
-                        is_player_exists = true;
-                        this.tiles.add(player);
+                if (box_coordinates.contains(new Point(j, i))) {
+                    for(int l = 0; l < box_coordinates.size(); l++) {
+                        if(box_coordinates.get(l).equals(new Point(j, i))){
+                            this.tiles.add(Game.boxes.get(l));
+                        }
+                    }
+                }else if (treasure_coordinates.contains(new Point(j, i))) {
+                    for(int l = 0; l < treasure_coordinates.size(); l++) {
+                        if(treasure_coordinates.get(l).equals(new Point(j, i))){
+                            this.tiles.add(Game.treasures.get(l));
+                        }
                     }
                 }
-                if(!is_player_exists){
-                    if (box_coordinates.contains(new Point(j, i))) {
-                        for(int l = 0; l < box_coordinates.size(); l++) {
-                            if(box_coordinates.get(l).equals(new Point(j, i))){
-                                this.tiles.add(Game.boxes.get(l));
-                            }
-                        }
-                    }else if (treasure_coordinates.contains(new Point(j, i))) {
-                        for(int l = 0; l < treasure_coordinates.size(); l++) {
-                            if(treasure_coordinates.get(l).equals(new Point(j, i))){
-                                this.tiles.add(Game.treasures.get(l));
-                            }
-                        }
-                    }
-                    else  if (i == 0 || j == 0 || i == size-1 || j == size-1) {
-                        this.tiles.add(new Brick(j, i));
-                    }
-                    else if(j % 2 == 0 && i % 2 == 0){
-                        this.tiles.add(new Block(j, i));
-                    }
-                    else {
-                        this.tiles.add(new Empty(j, i));
-                    }
+                else  if (i == 0 || j == 0 || i == size-1 || j == size-1) {
+                    this.tiles.add(new Brick(j, i));
+                }
+                else if(j % 2 == 0 && i % 2 == 0){
+                    this.tiles.add(new Block(j, i));
+                }
+                else {
+                    this.tiles.add(new Empty(j, i));
                 }
             }
         }

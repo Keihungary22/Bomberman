@@ -38,7 +38,8 @@ public class Map {
         Layer BackgroundLayer  = new BackgroundLayer(size); //background layer
         Layer DecorationLayer  = new DecorationLayer(size); //decoration
         Layer BombsLayer = new BombsLayer(size);
-        Layer ObjectsLayer = new ObjectsLayer(size); //objects layer
+        Layer ObjectsLayer = new ObjectsLayer(size);
+        Layer PlayersLayer = new PlayersLayer(size);//objects layer
         //endregion
 
         //region >> Add each layer in layers hashmap
@@ -46,6 +47,7 @@ public class Map {
         layers.put("Decoration", DecorationLayer);
         layers.put("Bombs", BombsLayer);
         layers.put("Objects", ObjectsLayer);
+        layers.put("Players", PlayersLayer);
         //endregion
     }
 
