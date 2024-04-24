@@ -321,10 +321,10 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_SHIFT:
-                if(Game.players.get(0).isAlive() && Game.players.get(0).isBombPlaceable()) {
+                if(Game.players.get(0).isAlive()){
                     if(Game.players.get(0).hasDetonatorBomb()){
                         Game.players.get(0).explodeDetonatorBomb();
-                    }else{
+                    }else if (Game.players.get(0).isBombPlaceable()){
                         newBomb = playerPutBomb(0);
                         newBomb.setBombExplodeListener(this);
                         for(Player player: Game.players){
