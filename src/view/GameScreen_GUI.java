@@ -5,8 +5,8 @@ import model.EventListener.BombExplodeListener;
 import model.EventListener.PlayerDieListener;
 import model.EventListener.PlayerGetTreasureListener;
 import model.EventListener.PlayerStatusChangeListener;
-import model.Layer.Layer;
 import model.Tile.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -227,6 +227,12 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.repaint();
         return newBomb;
     }
+    private void playerPutObstacle(int player_id){
+        Game.players.get(player_id).putObstacle();
+        Game.map.getLayers().get("Objects").update();
+        LayeredPane.revalidate();
+        LayeredPane.repaint();
+    }
     private void short_timer_start() {
         TimerTask task = new TimerTask() {
             @Override
@@ -287,6 +293,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         Player player2 = Game.players.get(1);
 
         Bomb newBomb;
+
         switch (e.getKeyCode()) {
             //region >> player1 controller
             case KeyEvent.VK_UP:
@@ -336,6 +343,11 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                             newBomb.setBombExplodeListener(player);
                         }
                     }
+                }
+                break;
+            case KeyEvent.VK_ENTER:
+                if(Game.players.get(0).isAlive() && Game.players.get(0).isObstaclePlaceable()){
+                    playerPutObstacle(0);
                 }
                 break;
             //endregion
@@ -390,6 +402,11 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                     }
                 }
                 break;
+            case KeyEvent.VK_F:
+                if(Game.players.get(1).isAlive() && Game.players.get(1).isObstaclePlaceable()){
+                    playerPutObstacle(1);
+                }
+                break;
             //endregion
 
             //region >> player3 controller
@@ -440,6 +457,11 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                             newBomb.setBombExplodeListener(player);
                         }
                     }
+                }
+                break;
+            case KeyEvent.VK_P:
+                if(Game.players.get(2).isAlive() && Game.players.get(2).isObstaclePlaceable()){
+                    playerPutObstacle(2);
                 }
                 break;
             //endregion
