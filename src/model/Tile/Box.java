@@ -5,7 +5,7 @@ import model.TreasureType;
 import java.util.Random;
 
 public class Box extends Tile {
-    private final TreasureType treasure_type;
+    protected TreasureType treasure_type;
 
     public Box(int x, int y) {
         super(x, y);

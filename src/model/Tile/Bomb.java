@@ -79,6 +79,9 @@ public class Bomb extends Tile{
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
+                            if(objectsTile instanceof Obstacle){
+                                ((Obstacle) objectsTile).getOwner().decrease_current_number_of_obstacle();
+                            }
                             destroyBox = true;
                         }
                     }
@@ -122,6 +125,9 @@ public class Bomb extends Tile{
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
+                            if(objectsTile instanceof Obstacle){
+                                ((Obstacle) objectsTile).getOwner().decrease_current_number_of_obstacle();
+                            }
                             destroyBox = true;
                         }
                     }
@@ -165,6 +171,9 @@ public class Bomb extends Tile{
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
+                            if(objectsTile instanceof Obstacle){
+                                ((Obstacle) objectsTile).getOwner().decrease_current_number_of_obstacle();
+                            }
                             destroyBox = true;
                         }
                     }
@@ -209,6 +218,9 @@ public class Bomb extends Tile{
                         obstacleCollision = true;
                         if(objectsTile instanceof Box){
                             ((Box) objectsTile).destroy();
+                            if(objectsTile instanceof Obstacle){
+                                ((Obstacle) objectsTile).getOwner().decrease_current_number_of_obstacle();
+                            }
                             destroyBox = true;
                         }
                     }
