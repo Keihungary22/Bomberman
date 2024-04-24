@@ -43,10 +43,7 @@ public class Game {
 
     public static void refreshForRound(){
         for(Player p : players){
-            p.setAlive(true);
-            p.setPower_of_bombs(1);
-            p.setMax_number_of_bombs(1);
-            p.setCurrent_number_of_bomb(0);
+            p.refreshForNewRound();
         }
         for(Bomb bomb : bombs){
             if(bomb instanceof NormalBomb){

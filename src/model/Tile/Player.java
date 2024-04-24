@@ -20,6 +20,7 @@ public class Player extends Tile implements BombExplodeListener {
     private PlayerStatusChangeListener playerStatusChangeListener;
     private int speed = 2;
     private DetonatorBomb currentDetonatorBomb;
+    private String originalVisual;
     //region >> status for power-ups
     private boolean is_invincible_mode = false;
     private boolean is_detonator_mode = false;
@@ -51,7 +52,35 @@ public class Player extends Tile implements BombExplodeListener {
         this.y = 0;
         this.destructible = true;
         this.visual = visual;
+        this.originalVisual = visual;
         this.displayName = visual.substring(0, visual.lastIndexOf("."));
+    }
+    public void refreshForNewRound()
+    {
+        is_alive = true;
+        power_of_bombs = 1;
+        max_number_of_bombs = 1;
+        current_number_of_bomb = 0;
+        currentDetonatorBomb = null;
+
+        invincible_timer.cancel();
+        invincible_timer = new Timer();
+        detonator_timer.cancel();
+        detonator_timer = new Timer();
+        obstacle_timer.cancel();
+        obstacle_timer = new Timer();
+        roller_skate_timer.cancel();
+        roller_skate_timer = new Timer();
+        ghost_timer.cancel();
+        ghost_timer = new Timer();
+
+        visual = originalVisual;
+
+        is_invincible_mode = false;
+        is_detonator_mode = false;
+        is_obstacle_mode = false;
+        is_roller_skate_mode = false;
+        is_ghost_mode = false;
     }
     public void die(){
         is_alive = false;
@@ -75,6 +104,7 @@ public class Player extends Tile implements BombExplodeListener {
         return currentDetonatorBomb != null;
     }
     public void explodeDetonatorBomb(){
+        System.out.println(hasDetonatorBomb());
         currentDetonatorBomb.explode();
         currentDetonatorBomb = null;
     }
@@ -130,7 +160,7 @@ public class Player extends Tile implements BombExplodeListener {
                 &&
                 !(next_objects_tile instanceof Box)
                 &&
-                !(next_bombs_tile instanceof NormalBomb)
+                !(next_bombs_tile instanceof Bomb)
         ){
             if(next_objects_tile instanceof Treasure){
                 getTreasure((Treasure) next_objects_tile);
