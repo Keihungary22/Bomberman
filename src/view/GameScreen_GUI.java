@@ -282,11 +282,15 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     @Override
     public void keyReleased(KeyEvent e) {
         // Processing when the key is released
+
+        Player player1 = Game.players.get(0);
+        Player player2 = Game.players.get(1);
+
         Bomb newBomb;
         switch (e.getKeyCode()) {
             //region >> player1 controller
             case KeyEvent.VK_UP:
-                if(Game.players.get(0).isAlive()){
+                if(player1.isAlive() && !player1.is_cooling_down()){
                     try {
                         playerMove(0, "up");
                     } catch (Exception ex) {
@@ -295,7 +299,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_DOWN:
-                if(Game.players.get(0).isAlive()){
+                if(player1.isAlive() && !player1.is_cooling_down()){
                     try {
                         playerMove(0, "down");
                     } catch (Exception ex) {
@@ -304,7 +308,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_RIGHT:
-                if(Game.players.get(0).isAlive()){
+                if(player1.isAlive() && !player1.is_cooling_down()){
                     try {
                         playerMove(0, "right");
                     } catch (Exception ex) {
@@ -313,7 +317,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_LEFT:
-                if(Game.players.get(0).isAlive()){
+                if(player1.isAlive() && !player1.is_cooling_down()){
                     try {
                         playerMove(0, "left");
                     } catch (Exception ex) {
@@ -338,7 +342,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
 
             //region >> player2 controller
             case KeyEvent.VK_W:
-                if(Game.players.get(1).isAlive()){
+                if(player2.isAlive() && !player2.is_cooling_down()){
                     try {
                         playerMove(1, "up");
                     } catch (Exception ex) {
@@ -347,7 +351,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_S:
-                if(Game.players.get(1).isAlive()){
+                if(player2.isAlive() && !player2.is_cooling_down()){
                     try {
                         playerMove(1, "down");
                     } catch (Exception ex) {
@@ -356,7 +360,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_D:
-                if(Game.players.get(1).isAlive()){
+                if(player2.isAlive() && !player2.is_cooling_down()){
                     try {
                         playerMove(1, "right");
                     } catch (Exception ex) {
@@ -365,7 +369,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_A:
-                if(Game.players.get(1).isAlive()){
+                if(player2.isAlive() && !player2.is_cooling_down()){
                     try {
                         playerMove(1, "left");
                     } catch (Exception ex) {
@@ -390,7 +394,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
 
             //region >> player3 controller
             case KeyEvent.VK_U:
-                if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
+                if(Game.number_of_players == 3 && Game.players.get(2).isAlive() && !Game.players.get(2).is_cooling_down()){
                     try {
                         playerMove(2, "up");
                     } catch (Exception ex) {
@@ -399,7 +403,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_J:
-                if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
+                if(Game.number_of_players == 3 && Game.players.get(2).isAlive() && !Game.players.get(2).is_cooling_down()){
                     try {
                         playerMove(2, "down");
                     } catch (Exception ex) {
@@ -408,7 +412,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_K:
-                if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
+                if(Game.number_of_players == 3 && Game.players.get(2).isAlive() && !Game.players.get(2).is_cooling_down()){
                     try {
                         playerMove(2, "right");
                     } catch (Exception ex) {
@@ -417,7 +421,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 }
                 break;
             case KeyEvent.VK_H:
-                if(Game.number_of_players == 3 && Game.players.get(2).isAlive()){
+                if(Game.number_of_players == 3 && Game.players.get(2).isAlive() && !Game.players.get(2).is_cooling_down()){
                     try {
                         playerMove(2, "left");
                     } catch (Exception ex) {

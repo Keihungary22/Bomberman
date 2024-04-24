@@ -16,19 +16,21 @@ public class Player extends Tile implements BombExplodeListener {
     private int current_number_of_bomb = 0;
     private int max_number_of_bombs = 1;
     private int power_of_bombs = 1;
-    private final String displayName;
+    private final String display_name;
     private PlayerDieListener playerDieListener;
     private PlayerStatusChangeListener playerStatusChangeListener;
     private PlayerGetTreasureListener playerGetTreasureListener;
-    private int speed = 2;
-    private DetonatorBomb currentDetonatorBomb;
-    private final String originalVisual;
+    private int speed = 1;
+    private DetonatorBomb current_detonator_bomb;
+    private final String original_visual;
+    private boolean is_cooling_down;
+    private double cool_down_time;
     //region >> status for power-ups
-    private boolean is_invincible_mode = false;
-    private boolean is_detonator_mode = false;
-    private boolean is_obstacle_mode = false;
-    private boolean is_roller_skate_mode = false;
-    private boolean is_ghost_mode = false;
+    private boolean is_invincible_mode;
+    private boolean is_detonator_mode;
+    private boolean is_obstacle_mode;
+    private boolean is_roller_skate_mode;
+    private boolean is_ghost_mode;
     //endregion
     //region >> power-up times for each power-ups
     private final int power_up_time = 15;
@@ -54,15 +56,17 @@ public class Player extends Tile implements BombExplodeListener {
         this.y = 0;
         this.destructible = true;
         this.visual = visual;
-        this.originalVisual = visual;
-        this.displayName = visual.substring(0, visual.lastIndexOf("."));
+        this.original_visual = visual;
+        this.display_name = visual.substring(0, visual.lastIndexOf("."));
     }
     public void refreshForNewRound() {
+
         is_alive = true;
         power_of_bombs = 1;
         max_number_of_bombs = 1;
         current_number_of_bomb = 0;
-        currentDetonatorBomb = null;
+        current_detonator_bomb = null;
+        is_cooling_down = false;
 
         invincible_timer.cancel();
         invincible_timer = new Timer();
@@ -75,7 +79,7 @@ public class Player extends Tile implements BombExplodeListener {
         ghost_timer.cancel();
         ghost_timer = new Timer();
 
-        visual = originalVisual;
+        visual = original_visual;
 
         is_invincible_mode = false;
         is_detonator_mode = false;
@@ -92,7 +96,7 @@ public class Player extends Tile implements BombExplodeListener {
         if(isBombPlaceable()){
             Bomb newBomb = generateBomb();
             if(newBomb instanceof DetonatorBomb){
-                currentDetonatorBomb = (DetonatorBomb) newBomb;
+                current_detonator_bomb = (DetonatorBomb) newBomb;
             }
             Game.bombs.add(newBomb);
             current_number_of_bomb++;
@@ -102,12 +106,12 @@ public class Player extends Tile implements BombExplodeListener {
         return null;
     }
     public boolean hasDetonatorBomb(){
-        return currentDetonatorBomb != null;
+        return current_detonator_bomb != null;
     }
     public void explodeDetonatorBomb(){
         System.out.println(hasDetonatorBomb());
-        currentDetonatorBomb.explode();
-        currentDetonatorBomb = null;
+        current_detonator_bomb.explode();
+        current_detonator_bomb = null;
     }
     public boolean isBombPlaceable(){
         return !isSomethingAtMyFeet() && (current_number_of_bomb < max_number_of_bombs);
@@ -196,6 +200,7 @@ public class Player extends Tile implements BombExplodeListener {
                 System.out.println("Move into explosion and die " + this.visual);
                 die();
             }
+            coolDownStart();
             return true;
         }
         else {
@@ -263,7 +268,6 @@ public class Player extends Tile implements BombExplodeListener {
                     invincible_time = power_up_time;
                     is_invincible_mode = false;
                     visual = temp_visual;
-                    System.out.println("invincibility finish");
                     try {
                         firePlayerStatusChangeTimeUp(id, TreasureType.INVINCIBILITY);
                     } catch (Exception e) {
@@ -322,7 +326,6 @@ public class Player extends Tile implements BombExplodeListener {
                     obstacle_timer.cancel();
                     obstacle_time = power_up_time;
                     is_obstacle_mode = false;
-                    System.out.println("obstacle finish");
                     try {
                         firePlayerStatusChangeTimeUp(id, TreasureType.OBSTACLE);
                     } catch (Exception e) {
@@ -370,6 +373,7 @@ public class Player extends Tile implements BombExplodeListener {
     }
     private void use_roller_skate(){
         is_roller_skate_mode = true;
+        speed++;
         //region >> Update the timer once canceled to a new instance
         if (roller_skate_timer != null) {
             roller_skate_timer.cancel();
@@ -381,8 +385,10 @@ public class Player extends Tile implements BombExplodeListener {
             @Override
             public void run() {
                 if (roller_skate_time <= 0) {
+                    roller_skate_timer.cancel();
                     roller_skate_time = power_up_time;
                     is_roller_skate_mode = false;
+                    speed--;
                     try {
                         firePlayerStatusChangeTimeUp(id, TreasureType.ROLLERSKATE);
                     } catch (Exception e) {
@@ -409,11 +415,38 @@ public class Player extends Tile implements BombExplodeListener {
     private boolean isSomethingAtMyFeet(){
         return isObjectsAtMyFeet() || isBombAtMyFeet();
     }
+    //endregion
+
+    //region >> private methods
     private boolean isObjectsAtMyFeet(){
         return !Game.map.getLayers().get("Objects").getTiles().get(Game.map.getSize()*this.y + x).getVisual().equals("Empty.png");
     }
     private boolean isBombAtMyFeet(){
         return !Game.map.getLayers().get("Bombs").getTiles().get(Game.map.getSize()*this.y + x).getVisual().equals("Empty.png");
+    }
+    private void coolDownStart(){
+        if(speed != 2){
+            is_cooling_down = true;
+        }
+        Timer cool_down_timer = new Timer();
+        cool_down_time = switch (speed){
+            case 0 -> 0.6;
+            case 1 -> 0.3;
+            default -> 0;
+        };
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (cool_down_time <= 0) {
+                    cool_down_timer.cancel();
+                    is_cooling_down = false;
+                }else{
+                     cool_down_time-= 0.1;
+                }
+            }
+        };
+
+        cool_down_timer.scheduleAtFixedRate(task, 0, 100);
     }
     //endregion
 
@@ -476,7 +509,7 @@ public class Player extends Tile implements BombExplodeListener {
         return current_number_of_bomb;
     }
     public String getDisplayName(){
-        return this.displayName;
+        return this.display_name;
     }
     public int getSpeed() {
         return speed;
@@ -486,6 +519,10 @@ public class Player extends Tile implements BombExplodeListener {
     }
     public void decreaseSpeed(){
         this.speed--;
+    }
+
+    public boolean is_cooling_down() {
+        return is_cooling_down;
     }
     //endregion
 
