@@ -1,60 +1,53 @@
 package model.Tile;
 
+import model.EventListener.BombExplodeListener;
 import model.Game;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import model.EventListener.BombExplodeListener;
+public class Bomb extends Tile{
+    protected int exp_time = 1;
+    protected final Timer exp_timer = new Timer();
+    protected Player owner;
+    protected ArrayList<Explosion> explosions = new ArrayList<>();
+    protected ArrayList<Bomb> bomb_chain_queue = new ArrayList<>();
+    protected int power;
+    protected boolean exploded = false;
+    protected List<BombExplodeListener> bombExplodeListeners = new ArrayList<>();;
 
-public class Bomb extends Tile {
-    public static int time_until_explode = 4;
-    private int time = time_until_explode;
-    private int exp_time = 1;
-    private final Timer timer = new Timer();
-    private final Timer exp_timer = new Timer();
-    private final Player owner;
-    private ArrayList<Explosion> explosions = new ArrayList<>();
-    private ArrayList<Bomb> bomb_chain_queue = new ArrayList<>();
-    private int power;
-    private boolean exploded = false;
-    private List<BombExplodeListener> bombExplodeListeners = new ArrayList<>();;
-
-    public Bomb(int x, int y, Player owner) {
+    protected Bomb(int x, int y, Player owner) {
         super(x, y);
         this.destructible = false;
-        this.visual = "Bomb.png";
         this.owner = owner;
         this.power = owner.getPower_of_bombs();
-
-        // Create a timer and schedule a task to decrement time every second.
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if(!Game.is_paused){
-                    time--;
-                    if (time <= 0) {//if the time is over
-                        explode();
-                        timer.cancel(); // stop timer
-                    }
-                }
-            }
-        }, 1000, 1000);// Execute the task once 1 second later, and then every second thereafter.
     }
-
+    public Timer getExp_timer(){
+        return exp_timer;
+    }
+    public void setExploded(boolean exploded) {
+        this.exploded = exploded;
+    }
+    public boolean isExploded() {
+        return exploded;
+    }
     public void explode(){
         Game.sfxPlayer.play("assets/sound/bombExplode.wav");
-        this.owner.setCurrent_number_of_bomb(this.owner.getCurrent_number_of_bomb()-1);//decrease owner-player's number of bomb
         Game.bombs.remove(this);//Remove self from bombs list of Game object
+        this.owner.setCurrent_number_of_bomb(this.owner.getCurrent_number_of_bomb()-1);
         generateExplosions();
         fireBombExplodeEvent();//GameScreen_GUI class will receive signal and update Bombs layer
         explosionsTimer();//Count down will start. And explosions area will be disappeared when timer is over.
     }
 
+
     //explosions will be disappeared in specific time.(in 2 sec as a default)
-    public void explosionsTimer(){
+    protected void explosionsTimer(){
         exp_timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -68,8 +61,7 @@ public class Bomb extends Tile {
             }
         }, 1000, 1000);
     }
-
-    private void generateExplosions(){
+    protected void generateExplosions(){
         Explosion center = new Explosion(this.x, this.y, this,"exp_center.png");
         Game.explosions.add(center);
         this.explosions.add(center);
@@ -109,7 +101,9 @@ public class Bomb extends Tile {
                         if(!bomb_chain_queue.contains(Game.bombs.get(index)) && !Game.bombs.get(index).isExploded()){
                             bomb_chain_queue.add(Game.bombs.get(index));
                             Game.bombs.get(index).setExploded(true);
-                            Game.bombs.get(index).timer.cancel();//Cancel the timer of added bomb
+                            if(Game.bombs.get(index) instanceof NormalBomb){
+                                ((NormalBomb)Game.bombs.get(index)).timer.cancel();//Cancel the timer of added bomb
+                            }
                         }
                     }
                 }
@@ -150,7 +144,9 @@ public class Bomb extends Tile {
                         if(!bomb_chain_queue.contains(Game.bombs.get(index)) && !Game.bombs.get(index).isExploded()){
                             bomb_chain_queue.add(Game.bombs.get(index));
                             Game.bombs.get(index).setExploded(true);
-                            Game.bombs.get(index).timer.cancel();//Cancel the timer of added bomb
+                            if(Game.bombs.get(index) instanceof NormalBomb){
+                                ((NormalBomb)Game.bombs.get(index)).timer.cancel();//Cancel the timer of added bomb
+                            }
                         }
                     }
                 }
@@ -191,7 +187,9 @@ public class Bomb extends Tile {
                         if(!bomb_chain_queue.contains(Game.bombs.get(index)) && !Game.bombs.get(index).isExploded()){
                             bomb_chain_queue.add(Game.bombs.get(index));
                             Game.bombs.get(index).setExploded(true);
-                            Game.bombs.get(index).timer.cancel();//Cancel the timer of added bomb
+                            if(Game.bombs.get(index) instanceof NormalBomb){
+                                ((NormalBomb)Game.bombs.get(index)).timer.cancel();//Cancel the timer of added bomb
+                            }
                         }
                     }
                 }
@@ -233,7 +231,9 @@ public class Bomb extends Tile {
                         if(!bomb_chain_queue.contains(Game.bombs.get(index)) && !Game.bombs.get(index).isExploded()){
                             bomb_chain_queue.add(Game.bombs.get(index));
                             Game.bombs.get(index).setExploded(true);
-                            Game.bombs.get(index).timer.cancel();//Cancel the timer of added bomb
+                            if(Game.bombs.get(index) instanceof NormalBomb){
+                                ((NormalBomb)Game.bombs.get(index)).timer.cancel();//Cancel the timer of added bomb
+                            }
                         }
                     }
                 }
@@ -256,9 +256,12 @@ public class Bomb extends Tile {
         }
         //endregion
     }
-
-
-    private void finishExplosionsEvent(){
+    protected void fireBombDestroyBoxEvent(){
+        for (BombExplodeListener listener : bombExplodeListeners) {
+            listener.bombDestroyedBox();
+        }
+    }
+    protected void finishExplosionsEvent(){
         for(Explosion explosion : this.explosions){
             Game.explosions.remove(explosion);
         }
@@ -267,40 +270,15 @@ public class Bomb extends Tile {
             listener.bombFinishExplosion();
         }
     }
-
-    private void fireBombExplodeEvent(){
+    protected void fireBombExplodeEvent(){
         for (BombExplodeListener listener : bombExplodeListeners) {
             listener.bombExploded();
-        }
-    }
-
-    private void fireBombDestroyBoxEvent(){
-        for (BombExplodeListener listener : bombExplodeListeners) {
-            listener.bombDestroyedBox();
         }
     }
 
     public void setBombExplodeListener(BombExplodeListener listener) {
         this.bombExplodeListeners.add(listener);
     }
-
-
-    //region >> getter/setter
-    public Timer getTimer(){
-        return timer;
-    }
-    public Timer getExp_timer(){
-        return exp_timer;
-    }
-
-    public void setExploded(boolean exploded) {
-        this.exploded = exploded;
-    }
-
-    public boolean isExploded() {
-        return exploded;
-    }
-    //endregion
 
 
     @Override

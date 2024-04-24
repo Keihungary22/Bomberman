@@ -19,6 +19,7 @@ public class Player extends Tile implements BombExplodeListener {
     private PlayerDieListener playerDieListener;
     private PlayerStatusChangeListener playerStatusChangeListener;
     private int speed = 2;
+    private DetonatorBomb currentDetonatorBomb;
     //region >> status for power-ups
     private boolean is_invincible_mode = false;
     private boolean is_detonator_mode = false;
@@ -60,12 +61,22 @@ public class Player extends Tile implements BombExplodeListener {
         //if there is not a bomb in the same cell, player can put new bomb
         if(isBombPlaceable()){
             Bomb newBomb = generateBomb();
+            if(newBomb instanceof DetonatorBomb){
+                currentDetonatorBomb = (DetonatorBomb) newBomb;
+            }
             Game.bombs.add(newBomb);
             current_number_of_bomb++;
             Game.sfxPlayer.play("assets/sound/placeBomb.wav");
             return newBomb;
         }
         return null;
+    }
+    public boolean hasDetonatorBomb(){
+        return currentDetonatorBomb != null;
+    }
+    public void explodeDetonatorBomb(){
+        currentDetonatorBomb.explode();
+        currentDetonatorBomb = null;
     }
     public boolean isBombPlaceable(){
         return !isABombAtMyFeet() && (current_number_of_bomb < max_number_of_bombs);
@@ -119,7 +130,7 @@ public class Player extends Tile implements BombExplodeListener {
                 &&
                 !(next_objects_tile instanceof Box)
                 &&
-                !(next_bombs_tile instanceof Bomb)
+                !(next_bombs_tile instanceof NormalBomb)
         ){
             if(next_objects_tile instanceof Treasure){
                 getTreasure((Treasure) next_objects_tile);
@@ -345,7 +356,11 @@ public class Player extends Tile implements BombExplodeListener {
 
     //region >> bomb
     private Bomb generateBomb(){
-        return new Bomb(this.x,this.y, this);
+        if(is_detonator_mode){
+            return new DetonatorBomb(this.x, this.y, this);
+        }else{
+            return new NormalBomb(this.x,this.y, this);
+        }
     }
     private boolean isABombAtMyFeet(){
         return !Game.map.getLayers().get("Bombs").getTiles().get(Game.map.getSize()*this.y + x).getVisual().equals("Empty.png");

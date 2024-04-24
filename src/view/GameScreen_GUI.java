@@ -45,7 +45,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     private JPanel Player2StatusPanel;
     private final JLayeredPane LayeredPane;
     private final Timer timer = new Timer();
-    private int short_time = Bomb.time_until_explode;
+    private int short_time = NormalBomb.time_until_explode;
 
     //constructor
     public GameScreen_GUI() {
@@ -322,10 +322,14 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 break;
             case KeyEvent.VK_SHIFT:
                 if(Game.players.get(0).isAlive() && Game.players.get(0).isBombPlaceable()) {
-                    newBomb = playerPutBomb(0);
-                    newBomb.setBombExplodeListener(this);
-                    for(Player player: Game.players){
-                        newBomb.setBombExplodeListener(player);
+                    if(Game.players.get(0).hasDetonatorBomb()){
+                        Game.players.get(0).explodeDetonatorBomb();
+                    }else{
+                        newBomb = playerPutBomb(0);
+                        newBomb.setBombExplodeListener(this);
+                        for(Player player: Game.players){
+                            newBomb.setBombExplodeListener(player);
+                        }
                     }
                 }
                 break;

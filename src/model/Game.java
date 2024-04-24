@@ -49,7 +49,9 @@ public class Game {
             p.setCurrent_number_of_bomb(0);
         }
         for(Bomb bomb : bombs){
-            bomb.getTimer().cancel();
+            if(bomb instanceof NormalBomb){
+                ((NormalBomb) bomb).getTimer().cancel();
+            }
         }
         for(Explosion exp : explosions){
             exp.getOwner_bomb().getExp_timer().cancel();

@@ -7,14 +7,12 @@ package model.Layer;
 
 import model.Game;
 import model.Tile.Bomb;
+import model.Tile.NormalBomb;
 import model.Tile.Empty;
 import model.Tile.Explosion;
 
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BombsLayer extends Layer{
     public BombsLayer(int size) {

@@ -2,7 +2,7 @@ package model.Tile;
 
 public class Explosion extends Tile {
     Bomb owner_bomb;
-    public Explosion(int x, int y, Bomb owner_bomb ,String visual) {
+    public Explosion(int x, int y, Bomb owner_bomb , String visual) {
         super(x, y);
         this.destructible = false;
         this.visual = visual;
