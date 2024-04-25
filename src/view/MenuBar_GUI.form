@@ -4,92 +4,91 @@
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-9524033"/>
+      <enabled value="false"/>
+      <foreground color="-1"/>
+    </properties>
     <border type="none"/>
     <children>
-      <grid id="93700" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+      <grid id="93700" layout-manager="FlowLayout" hgap="10" vgap="10" flow-align="1">
         <constraints border-constraint="North"/>
-        <properties/>
+        <properties>
+          <background color="-4069899"/>
+          <enabled value="true"/>
+          <foreground color="-1"/>
+        </properties>
         <border type="none"/>
         <children>
-          <component id="5caba" class="javax.swing.JLabel">
+          <component id="cfac7" class="javax.swing.JLabel" binding="CurrentRound">
             <constraints/>
             <properties>
-              <text value="Round"/>
+              <background color="-1"/>
+              <enabled value="true"/>
+              <foreground color="-16777216"/>
+              <text value="current_round"/>
             </properties>
           </component>
-          <component id="e2eea" class="javax.swing.JTextArea" binding="CurrentRound">
+          <component id="ee95e" class="javax.swing.JLabel" binding="ElapsedTime">
             <constraints/>
             <properties>
-              <editable value="false"/>
-              <text value="1"/>
+              <background color="-16777216"/>
+              <enabled value="true"/>
+              <foreground color="-16777216"/>
+              <text value="elapsed_time"/>
             </properties>
           </component>
-          <component id="e9f1d" class="javax.swing.JLabel">
+          <component id="bcf99" class="javax.swing.JLabel" binding="TypeOfMap">
             <constraints/>
             <properties>
-              <text value="Timer:"/>
-            </properties>
-          </component>
-          <component id="c551e" class="javax.swing.JTextArea" binding="ElapsedTime">
-            <constraints/>
-            <properties>
-              <editable value="false"/>
-              <text value="60"/>
+              <background color="-16777216"/>
+              <enabled value="true"/>
+              <foreground color="-16777216"/>
+              <text value="type_of_map"/>
             </properties>
           </component>
         </children>
       </grid>
-      <grid id="41e7f" layout-manager="BorderLayout" hgap="0" vgap="0">
-        <constraints border-constraint="Center"/>
-        <properties/>
-        <border type="none"/>
-        <children>
-          <grid id="d2300" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
-            <constraints border-constraint="North"/>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="f2257" class="javax.swing.JLabel">
-                <constraints/>
-                <properties>
-                  <text value="Map:"/>
-                </properties>
-              </component>
-              <component id="bcf99" class="javax.swing.JLabel" binding="TypeOfMap">
-                <constraints/>
-                <properties>
-                  <text value="TypeOfMap"/>
-                </properties>
-              </component>
-            </children>
-          </grid>
-          <grid id="34418" binding="Player" layout-manager="GridBagLayout">
-            <constraints border-constraint="Center"/>
-            <properties/>
-            <border type="none"/>
-            <children/>
-          </grid>
-        </children>
-      </grid>
-      <grid id="bf2cb" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+      <grid id="bf2cb" layout-manager="FlowLayout" hgap="10" vgap="10" flow-align="1">
         <constraints border-constraint="South"/>
-        <properties/>
+        <properties>
+          <background color="-4069899"/>
+          <enabled value="true"/>
+          <foreground color="-1"/>
+        </properties>
         <border type="none"/>
         <children>
-          <component id="b2b1c" class="javax.swing.JButton" binding="btn_continue">
-            <constraints/>
-            <properties>
-              <text value="Continue"/>
-            </properties>
-          </component>
           <component id="5f913" class="javax.swing.JButton" binding="btn_end">
             <constraints/>
             <properties>
-              <text value="End Game"/>
+              <background color="-2031616"/>
+              <enabled value="true"/>
+              <font style="1"/>
+              <foreground color="-1"/>
+              <hideActionText value="false"/>
+              <text value="END"/>
+            </properties>
+          </component>
+          <component id="b2b1c" class="javax.swing.JButton" binding="btn_continue">
+            <constraints/>
+            <properties>
+              <background color="-12069798"/>
+              <enabled value="true"/>
+              <font style="1"/>
+              <foreground color="-1"/>
+              <text value="CONTINUE"/>
             </properties>
           </component>
         </children>
+      </grid>
+      <grid id="34418" binding="Players" layout-manager="GridBagLayout">
+        <constraints border-constraint="Center"/>
+        <properties>
+          <background color="-4069899"/>
+          <enabled value="true"/>
+        </properties>
+        <border type="none"/>
+        <children/>
       </grid>
     </children>
   </grid>
