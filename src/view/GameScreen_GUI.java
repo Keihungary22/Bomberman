@@ -1,3 +1,5 @@
+// 各ラウンドで毎回生成される
+
 package view;
 
 import model.*;
@@ -10,7 +12,6 @@ import model.Tile.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,6 +54,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     public GameScreen_GUI() {
         Game.musicPlayer.battleMusicStart();
         Game.refreshForRound();
+        setupMonsterMovement();
         LayeredPane = new JLayeredPane();
         initPlayerStatusImage();
 //
@@ -121,7 +123,24 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         }
     }
     //endregion
-
+    private void setupMonsterMovement() {
+        // Timer for monster movement
+        Timer monsterMovementTimer = new Timer();
+        TimerTask monsterMoveTask = new TimerTask() {
+            public void run() {
+                SwingUtilities.invokeLater(() -> {
+                    for (Monster monster : Game.monsters) {
+                        monster.updateMovement();
+                        monster.move();
+                    }
+                    Game.map.getLayers().get("Objects").update();
+                    LayeredPane.revalidate();
+                    LayeredPane.repaint();
+                });
+            }
+        };
+        monsterMovementTimer.scheduleAtFixedRate(monsterMoveTask, 0, 2000);
+    }
 
     //region >> private functions
     private void GenerateGameBoard(){

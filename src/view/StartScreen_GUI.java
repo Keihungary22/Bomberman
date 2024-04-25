@@ -1,12 +1,16 @@
+// モンスターの初期値を作成する
+
 package view;
 
 import model.*;
+import model.Tile.Monster;
 import model.Tile.Player;
 
 import javax.swing.*;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 public class StartScreen_GUI extends JFrame implements ActionListener {
     //region >> private attributes
@@ -153,6 +157,9 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
                 }
                 index++;
             }
+            // モンスターの追加
+            Monster monster = new Monster("monster1.png");
+            Game.monsters.add(monster);
             new GameScreen_GUI();
         }
 
