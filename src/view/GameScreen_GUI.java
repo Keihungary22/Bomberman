@@ -133,7 +133,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                         monster.updateMovement();
                         monster.move();
                     }
-                    Game.map.getLayers().get("Objects").update();
+                    Game.map.getLayers().get("Characters").update();
                     LayeredPane.revalidate();
                     LayeredPane.repaint();
                 });
@@ -152,7 +152,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.add(Game.map.getLayers().get("Decoration").getLayer(), JLayeredPane.DEFAULT_LAYER, 0);
         LayeredPane.add(Game.map.getLayers().get("Bombs").getLayer(), JLayeredPane.PALETTE_LAYER, 2);
         LayeredPane.add(Game.map.getLayers().get("Objects").getLayer(), JLayeredPane.PALETTE_LAYER, 1);
-        LayeredPane.add(Game.map.getLayers().get("Players").getLayer(), JLayeredPane.PALETTE_LAYER, 0);
+        LayeredPane.add(Game.map.getLayers().get("Characters").getLayer(), JLayeredPane.PALETTE_LAYER, 0);
         //endregion
 
         // add LayeredPane in GameBoard JPane
@@ -234,7 +234,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     }
     private void playerMove(int player_id, String direction) throws Exception {
         if(Game.players.get(player_id).move(direction)){
-            Game.map.getLayers().get("Players").update();
+            Game.map.getLayers().get("Characters").update();
             LayeredPane.revalidate();
             LayeredPane.repaint();
         }
@@ -508,7 +508,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     }
     @Override
     public void playerDie() {
-        updateLayer("Players");
+        updateLayer("Characters");
         System.out.println(Game.getNumberOfAlivePlayers());
         if(Game.getNumberOfAlivePlayers() == 1){
             short_timer_start();
@@ -517,12 +517,12 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     @Override
     public void PlayerStatusChanged(int player_id, TreasureType treasure_type) throws Exception {
         PlayerStatusImageAdd(player_id, treasure_type);
-        updateLayer("Players");
+        updateLayer("Characters");
     }
     @Override
     public void PlayerStatusChangedTimeUp(int player_id, TreasureType treasure_type) throws Exception {
         PlayerStatusImageRemove(player_id, treasure_type);
-        updateLayer("Players");
+        updateLayer("Characters");
     }
     @Override
     public void PlayerGetTreasure(){

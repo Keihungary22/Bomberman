@@ -158,7 +158,7 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
                 index++;
             }
             // モンスターの追加
-            Monster monster = new Monster("monster1.png");
+            Monster monster = new Monster("Monster1.png");
             Game.monsters.add(monster);
             new GameScreen_GUI();
         }

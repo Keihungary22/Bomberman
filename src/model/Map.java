@@ -1,11 +1,9 @@
 package model;
 
 import model.Layer.*;
-import model.Tile.Tile;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;;
+;
 
 public class Map {
     private final String type;
@@ -39,7 +37,7 @@ public class Map {
         Layer DecorationLayer  = new DecorationLayer(size); //decoration
         Layer BombsLayer = new BombsLayer(size);
         Layer ObjectsLayer = new ObjectsLayer(size);
-        Layer PlayersLayer = new PlayersLayer(size);//objects layer
+        Layer CharactersLayer = new CharactersLayer(size);//objects layer
         //endregion
 
         //region >> Add each layer in layers hashmap
@@ -47,7 +45,7 @@ public class Map {
         layers.put("Decoration", DecorationLayer);
         layers.put("Bombs", BombsLayer);
         layers.put("Objects", ObjectsLayer);
-        layers.put("Players", PlayersLayer);
+        layers.put("Characters", CharactersLayer);
         //endregion
     }
 
