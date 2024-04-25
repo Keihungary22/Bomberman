@@ -17,15 +17,20 @@ import java.util.TimerTask;
 
 public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener, PlayerStatusChangeListener, PlayerGetTreasureListener {
     private JPanel MainPanel;
-    private JTextArea ElapsedTime;
-    private JTextArea CurrentRound;
+
+    private JLabel CurrentRound;
+    private JLabel ElapsedTime;
     private JButton MenuButton;
     private JButton FinishButton;
+
     private JPanel GameBoard;
+    private JPanel Player1StatusPanel;
+    private JPanel Player2StatusPanel;
     private JPanel Player3StatusPanel;
+
     private JLabel Player1Image;
-    private JLabel Player3Image;
     private JLabel Player2Image;
+    private JLabel Player3Image;
     private JPanel Player1Status;
     private JPanel Player2Status;
     private JPanel Player3Status;
@@ -44,9 +49,11 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     private JLabel Player1Invincibility;
     private JLabel Player2Invincibility;
     private JLabel Player3Invincibility;
+    private JTextField player1TextField;
+    private JTextField player2TextField;
+    private JTextField player3TextField;
     private JLabel Player1Forbidden;
-    private JPanel Player1StatusPanel;
-    private JPanel Player2StatusPanel;
+
     private final JLayeredPane LayeredPane;
     private final Timer timer = new Timer();
     private int short_time = NormalBomb.time_until_explode;
@@ -59,10 +66,24 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane = new JLayeredPane();
         initPlayerStatusImage();
 //
-        //region >> Register button action listeners
+        //region >> Register button action listeners and set style fo the buttons
         MenuButton.addActionListener(this);
+        MenuButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        MenuButton.setFont(new Font("Courier New", Font.PLAIN, 30));
+
         FinishButton.addActionListener(this);
+        FinishButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        FinishButton.setFont(new Font("Courier New", Font.PLAIN, 30));
         //endregion
+
+        Player1StatusPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        Player1StatusPanel.setPreferredSize(new Dimension(150, 100));
+
+        Player2StatusPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        Player2StatusPanel.setPreferredSize(new Dimension(150, 100));
+
+        Player3StatusPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        Player3StatusPanel.setPreferredSize(new Dimension(150, 100));
 
         //region >> add event listener for keyboard input
         this.addKeyListener(this);
@@ -80,7 +101,21 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
 
         //region >> initiate GUI for game screen
         setTitle("BOMBERMAN");
-        CurrentRound.setText(String.valueOf(Game.current_round));
+
+        //region >> Set game status style
+        CurrentRound.setText("Round " + String.valueOf(Game.current_round));
+        CurrentRound.setFont(new Font("Courier New", Font.PLAIN, 30));
+        CurrentRound.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        CurrentRound.setOpaque(true);
+        CurrentRound.setBackground(Color.WHITE);
+
+        ElapsedTime.setText("Time:" + String.valueOf(60)); // gameScreenFrame.ElapsedTime is needed instead of 60
+        ElapsedTime.setFont(new Font("Courier New", Font.PLAIN, 30));
+        ElapsedTime.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        ElapsedTime.setOpaque(true);
+        ElapsedTime.setBackground(Color.WHITE);
+        //endregion
+
         initPlayersPositions();//Initiate players position and put them on the map for each round
         Game.map.updateMap();//Update map class
         GenerateGameBoard(); //based on the map class, initiate JPanel of the game board
