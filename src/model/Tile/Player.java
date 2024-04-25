@@ -160,7 +160,7 @@ public class Player extends Tile implements BombExplodeListener {
 
         Tile next_objects_tile = Game.map.getLayers().get("Objects").getTiles().get(size*(y+dy)+x+dx);
         Tile next_bombs_tile = Game.map.getLayers().get("Bombs").getTiles().get(size*(y+dy)+x+dx);
-        Tile next_players_tile = Game.map.getLayers().get("Players").getTiles().get(size*(y+dy)+x+dx);
+        Tile next_characters_tile = Game.map.getLayers().get("Characters").getTiles().get(size*(y+dy)+x+dx);
         if(
                 (
                     !is_ghost_mode
@@ -173,11 +173,11 @@ public class Player extends Tile implements BombExplodeListener {
                     &&
                     !(next_bombs_tile instanceof Bomb)
                     &&
-                    !(next_players_tile instanceof Player)
+                    !(next_characters_tile instanceof Player)
                 )
                 ||
                 (
-                    is_ghost_mode && !(next_objects_tile instanceof Brick) && !(next_players_tile instanceof Player)
+                    is_ghost_mode && !(next_objects_tile instanceof Brick) && !(next_characters_tile instanceof Player)
                 )
         ){
             if(next_objects_tile instanceof Treasure){
