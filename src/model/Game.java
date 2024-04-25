@@ -16,6 +16,7 @@ public class Game {
     public static ArrayList<Explosion> explosions;
     public static ArrayList<Box> boxes;
     public static ArrayList<Treasure> treasures;
+    public static ArrayList<Monster> monsters;
     public static int number_of_players;
     public static int number_of_rounds;
     public static int current_round;
@@ -35,6 +36,7 @@ public class Game {
         explosions = new ArrayList<>();
         boxes = new ArrayList<>();
         treasures = new ArrayList<>();
+        monsters = new ArrayList<>();
         number_of_players = 2;
         map = new Map("SmallMap");
         number_of_rounds = 1;

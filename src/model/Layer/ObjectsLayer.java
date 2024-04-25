@@ -1,10 +1,10 @@
 package model.Layer;
-
 import model.Game;
 import model.Tile.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ObjectsLayer extends Layer{
     public ObjectsLayer(int size) {
@@ -17,6 +17,9 @@ public class ObjectsLayer extends Layer{
     protected void updateTiles(int size) {
         ArrayList<Point> box_coordinates = new ArrayList<>();
         ArrayList<Point> treasure_coordinates = new ArrayList<>();
+        ArrayList<Monster> living_monsters = new ArrayList<>();
+
+        System.out.println(Game.monsters);
 
         for(Box box : Game.boxes){
             Point newPoint = new Point(box.getX(), box.getY());
@@ -25,6 +28,12 @@ public class ObjectsLayer extends Layer{
         for(Treasure treasure : Game.treasures){
             Point newPoint = new Point(treasure.getX(), treasure.getY());
             treasure_coordinates.add(newPoint);
+        }
+        // Position and add monsters directly to tiles
+        for(Monster monster : Game.monsters){
+            if(monster.isAlive()){
+                living_monsters.add(monster);
+            }
         }
 
         for (int i = 0; i < size; i++) {

@@ -1,78 +1,112 @@
 package model.Tile;
 
 import java.util.Random;
-
+import model.Game;
 public class Monster extends Tile {
-    private enum Direction {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-        STOP // Also add a stop state
-    }
+    private boolean is_alive;
     private int speed;
     private Direction direction;
-    private final Random random = new Random();
-    
-    // Added: Player's position
-    private int playerX;
-    private int playerY;
-
-    public Monster(int x, int y) {
-        super(x, y);
-        this.destructible = true;
-        this.visual = "Monster.png";
-        this.speed = 1; // Set default speed
-        this.direction = Direction.STOP; // Initial direction set to stop
+    Random random = new Random();
+    enum Direction {
+        UP, DOWN, LEFT, RIGHT, STOP // Also add a stop state
     }
 
-    // Method to update the monster's movement
-    public void updateMovement(Player player) {
-        int decision = random.nextInt(100);
-        if (decision < 20) {  // 20% probability to change direction randomly
-            this.direction = Direction.values()[random.nextInt(Direction.values().length)];
-        } else if (decision < 40) {  // 20% probability to stop or reconsider strategy
-            this.direction = Direction.STOP;
-        } else {  // 60% probability to move towards the player
-            if (playerX > this.getX()) {
-                this.direction = Direction.RIGHT;
-            } else if (playerX < this.getX()) {
-                this.direction = Direction.LEFT;
-            } else if (playerY > this.getY()) {
-                this.direction = Direction.DOWN;
-            } else if (playerY < this.getY()) {
-                this.direction = Direction.UP;
-            }
+    public Monster(String visual) {
+        super(1, 3);  // Initialize position at (0, 0)
+        this.destructible = true;
+        this.visual = visual;  // Set visual from parameter
+        this.speed = 1;  // Set default speed
+        this.direction = Direction.STOP;
+        is_alive = true;// Initial direction set to stop
+    }
+
+    public boolean isAlive() {
+        return is_alive;
+    }
+    public void setAlive(boolean alive) {
+        this.is_alive = alive;
+    }
+
+    // Update the monster's movement logic
+    public void updateMovement() {
+        // Change direction randomly or at a decision point
+        if (random.nextInt(100) < 20) {  // 20% chance to randomly change direction
+            changeDirectionRandomly();
+        } else if (shouldChangeDirection()) {  // Checks if there is an obstacle
+            changeDirectionRandomly();
         }
+
+        // Additional logic to periodically change direction independently of obstacles
+        if (random.nextInt(100) < 10) {  // 10% chance to change direction voluntarily
+            changeDirectionRandomly();
+        }
+    }
+
+    // Method to change the monster's direction randomly
+    void changeDirectionRandomly() {
+        Direction[] directions = Direction.values();
+        this.direction = directions[random.nextInt(directions.length)];
+    }
+
+    boolean shouldChangeDirection() {
+        // This should be replaced with actual collision detection logic
+        // Example: pseudo code for collision detection
+        // return map.isObstacleAt(this.x + dx[this.direction], this.y + dy[this.direction]);
+        return random.nextBoolean();  // Randomly simulates obstacle detection
     }
 
     // Method to process the movement of the monster
     public void move() {
-        // Implement movement logic here
+        // Calculate new position based on direction
+        int newX = this.getX();
+        int newY = this.getY();
         switch (this.direction) {
-            case UP:
-                this.setY(this.getY() - speed);
-                break;
-            case DOWN:
-                this.setY(this.getY() + speed);
-                break;
-            case LEFT:
-                this.setX(this.getX() - speed);
-                break;
-            case RIGHT:
-                this.setX(this.getX() + speed);
-                break;
-            default:
-                // Do not move
-                break;
+            case UP: newY -= speed; break;
+            case DOWN: newY += speed; break;
+            case LEFT: newX -= speed; break;
+            case RIGHT: newX += speed; break;
+            default: return; // Do not move if STOP or invalid direction
+        }
+
+        // Check for collisions with the bounds of the game field or immovable objects
+        if (isValidPosition(newX, newY) && !isPlayerAtPosition(newX, newY)) {
+            this.setX(newX);
+            this.setY(newY);
+        } else {
+            // Change direction if the move is not valid
+            changeDirectionRandomly();
         }
     }
 
-    // Method to update the player's position (new method)
-    private void setPlayerPosition(int x, int y) {
-        this.playerX = x;
-        this.playerY = y;
+    private boolean isPlayerAtPosition(int x, int y) {
+        for (Player player : Game.players) {
+            if (player.getX() == x && player.getY() == y) {
+                // Player is at the position the monster is trying to move to
+                player.die(); // Here, you would call the method that handles player death
+                return true; // Collision with player detected
+            }
+        }
+        return false; // No player at the new position
     }
+
+    boolean isValidPosition(int x, int y) {
+        // Check if the position is outside the map bounds
+        if (x < 0 || x >= Game.map.getSize() || y < 0 || y >= Game.map.getSize()) {
+            return false;
+        }
+
+        // Check for collision with Bricks, Blocks, and Treasures
+        for (Tile tile : Game.map.getLayers().get("Objects").getTiles()) {
+            if ((tile instanceof Brick || tile instanceof Block || tile instanceof Treasure) && tile.getX() == x && tile.getY() == y) {
+                return false; // Collision detected, position is not valid
+            }
+        }
+
+        // No collision detected, position is valid
+        return true;
+    }
+
+
 
     // Method to set the direction
     public void setDirection(Direction direction) {
@@ -115,3 +149,4 @@ public class Monster extends Tile {
         return speed;
     }
 }
+
