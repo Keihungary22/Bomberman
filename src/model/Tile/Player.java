@@ -8,6 +8,8 @@ import model.EventListener.PlayerDieListener;
 import model.TreasureType;
 
 import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Player extends Tile implements BombExplodeListener {
     private final int id;
@@ -249,6 +251,46 @@ public class Player extends Tile implements BombExplodeListener {
             case DETONATOR:
                 if(!is_detonator_mode){
                     be_detonator_setter();
+                }
+                break;
+            case FORBIDDEN:
+                current_number_of_bomb = max_number_of_bombs;
+                new Thread(() -> {
+                    try{
+                        Thread.sleep(5000);
+                        current_number_of_bomb = 0;
+                    }catch(InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }).start();
+                break;
+            case BOMB_POWER_DOWN:
+                if(power_of_bombs >= 2){
+                    int temp = power_of_bombs;
+                    power_of_bombs = 1;
+                    //after 5 sec, power_of_bombs++;
+                    new Thread(() -> {
+                        try{
+                            Thread.sleep(5000);
+                            power_of_bombs = temp;
+                        }catch(InterruptedException e){
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
+                break;
+            case SPEED_DOWN:
+                if(speed >= 1){
+                    int temp = speed;
+                    speed = 0;
+                    new Thread(() -> {
+                        try{
+                            Thread.sleep(5000);
+                            speed = temp;
+                        }catch(InterruptedException e){
+                            e.printStackTrace();
+                        }
+                    }).start();
                 }
                 break;
         }

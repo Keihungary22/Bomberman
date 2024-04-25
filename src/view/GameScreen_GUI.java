@@ -44,6 +44,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     private JLabel Player1Invincibility;
     private JLabel Player2Invincibility;
     private JLabel Player3Invincibility;
+    private JLabel Player1Forbidden;
     private JPanel Player1StatusPanel;
     private JPanel Player2StatusPanel;
     private final JLayeredPane LayeredPane;
@@ -103,6 +104,9 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             case OBSTACLE -> "assets/item_obstacle.png";
             case GHOST -> "assets/item_ghost.png";
             case DETONATOR -> "assets/item_detonator.png";
+            case FORBIDDEN -> "assets/item_forbidden_bomb.png";
+            case BOMB_POWER_DOWN -> "assets/item_power_down.png";
+            case SPEED_DOWN -> "assets/item_speed_down.png";
         };
 
         try{
