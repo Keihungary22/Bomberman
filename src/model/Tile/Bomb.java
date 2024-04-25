@@ -274,7 +274,8 @@ public class Bomb extends Tile{
         }
         //endregion
     }
-    protected void fireBombDestroyBoxEvent(){
+    protected void fireBombDestroyBoxEvent()
+    {
         for (BombExplodeListener listener : bombExplodeListeners) {
             listener.bombDestroyedBox();
         }
