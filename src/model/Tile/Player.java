@@ -81,8 +81,10 @@ public class Player extends Tile implements BombExplodeListener {
         is_ghost_mode = false;
     }
     public void die(){
-        is_alive = false;
-        firePlayerDieEvent();
+        if(!is_invincible_mode){
+            is_alive = false;
+            firePlayerDieEvent();
+        }
     }
     public Bomb putBomb(){
         //if there is not a bomb in the same cell, player can put new bomb
@@ -258,7 +260,7 @@ public class Player extends Tile implements BombExplodeListener {
     private void be_invincible(){
         is_invincible_mode = true;
         String temp_visual = visual;
-        visual = "invincibilityModePlayer.png";
+//        visual = "invincibilityModePlayer.png";
         //region >> Update the timer once canceled to a new instance
         if (invincible_timer != null) {
             invincible_timer.cancel();
@@ -273,7 +275,7 @@ public class Player extends Tile implements BombExplodeListener {
                     invincible_timer.cancel();
                     invincible_time = power_up_time;
                     is_invincible_mode = false;
-                    visual = temp_visual;
+//                    visual = temp_visual;
                     try {
                         firePlayerStatusChangeTimeUp(id, TreasureType.INVINCIBILITY);
                     } catch (Exception e) {
