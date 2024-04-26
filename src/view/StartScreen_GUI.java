@@ -6,7 +6,7 @@ import model.*;
 import model.Tile.*;
 
 import javax.swing.*;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
@@ -98,7 +98,7 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
 
 
         this.setContentPane(this.MainPanel);
-        this.setSize(1000, 700);
+        this.setExtendedState(Frame.MAXIMIZED_BOTH);
         this.setVisible(true);
     }
 

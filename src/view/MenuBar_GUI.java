@@ -93,7 +93,7 @@ public class MenuBar_GUI extends JFrame implements ActionListener{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.setContentPane(this.MainPanel);
-        this.setSize(1500, 1200);
+        this.setExtendedState(Frame.MAXIMIZED_BOTH);
         this.setVisible(true);
     }
 

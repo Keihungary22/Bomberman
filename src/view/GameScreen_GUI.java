@@ -121,7 +121,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         GenerateGameBoard(); //based on the map class, initiate JPanel of the game board
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(this.MainPanel);
-        this.setSize(1200, 1200);
+        this.setExtendedState(Frame.MAXIMIZED_BOTH);
         //endregion
 
 //        Game.map.getLayers().get("Bombs").update();

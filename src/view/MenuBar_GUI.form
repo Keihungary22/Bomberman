@@ -8,7 +8,7 @@
       <background color="-9524033"/>
       <enabled value="false"/>
       <foreground color="-1"/>
-      <minimumSize width="1500" height="1200"/>
+      <minimumSize width="1500" height="1000"/>
     </properties>
     <border type="none"/>
     <children>
