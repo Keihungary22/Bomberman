@@ -66,6 +66,12 @@ public class ChaserMonster extends Monster {
             // 有効な位置であれば移動する
             this.setX(newX);
             this.setY(newY);
+            for(Player player:Game.players) {
+                if (player.getX() == x && player.getY() == y) {
+                    // Player is at the position the monster is trying to move to
+                    player.die(); // Here, you would call the method that handles player death
+                }
+            }
         } else {
             // 移動できない場合はプレイヤーに向かう新しい方向を選ぶ
             changeDirectionRandomly();

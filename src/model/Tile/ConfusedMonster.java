@@ -8,7 +8,7 @@ public class ConfusedMonster extends Monster {
 
     public ConfusedMonster(String visual) {
         super(visual);
-        this.setSpeed(2); // 基本のモンスターと同じ速度
+        this.setSpeed(1); // 基本のモンスターと同じ速度
     }
 
     @Override

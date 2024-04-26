@@ -1,11 +1,15 @@
 package model.Tile;
 
 import java.util.Random;
+
+import model.EventListener.BombExplodeListener;
+import model.EventListener.MonsterDieListener;
 import model.Game;
-public class Monster extends Tile {
+public class Monster extends Tile implements BombExplodeListener {
     private boolean is_alive;
     private int speed;
     private Direction direction;
+    private MonsterDieListener monsterDieListener;
     Random random = new Random();
     enum Direction {
         UP, DOWN, LEFT, RIGHT, STOP // Also add a stop state
@@ -23,8 +27,9 @@ public class Monster extends Tile {
     public boolean isAlive() {
         return is_alive;
     }
-    public void setAlive(boolean alive) {
-        this.is_alive = alive;
+    public void die(){
+        is_alive = false;
+        fireMonsterDieListener();
     }
 
     // Update the monster's movement logic
@@ -69,9 +74,15 @@ public class Monster extends Tile {
         }
 
         // Check for collisions with the bounds of the game field or immovable objects
-        if (isValidPosition(newX, newY) && !isPlayerAtPosition(newX, newY)) {
+        if (isValidPosition(newX, newY)) {
             this.setX(newX);
             this.setY(newY);
+            for(Player player:Game.players){
+                if (player.getX() == x && player.getY() == y) {
+                    // Player is at the position the monster is trying to move to
+                    player.die(); // Here, you would call the method that handles player death
+                }
+            }
         } else {
             // Change direction if the move is not valid
             changeDirectionRandomly();
@@ -97,8 +108,14 @@ public class Monster extends Tile {
 
         // Check for collision with Bricks, Blocks, and Treasures
         for (Tile tile : Game.map.getLayers().get("Objects").getTiles()) {
-            if ((tile instanceof Brick || tile instanceof Block || tile instanceof Treasure) && tile.getX() == x && tile.getY() == y) {
+            if ((tile instanceof Brick || tile instanceof Block || tile instanceof Box) && tile.getX() == x && tile.getY() == y) {
                 return false; // Collision detected, position is not valid
+            }
+        }
+
+        for(Tile characters_tile : Game.map.getLayers().get("Characters").getTiles()) {
+            if((characters_tile instanceof Monster) && characters_tile.getX() == x && characters_tile.getY() == y) {
+                return false;
             }
         }
 
@@ -106,7 +123,12 @@ public class Monster extends Tile {
         return true;
     }
 
-
+    public void fireMonsterDieListener(){
+        this.monsterDieListener.monsterDie();
+    }
+    public void setMonsterDieListener(MonsterDieListener listener){
+        this.monsterDieListener = listener;
+    }
 
     // Method to set the direction
     public void setDirection(Direction direction) {
@@ -148,5 +170,27 @@ public class Monster extends Tile {
     public int getSpeed() {
         return speed;
     }
+
+    @Override
+    public void bombExploded() {
+        for(Explosion explosion : Game.explosions){
+            if(explosion.getX() == this.x && explosion.getY() == this.y){
+                System.out.println("Die " + this.getVisual());
+                die();
+            }
+        }
+    }
+
+
+
+    @Override
+    public void bombFinishExplosion() {
+
+    }
+    @Override
+    public void bombDestroyedBox() {
+
+    }
 }
+
 
