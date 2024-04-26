@@ -47,6 +47,18 @@ public class GhostMonster extends Monster {
                 return false; // ボムがある位置には移動できない
             }
         }
+
+        for (Tile tile : Game.map.getLayers().get("Objects").getTiles()) {
+            if ((tile instanceof Brick) && tile.getX() == x && tile.getY() == y) {
+                return false; // Collision detected, position is not valid
+            }
+        }
+
+        for(Tile characters_tile : Game.map.getLayers().get("Characters").getTiles()) {
+            if((characters_tile instanceof Monster) && characters_tile.getX() == x && characters_tile.getY() == y) {
+                return false;
+            }
+        }
         return true; // それ以外の場合は移動可能
     }
 
@@ -60,6 +72,12 @@ public class GhostMonster extends Monster {
             // マップの範囲内であれば移動
             this.setX(newX);
             this.setY(newY);
+            for(Player player:Game.players) {
+                if (player.getX() == x && player.getY() == y) {
+                    // Player is at the position the monster is trying to move to
+                    player.die(); // Here, you would call the method that handles player death
+                }
+            }
         } else {
             // 移動できなければ方向を変える
             changeDirectionRandomly();

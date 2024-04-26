@@ -3,8 +3,7 @@
 package view;
 
 import model.*;
-import model.Tile.Monster;
-import model.Tile.Player;
+import model.Tile.*;
 
 import javax.swing.*;
 import java.awt.Font;
@@ -157,9 +156,17 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
                 }
                 index++;
             }
-            // モンスターの追加
-            Monster monster = new Monster("Monster1.png");
-            Game.monsters.add(monster);
+            // モンスターの初期化
+            Monster basicMonster = new Monster("basicMonster.png");
+            ConfusedMonster confusedMonster = new ConfusedMonster("confusedMonster.png");
+            GhostMonster ghostMonster = new GhostMonster("ghostMonster.png");
+            ChaserMonster chaserMonster = new ChaserMonster("chaserMonster.png");
+
+            // モンスターをリストに追加
+            Game.monsters.add(basicMonster);
+            Game.monsters.add(confusedMonster);
+            Game.monsters.add(ghostMonster);
+            Game.monsters.add(chaserMonster);
             new GameScreen_GUI();
         }
 

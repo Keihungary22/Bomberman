@@ -208,6 +208,11 @@ public class Player extends Tile implements BombExplodeListener {
                 System.out.println("Move into explosion and die " + this.visual);
                 die();
             }
+            for(Monster monster : Game.monsters){
+                if(monster.getX() == new_x && monster.getY() == new_y && monster.isAlive()){
+                    die();
+                }
+            }
             coolDownStart();
             return true;
         }

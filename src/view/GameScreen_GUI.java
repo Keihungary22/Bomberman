@@ -3,10 +3,7 @@
 package view;
 
 import model.*;
-import model.EventListener.BombExplodeListener;
-import model.EventListener.PlayerDieListener;
-import model.EventListener.PlayerGetTreasureListener;
-import model.EventListener.PlayerStatusChangeListener;
+import model.EventListener.*;
 import model.Tile.*;
 
 import javax.swing.*;
@@ -15,7 +12,7 @@ import java.awt.event.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener, PlayerStatusChangeListener, PlayerGetTreasureListener {
+public class GameScreen_GUI extends JFrame implements ActionListener, KeyListener, BombExplodeListener, PlayerDieListener, PlayerStatusChangeListener, PlayerGetTreasureListener, MonsterDieListener {
     private JPanel MainPanel;
 
     private JLabel CurrentRound;
@@ -62,7 +59,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     public GameScreen_GUI() {
         Game.musicPlayer.battleMusicStart();
         Game.refreshForRound();
-        setupMonsterMovement();
+        initMonstersPositions();
         LayeredPane = new JLayeredPane();
         initPlayerStatusImage();
 //
@@ -96,6 +93,9 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             player.setPlayerDieListener(this);
             player.setPlayerStatusChangeListener(this);
             player.setPlayerGetTreasureListener(this);
+        }
+        for(Monster monster: Game.monsters){
+            monster.setMonsterDieListener(this);
         }
         //endregion
 
@@ -162,23 +162,64 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         }
     }
     //endregion
-    private void setupMonsterMovement() {
-        // Timer for monster movement
+    private void initMonstersPositions() {
+        // 各モンスターの初期位置を設定
+        int size = Game.map.getSize();
+        int index = 0;
+
+        for(Monster monster : Game.monsters){
+            int x = 1;
+            int y = 1;
+            System.out.println(index);
+            switch (index){// Use modulus to loop through the four starting positions
+                case 0:
+                    x = 4;
+                    y =3;
+                    break;
+                case 1:
+                    x = size - 5;
+                    y = 3;
+                    break;
+                case 2:
+                    x = 4;
+                    y = size - 4;
+                    break;
+                case 3:
+                    x = size - 5;
+                    y = size - 4;
+                    break;
+            }
+            monster.setX(x);
+            monster.setY(y);
+            index++;
+        }
+
+
+        for(Monster monster : Game.monsters){
+            if(monster instanceof  ChaserMonster){
+                setupIndividualMonsterMovement(monster, 500);
+            }else{
+                setupIndividualMonsterMovement(monster, 1000);
+            }
+        }
+    }
+
+    private void setupIndividualMonsterMovement(Monster monster, int interval) {
         Timer monsterMovementTimer = new Timer();
         TimerTask monsterMoveTask = new TimerTask() {
             public void run() {
                 SwingUtilities.invokeLater(() -> {
-                    for (Monster monster : Game.monsters) {
+                    if (monster.isAlive()) {
                         monster.updateMovement();
                         monster.move();
+                        Game.map.getLayers().get("Characters").update();
+                        LayeredPane.revalidate();
+                        LayeredPane.repaint();
                     }
-                    Game.map.getLayers().get("Characters").update();
-                    LayeredPane.revalidate();
-                    LayeredPane.repaint();
                 });
             }
         };
-        monsterMovementTimer.scheduleAtFixedRate(monsterMoveTask, 0, 2000);
+        monsterMovementTimer.scheduleAtFixedRate(monsterMoveTask, 0, interval);
     }
 
     //region >> private functions
@@ -400,6 +441,9 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                         for(Player player: Game.players){
                             newBomb.setBombExplodeListener(player);
                         }
+                        for(Monster monster: Game.monsters){
+                            newBomb.setBombExplodeListener(monster);
+                        }
                     }
                 }
                 break;
@@ -456,6 +500,9 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                         newBomb.setBombExplodeListener(this);
                         for(Player player: Game.players){
                             newBomb.setBombExplodeListener(player);
+                        }
+                        for(Monster monster: Game.monsters){
+                            newBomb.setBombExplodeListener(monster);
                         }
                     }
                 }
@@ -514,6 +561,9 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                         for(Player player: Game.players){
                             newBomb.setBombExplodeListener(player);
                         }
+                        for(Monster monster: Game.monsters){
+                            newBomb.setBombExplodeListener(monster);
+                        }
                     }
                 }
                 break;
@@ -552,6 +602,10 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         if(Game.getNumberOfAlivePlayers() == 1){
             short_timer_start();
         }
+    }
+    @Override
+    public void monsterDie() {
+        updateLayer("Characters");
     }
     @Override
     public void PlayerStatusChanged(int player_id, TreasureType treasure_type) throws Exception {
