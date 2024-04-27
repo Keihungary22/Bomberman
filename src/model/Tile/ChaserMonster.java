@@ -6,17 +6,15 @@ import model.Game;
 public class ChaserMonster extends Monster {
     public ChaserMonster(String visual) {
         super(visual);
-        this.setSpeed(3); // SmartMonsterは基本的なモンスターよりも速く設定
+        this.setSpeed(3);
     }
 
     @Override
     protected void changeDirectionRandomly() {
-        // プレイヤーに最も近い方向を選ぶ
         Player closestPlayer = findClosestPlayer();
         if (closestPlayer != null) {
             this.setDirection(getDirectionTowardsPlayer(closestPlayer));
         } else {
-            // ランダムな方向を選ぶ
             super.changeDirectionRandomly();
         }
     }
@@ -40,40 +38,32 @@ public class ChaserMonster extends Monster {
         int dx = player.getX() - this.getX();
         int dy = player.getY() - this.getY();
 
-        // プレイヤーに向かう方向を選ぶ
         if (Math.abs(dx) > Math.abs(dy)) {
-            // X軸の方が離れている場合はX軸方向へ
             return dx > 0 ? Direction.RIGHT : Direction.LEFT;
         } else {
-            // Y軸の方が離れている場合はY軸方向へ
             return dy > 0 ? Direction.DOWN : Direction.UP;
         }
     }
 
     @Override
     protected boolean shouldChangeDirection() {
-        // 障害物にぶつかると方向を変えるが、このメソッドはその判断を行うためにオーバーライドする必要がある
         return super.shouldChangeDirection(); // 基本のロジックを利用する
     }
 
     @Override
     public void move() {
-        // SmartMonsterの移動ロジック
         int newX = this.getX() + getDX();
         int newY = this.getY() + getDY();
 
         if (isValidPosition(newX, newY)) {
-            // 有効な位置であれば移動する
             this.setX(newX);
             this.setY(newY);
             for(Player player:Game.players) {
                 if (player.getX() == x && player.getY() == y) {
-                    // Player is at the position the monster is trying to move to
-                    player.die(); // Here, you would call the method that handles player death
+                    player.die();
                 }
             }
         } else {
-            // 移動できない場合はプレイヤーに向かう新しい方向を選ぶ
             changeDirectionRandomly();
         }
     }

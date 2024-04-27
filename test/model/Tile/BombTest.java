@@ -12,7 +12,6 @@ class BombTest {
 
     @BeforeEach
     void setUp() {
-        // Player オブジェクトを初期化します。ここでは適当なビジュアル文字列とIDを渡しています。
         player = new Player("player_visual", 1);
         bomb = new Bomb(0, 0, player);
     }
