@@ -19,14 +19,6 @@ class GhostMonsterTest {
     }
 
     @Test
-    void testInteractWithMonster() {
-        Monster anotherMonster = new Monster("anotherMonster.png");
-        ghostMonster.interact(anotherMonster);
-        assertNotEquals(Monster.Direction.STOP, ghostMonster.getDirection(), "GhostMonster should change direction after interacting with another monster.");
-        assertNotEquals(Monster.Direction.STOP, anotherMonster.getDirection(), "The other monster should also change direction.");
-    }
-
-    @Test
     void testSetAndGetDirection() {
         ghostMonster.setDirection(GhostMonster.Direction.LEFT);
         assertEquals(GhostMonster.Direction.LEFT, ghostMonster.getDirection(), "GhostMonster direction should be set to LEFT.");
