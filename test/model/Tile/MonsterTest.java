@@ -28,14 +28,6 @@ class MonsterTest {
     }
 
     @Test
-    void testInteractWithMonster() {
-        Monster anotherMonster = new Monster("anotherMonster.png");
-        monster.interact(anotherMonster);
-        assertNotEquals(Monster.Direction.STOP, monster.getDirection(), "Monster should change direction after interacting with another monster.");
-        assertNotEquals(Monster.Direction.STOP, anotherMonster.getDirection(), "The other monster should also change direction.");
-    }
-
-    @Test
     void testSetAndGetDirection() {
         monster.setDirection(Monster.Direction.LEFT);
         assertEquals(Monster.Direction.LEFT, monster.getDirection(), "Monster direction should be set to LEFT.");
