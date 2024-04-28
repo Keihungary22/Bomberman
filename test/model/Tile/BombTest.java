@@ -12,7 +12,7 @@ class BombTest {
 
     @BeforeEach
     void setUp() {
-        player = new Player("player_visual", 1);
+        player = new Player("Player1.png", 1);
         bomb = new Bomb(0, 0, player);
     }
 

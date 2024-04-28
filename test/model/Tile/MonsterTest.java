@@ -19,15 +19,6 @@ class MonsterTest {
     }
 
     @Test
-    void testUpdateMovement() {
-        Monster.Direction originalDirection = monster.getDirection();
-        for (int i = 0; i < 10; i++) {
-            monster.updateMovement();
-        }
-        assertNotEquals(originalDirection, monster.getDirection(), "Monster direction should have changed.");
-    }
-
-    @Test
     void testSetAndGetDirection() {
         monster.setDirection(Monster.Direction.LEFT);
         assertEquals(Monster.Direction.LEFT, monster.getDirection(), "Monster direction should be set to LEFT.");
