@@ -9,13 +9,13 @@ variables:
 
 build-my-first-job:
     stage: build
+    image: ubuntu:22.04
     script:
+        - echo "Updating packages and installing Java"
+        - apt-get update -y && apt-get install -y openjdk-11-jdk
         - echo "Building the project"
         - find src -name "*.java" > sources.txt
-        # Compile Java files, assuming that IntelliJ has already generated the necessary code from .form files
         - javac -cp src -d $CLASSES_DIR @sources.txt
-        # Optionally, you might need to add the path to IntelliJ IDEA's libraries if .form files are not pre-processed
-        - javac -cp src:path-to-intellij-libs -d $CLASSES_DIR @sources.txt
 
 test-my-first-job:
     stage: test
