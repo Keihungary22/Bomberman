@@ -1,5 +1,3 @@
-// モンスターの初期値を作成する
-
 package view;
 
 import model.*;
@@ -156,13 +154,11 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
                 }
                 index++;
             }
-            // モンスターの初期化
             Monster basicMonster = new Monster("basicMonster.png");
             ConfusedMonster confusedMonster = new ConfusedMonster("confusedMonster.png");
             GhostMonster ghostMonster = new GhostMonster("ghostMonster.png");
             ChaserMonster chaserMonster = new ChaserMonster("chaserMonster.png");
 
-            // モンスターをリストに追加
             Game.monsters.add(basicMonster);
             Game.monsters.add(confusedMonster);
             Game.monsters.add(ghostMonster);
