@@ -1,7 +1,4 @@
-// 各ラウンドで毎回生成される
-
 package view;
-
 import model.*;
 import model.EventListener.*;
 import model.Tile.*;
@@ -62,7 +59,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         initMonstersPositions();
         LayeredPane = new JLayeredPane();
         initPlayerStatusImage();
-//
+
         //region >> Register button action listeners and set style fo the buttons
         MenuButton.addActionListener(this);
         MenuButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
@@ -163,7 +160,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     }
     //endregion
     private void initMonstersPositions() {
-        // 各モンスターの初期位置を設定
         int size = Game.map.getSize();
         int index = 0;
 
@@ -348,7 +344,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             }
         };
 
-        // タイマーを1秒ごとに実行する
         timer.scheduleAtFixedRate(task, 0, 1000);
     }
     private void updateLayer(String layer_name){
@@ -356,7 +351,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         LayeredPane.revalidate();
         LayeredPane.repaint();
     }
-    //endregion
 
     //actions for each button
     @Override
