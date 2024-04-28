@@ -9,19 +9,23 @@
     <children>
       <grid id="3406" binding="Player" layout-manager="GridBagLayout">
         <constraints border-constraint="Center"/>
-        <properties/>
+        <properties>
+          <background color="-4069899"/>
+        </properties>
         <border type="none"/>
         <children/>
       </grid>
       <grid id="93f01" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="South"/>
-        <properties/>
+        <properties>
+          <background color="-4069899"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="4429e" class="javax.swing.JButton" binding="btn_startsc">
             <constraints/>
             <properties>
-              <text value="Start Screen"/>
+              <text value="HOME"/>
             </properties>
           </component>
         </children>

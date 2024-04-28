@@ -9,7 +9,9 @@
     <children>
       <grid id="22e1b" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="North"/>
-        <properties/>
+        <properties>
+          <background color="-4069899"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="b2b30" class="javax.swing.JTextArea" binding="RoundNumber">
@@ -22,6 +24,7 @@
           <component id="1bc0b" class="javax.swing.JLabel">
             <constraints/>
             <properties>
+              <foreground color="-16777216"/>
               <text value="Round Result"/>
             </properties>
           </component>
@@ -29,31 +32,31 @@
       </grid>
       <grid id="84602" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints border-constraint="South"/>
-        <properties/>
+        <properties>
+          <background color="-4069899"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="c8bbd" class="javax.swing.JButton" binding="nextRoundButton" default-binding="true">
             <constraints/>
             <properties>
-              <text value="Next round"/>
+              <background color="-12069798"/>
+              <font style="1"/>
+              <text value="CONTINUE"/>
             </properties>
           </component>
         </children>
       </grid>
       <grid id="8307f" layout-manager="GridBagLayout">
         <constraints border-constraint="Center"/>
-        <properties/>
+        <properties>
+          <background color="-4069899"/>
+        </properties>
         <border type="none"/>
         <children>
-          <vspacer id="6d42">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-          </vspacer>
           <grid id="5bc5a" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties/>
@@ -62,19 +65,24 @@
               <component id="c5335" class="javax.swing.JLabel">
                 <constraints border-constraint="North"/>
                 <properties>
+                  <background color="-8139797"/>
                   <horizontalAlignment value="0"/>
-                  <text value="Winner"/>
+                  <text value="WINNER"/>
                 </properties>
               </component>
               <grid id="8ee49" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
                 <constraints border-constraint="South"/>
-                <properties/>
+                <properties>
+                  <background color="-8139797"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <component id="90d3c" class="javax.swing.JTextField" binding="WinnerField">
                     <constraints/>
                     <properties>
+                      <background color="-24320"/>
                       <editable value="false"/>
+                      <foreground color="-16777216"/>
                       <text value="winner name"/>
                     </properties>
                   </component>
@@ -84,15 +92,19 @@
           </grid>
           <grid id="c64f9" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
             <constraints>
-              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-8139797"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="64a6e" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <background color="-604499"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <component id="3fe3b" class="javax.swing.JTextField" binding="p1WinCount">
@@ -105,6 +117,8 @@
                   <component id="a63a5" class="javax.swing.JLabel">
                     <constraints border-constraint="North"/>
                     <properties>
+                      <background color="-16777216"/>
+                      <foreground color="-16777216"/>
                       <horizontalAlignment value="0"/>
                       <text value="Player1"/>
                     </properties>
@@ -113,12 +127,16 @@
               </grid>
               <grid id="cb325" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <background color="-1728803"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <component id="6dd9a" class="javax.swing.JLabel">
                     <constraints border-constraint="North"/>
                     <properties>
+                      <background color="-16777216"/>
+                      <foreground color="-16777216"/>
                       <horizontalAlignment value="0"/>
                       <text value="Player2"/>
                     </properties>
@@ -134,7 +152,9 @@
               </grid>
               <grid id="8b6f9" binding="P3WinCountPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <background color="-4921950"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <component id="528d" class="javax.swing.JTextField" binding="p3WinCount">
@@ -147,6 +167,8 @@
                   <component id="ec225" class="javax.swing.JLabel">
                     <constraints border-constraint="North"/>
                     <properties>
+                      <background color="-16777216"/>
+                      <foreground color="-16777216"/>
                       <horizontalAlignment value="0"/>
                       <text value="Player3"/>
                     </properties>
