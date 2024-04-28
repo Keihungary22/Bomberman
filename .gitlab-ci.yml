@@ -3,14 +3,33 @@ stages:
     - test
     - deploy
 
+variables:
+    # Define the base directory for Java classes to simplify commands
+    CLASSES_DIR: out
+
 build-my-first-job:
-    grade: build
-    script: echo "this is first build job"
+    stage: build
+    script:
+        - echo "Building the project"
+        - find src -name "*.java" > sources.txt
+        # Compile Java files, assuming that IntelliJ has already generated the necessary code from .form files
+        - javac -cp src -d $CLASSES_DIR @sources.txt
+        # Optionally, you might need to add the path to IntelliJ IDEA's libraries if .form files are not pre-processed
+        - javac -cp src:path-to-intellij-libs -d $CLASSES_DIR @sources.txt
 
 test-my-first-job:
-    grade: test
-    script: echo "this is first test job"
+    stage: test
+    script:
+        - echo "Running tests"
+        # Assuming tests are in the 'model.tile' package and we compile them into the same 'out' directory
+        - find test -name "*Test.java" > test_sources.txt
+        - javac -cp src:test:$CLASSES_DIR -d $CLASSES_DIR @test_sources.txt
+        # Run tests using the compiled classes and test classes
+        # Note: Replace 'model.tile' with the correct package path if needed
+        - java -cp $CLASSES_DIR org.junit.runner.JUnitCore model.tile.BlastTest model.tile.BlockTest model.tile.BombTest ... # etc.
 
 deploy-my-first-job:
-    grade: deploy
-    script: echo "this is first deploy job"
+    stage: deploy
+    script:
+        - echo "Deploying the application"
+        # Add your deployment commands here
