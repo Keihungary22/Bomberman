@@ -14,7 +14,7 @@ build-my-first-job:
         - echo "Updating packages and installing Java 22"
         - apt-get update -y
         - apt-get install -y wget
-        - wget https://download.java.net/java/GA/jdk22/13/GPL/openjdk-22_linux-x64_bin.tar.gz
+        - wget https://download.java.net/java/GA/jdk22.0.1/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-22.0.1_linux-x64_bin.tar.gz
         - tar xvf openjdk-22_linux-x64_bin.tar.gz
         - export JAVA_HOME=$PWD/jdk-22
         - export PATH=$JAVA_HOME/bin:$PATH
