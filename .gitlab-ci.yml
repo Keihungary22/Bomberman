@@ -1,35 +1,35 @@
-stages:
-    - build
-    - test
-    - deploy
-
-variables:
-    # Define the base directory for Java classes to simplify commands
-    CLASSES_DIR: out
-
-build-my-first-job:
-    stage: build
-    image: ubuntu:22.04
-    script:
-        - echo "Updating packages and installing Java"
-        - apt-get update -y && apt-get install -y openjdk-11-jdk
-        - echo "Building the project"
-        - find src -name "*.java" > sources.txt
-        - javac -cp src -d $CLASSES_DIR @sources.txt
-
-test-my-first-job:
-    stage: test
-    script:
-        - echo "Running tests"
-        # Assuming tests are in the 'model.tile' package and we compile them into the same 'out' directory
-        - find test -name "*Test.java" > test_sources.txt
-        - javac -cp src:test:$CLASSES_DIR -d $CLASSES_DIR @test_sources.txt
-        # Run tests using the compiled classes and test classes
-        # Note: Replace 'model.tile' with the correct package path if needed
-        - java -cp $CLASSES_DIR org.junit.runner.JUnitCore model.tile.BlastTest model.tile.BlockTest model.tile.BombTest ... # etc.
-
-deploy-my-first-job:
-    stage: deploy
-    script:
-        - echo "Deploying the application"
-        # Add your deployment commands here
+#stages:
+#    - build
+#    - test
+#    - deploy
+#
+#variables:
+#    # Define the base directory for Java classes to simplify commands
+#    CLASSES_DIR: out
+#
+#build-my-first-job:
+#    stage: build
+#    image: ubuntu:22.04
+#    script:
+#        - echo "Updating packages and installing Java"
+#        - apt-get update -y && apt-get install -y openjdk-11-jdk
+#        - echo "Building the project"
+#        - find src -name "*.java" > sources.txt
+#        - javac -cp src -d $CLASSES_DIR @sources.txt
+#
+#test-my-first-job:
+#    stage: test
+#    script:
+#        - echo "Running tests"
+#        # Assuming tests are in the 'model.tile' package and we compile them into the same 'out' directory
+#        - find test -name "*Test.java" > test_sources.txt
+#        - javac -cp src:test:$CLASSES_DIR -d $CLASSES_DIR @test_sources.txt
+#        # Run tests using the compiled classes and test classes
+#        # Note: Replace 'model.tile' with the correct package path if needed
+#        - java -cp $CLASSES_DIR org.junit.runner.JUnitCore model.tile.BlastTest model.tile.BlockTest model.tile.BombTest ... # etc.
+#
+#deploy-my-first-job:
+#    stage: deploy
+#    script:
+#        - echo "Deploying the application"
+#        # Add your deployment commands here
