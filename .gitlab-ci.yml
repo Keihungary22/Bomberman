@@ -15,7 +15,10 @@ build-my-first-job:
         - apt-get update -y && apt-get install -y openjdk-11-jdk
         - echo "Building the project"
         - find src -name "*.java" > sources.txt
-        - javac -cp src -d $CLASSES_DIR @sources.txt
+        - javac -encoding UTF-8 -cp src -d $CLASSES_DIR @sources.txt
+    before_script:
+        - export CLASSES_DIR=out
+
 
 test-my-first-job:
     stage: test

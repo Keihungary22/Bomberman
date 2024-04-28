@@ -333,12 +333,10 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             @Override
             public void run() {
                 if (short_time <= 0) {
-                    // short_timeが0になったらGameScreen_GUIを閉じる
                     dispose();
                     timer.cancel();
                     new RoundResultScreen_GUI();
                 } else {
-                    // short_timeを減らす
                     short_time--;
                 }
             }
@@ -361,7 +359,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             menuBarGUI.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    // メニュー画面が閉じた後に、ゲーム画面にフォーカスを戻す
                     requestFocus();
                     Game.is_paused = false;
                 }
