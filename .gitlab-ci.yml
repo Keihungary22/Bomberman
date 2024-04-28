@@ -11,13 +11,20 @@ build-my-first-job:
     stage: build
     image: ubuntu:22.04
     script:
-        - echo "Updating packages and installing Java"
-        - apt-get update -y && apt-get install -y openjdk-11-jdk
+        - echo "Updating packages and installing Java 22"
+        - apt-get update -y
+        - apt-get install -y wget
+        - wget https://download.java.net/java/GA/jdk22/13/GPL/openjdk-22_linux-x64_bin.tar.gz
+        - tar xvf openjdk-22_linux-x64_bin.tar.gz
+        - export JAVA_HOME=$PWD/jdk-22
+        - export PATH=$JAVA_HOME/bin:$PATH
+        - java -version
         - echo "Building the project"
         - find src -name "*.java" > sources.txt
-        - javac -encoding UTF-8 -cp src -d $CLASSES_DIR @sources.txt
+        - javac -cp src -d $CLASSES_DIR @sources.txt
     before_script:
         - export CLASSES_DIR=out
+
 
 
 test-my-first-job:
