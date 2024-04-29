@@ -40,7 +40,6 @@ test-my-first-job:
         - echo "Running tests"
         - find test -name "*Test.java" > test_sources.txt
         - javac -cp src:test:$CLASSES_DIR -d $CLASSES_DIR @test_sources.txt
-        # Assuming JUnit is on your classpath, and you've correctly specified paths
         - java -cp $CLASSES_DIR org.junit.runner.JUnitCore model.tile.BlastTest model.tile.BlockTest model.tile.BombTest
     before_script:
         - export CLASSES_DIR=out
