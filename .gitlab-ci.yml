@@ -29,7 +29,7 @@ test-my-first-job:
     stage: test
     image: ubuntu:22.04
     script:
-        - echo "Updating packages and installing Java"
+        - echo "Updating packages and installing Java 22"
         - apt-get update -y
         - apt-get install -y wget
         - wget https://download.java.net/java/GA/jdk22.0.1/c7ec1332f7bb44aeba2eb341ae18aca4/8/GPL/openjdk-22.0.1_linux-x64_bin.tar.gz
@@ -37,15 +37,14 @@ test-my-first-job:
         - export JAVA_HOME=$PWD/jdk-22.0.1
         - export PATH=$JAVA_HOME/bin:$PATH
         - java -version
-
         - echo "Running tests"
         - find test -name "*Test.java" > test_sources.txt
         - javac -cp src:test:$CLASSES_DIR -d $CLASSES_DIR @test_sources.txt
-        # Run tests using the compiled classes and test classes
-        # Note: Replace 'model.tile' with the correct package path if needed
-        - java -cp $CLASSES_DIR org.junit.runner.JUnitCore model.tile.BlastTest model.tile.BlockTest model.tile.BombTest # ... and other test classes
+        # Assuming JUnit is on your classpath, and you've correctly specified paths
+        - java -cp $CLASSES_DIR org.junit.runner.JUnitCore model.tile.BlastTest model.tile.BlockTest model.tile.BombTest
     before_script:
         - export CLASSES_DIR=out
+
 
 deploy-my-first-job:
     stage: deploy
