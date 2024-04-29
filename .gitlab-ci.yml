@@ -37,16 +37,18 @@ test-my-first-job:
         - export JAVA_HOME=$PWD/jdk-22.0.1
         - export PATH=$JAVA_HOME/bin:$PATH
         - java -version
+        - echo "Downloading JUnit"
+        - wget https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-api/5.7.0/junit-jupiter-api-5.7.0.jar
+        - wget https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-engine/5.7.0/junit-jupiter-engine-5.7.0.jar
+        - wget https://repo1.maven.org/maven2/org/junit/platform/junit-platform-launcher/1.7.0/junit-platform-launcher-1.7.0.jar
         - echo "Running tests"
         - find test -name "*Test.java" > test_sources.txt
-        - javac -cp src:test:$CLASSES_DIR -d $CLASSES_DIR @test_sources.txt
-        - java -cp $CLASSES_DIR org.junit.runner.JUnitCore model.tile.BlastTest model.tile.BlockTest model.tile.BombTest
+        - javac -cp src:test:$CLASSES_DIR:junit-jupiter-api-5.7.0.jar:junit-jupiter-engine-5.7.0.jar:junit-platform-launcher-1.7.0.jar -d $CLASSES_DIR @test_sources.txt
+        - java -cp $CLASSES_DIR:junit-jupiter-api-5.7.0.jar:junit-jupiter-engine-5.7.0.jar:junit-platform-launcher-1.7.0.jar org.junit.platform.console.ConsoleLauncher --scan-classpath
     before_script:
         - export CLASSES_DIR=out
-
 
 deploy-my-first-job:
     stage: deploy
     script:
         - echo "Deploying the application"
-        # Add your deployment commands here
