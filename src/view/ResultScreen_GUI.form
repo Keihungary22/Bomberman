@@ -7,7 +7,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="3406" binding="Player" layout-manager="GridBagLayout">
+      <grid id="3406" binding="Players" layout-manager="GridBagLayout">
         <constraints border-constraint="Center"/>
         <properties>
           <background color="-4069899"/>
@@ -22,9 +22,14 @@
         </properties>
         <border type="none"/>
         <children>
-          <component id="4429e" class="javax.swing.JButton" binding="btn_startsc">
+          <component id="f73aa" class="javax.swing.JButton" binding="btn_startsc">
             <constraints/>
             <properties>
+              <background color="-12069798"/>
+              <enabled value="true"/>
+              <font style="1"/>
+              <hideActionText value="true"/>
+              <horizontalTextPosition value="0"/>
               <text value="HOME"/>
             </properties>
           </component>
