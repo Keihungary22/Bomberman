@@ -26,19 +26,19 @@ public class MenuBar_GUI extends JFrame implements ActionListener{
     public MenuBar_GUI(GameScreen_GUI gameScreenFrame) {
         //region >> Set game status style
         CurrentRound.setText("Round " + String.valueOf(Game.current_round));
-        CurrentRound.setFont(new Font("Courier New", Font.PLAIN, 50));
+        CurrentRound.setFont(new Font("Courier New", Font.PLAIN, 30));
         CurrentRound.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         CurrentRound.setOpaque(true);
         CurrentRound.setBackground(Color.WHITE);
 
         ElapsedTime.setText("Time:" + String.valueOf(60)); // gameScreenFrame.ElapsedTime is needed instead of 60
-        ElapsedTime.setFont(new Font("Courier New", Font.PLAIN, 50));
+        ElapsedTime.setFont(new Font("Courier New", Font.PLAIN, 30));
         ElapsedTime.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         ElapsedTime.setOpaque(true);
         ElapsedTime.setBackground(Color.WHITE);
 
         TypeOfMap.setText(Game.map.getType());
-        TypeOfMap.setFont(new Font("Courier New", Font.PLAIN, 50));
+        TypeOfMap.setFont(new Font("Courier New", Font.PLAIN, 30));
         TypeOfMap.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         TypeOfMap.setOpaque(true);
         TypeOfMap.setBackground(Color.WHITE);
@@ -46,16 +46,14 @@ public class MenuBar_GUI extends JFrame implements ActionListener{
 
         //region >> Register button action listeners and set button style
         btn_end.addActionListener(this);
+        btn_end.setFont(new Font("Courier New", Font.BOLD, 50));
         btn_end.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         btn_end.setPreferredSize(new Dimension(400, 100));
-        btn_end.setFont(new Font("Courier New", Font.BOLD, 50));
-        btn_end.setBackground(new Color(255,0,0,255));
 
         btn_continue.addActionListener(this);
-        btn_continue.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         btn_continue.setFont(new Font("Courier New", Font.BOLD, 50));
+        btn_continue.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         btn_continue.setPreferredSize(new Dimension(400, 100));
-        btn_continue.setBackground(new Color(71,212,90,255));
         //endregion
 
         //region >> Display player statuses
@@ -77,14 +75,13 @@ public class MenuBar_GUI extends JFrame implements ActionListener{
 
             JPanel playerPanel = new JPanel();
             playerPanel.add(playerLabel);
-
-            int radius = 3;
-            Border paddingBorder = new MatteBorder(radius, radius, radius, radius, new Color(193,229,245,255));
-            Border marginBorder = new MatteBorder(radius, radius, radius, radius, new Color(193,229,245,255));
-            playerPanel.setBorder(new CompoundBorder(marginBorder, paddingBorder));
+            playerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
             playerPanel.setBackground(new Color(0, 0, 0));
-
             Players.add(playerPanel);
+
+            JSeparator horizontalseparator = new JSeparator(SwingConstants.HORIZONTAL);
+            horizontalseparator.setPreferredSize(new Dimension(10, 0));
+            Players.add(horizontalseparator);
         }
         //endregion
 
@@ -97,7 +94,6 @@ public class MenuBar_GUI extends JFrame implements ActionListener{
         this.setVisible(true);
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btn_continue){
@@ -109,5 +105,4 @@ public class MenuBar_GUI extends JFrame implements ActionListener{
             new StartScreen_GUI();
         }
     }
-
 }

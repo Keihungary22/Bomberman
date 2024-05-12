@@ -22,9 +22,9 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
     private JButton btn_p3;
     private JButton btn_start;
     private JButton btn_exit;
-    private JTextArea number_of_round;
-    private JTextArea number_of_player;
-    private JTextArea type_of_map;
+    private JLabel number_of_round;
+    private JLabel number_of_player;
+    private JLabel type_of_map;
     private JPanel Title;
     //endregion
 
@@ -68,8 +68,16 @@ public class StartScreen_GUI extends JFrame implements ActionListener {
         btn_r1.addActionListener(this);
         btn_r2.addActionListener(this);
         btn_r3.addActionListener(this);
+
         btn_start.addActionListener(this);
+        btn_start.setFont(new Font("Courier New", Font.BOLD, 50));
+        btn_start.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        btn_start.setPreferredSize(new Dimension(400, 100));
+
         btn_exit.addActionListener(this);
+        btn_exit.setFont(new Font("Courier New", Font.BOLD, 50));
+        btn_exit.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        btn_exit.setPreferredSize(new Dimension(400, 100));
         //endregion
 
         //region >> Eliminate the focus function of all buttons. (Not important)
