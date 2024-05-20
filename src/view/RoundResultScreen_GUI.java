@@ -91,6 +91,7 @@ public class RoundResultScreen_GUI extends JFrame implements ActionListener {
             new GameScreen_GUI();
         }
         else{
+            Game.is_finished = true;
             new ResultScreen_GUI();
         }
     }

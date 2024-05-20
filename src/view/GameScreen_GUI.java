@@ -166,7 +166,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         for(Monster monster : Game.monsters){
             int x = 1;
             int y = 1;
-            System.out.println(index);
             switch (index){// Use modulus to loop through the four starting positions
                 case 0:
                     x = 4;
@@ -205,12 +204,15 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         TimerTask monsterMoveTask = new TimerTask() {
             public void run() {
                 SwingUtilities.invokeLater(() -> {
-                    if (monster.isAlive()) {
+                    if (monster.isAlive() && !Game.is_paused) {
                         monster.updateMovement();
                         monster.move();
                         Game.map.getLayers().get("Characters").update();
                         LayeredPane.revalidate();
                         LayeredPane.repaint();
+                    }
+                    if(Game.is_finished){
+                        monsterMovementTimer.cancel();
                     }
                 });
             }
@@ -335,6 +337,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 if (short_time <= 0) {
                     dispose();
                     timer.cancel();
+                    Game.is_paused = true;
                     new RoundResultScreen_GUI();
                 } else {
                     short_time--;
@@ -365,13 +368,8 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
             });
         }else if(e.getSource() == FinishButton) {
             this.dispose();
-            Game.current_round++;
-            if(Game.current_round <= Game.number_of_rounds){
-                new GameScreen_GUI();
-            }
-            else{
-                new ResultScreen_GUI();
-            }
+            Game.is_paused = true;
+            new RoundResultScreen_GUI();
         }
     }
     // player controller
@@ -589,7 +587,6 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
     @Override
     public void playerDie() {
         updateLayer("Characters");
-        System.out.println(Game.getNumberOfAlivePlayers());
         if(Game.getNumberOfAlivePlayers() == 1){
             short_timer_start();
         }

@@ -80,6 +80,7 @@ public class Monster extends Tile implements BombExplodeListener {
             for(Player player:Game.players){
                 if (player.getX() == x && player.getY() == y) {
                     // Player is at the position the monster is trying to move to
+                    System.out.println(this.getVisual() + " killed " + player.getVisual());
                     player.die(); // Here, you would call the method that handles player death
                 }
             }
