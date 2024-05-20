@@ -205,7 +205,6 @@ public class Player extends Tile implements BombExplodeListener {
             int new_x = this.x;
             int new_y = this.y;
             if(Game.map.getLayers().get("Bombs").getTiles().get(size*new_y+new_x) instanceof Explosion){
-                System.out.println("Move into explosion and die " + this.visual);
                 die();
             }
             for(Monster monster : Game.monsters){
@@ -360,6 +359,7 @@ public class Player extends Tile implements BombExplodeListener {
                     ghost_time = power_up_time;
                     is_ghost_mode = false;
                     if(isObjectsAtMyFeet()){
+                        System.out.println("Player die because of ghost mode timer");
                         die();
                     }
                     try {
@@ -517,7 +517,6 @@ public class Player extends Tile implements BombExplodeListener {
     public void bombExploded() {
         for(Explosion explosion : Game.explosions){
             if(explosion.getX() == this.x && explosion.getY() == this.y){
-                System.out.println("Die " + this.getVisual());
                 die();
             }
         }

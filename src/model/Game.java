@@ -20,7 +20,8 @@ public class Game {
     public static int number_of_players;
     public static int number_of_rounds;
     public static int current_round;
-    public static boolean is_paused = false;
+    public static boolean is_paused = true;
+    public static boolean is_finished = false;
     public static boolean sound_on = true;
 
     //constructor
@@ -41,6 +42,8 @@ public class Game {
         map = new Map("SmallMap");
         number_of_rounds = 1;
         current_round = 1;
+        is_paused = true;
+        is_finished = false;
     }
 
     public static void refreshForRound(){
@@ -65,8 +68,8 @@ public class Game {
                 boxes.add(new Box(i, j));
             }
         }
-        System.out.println("Game: refreshForRound");
         //endregion
+        is_paused = false;
     }
 
     public static int getNumberOfAlivePlayers(){
