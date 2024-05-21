@@ -21,6 +21,7 @@ public class Game {
     public static int number_of_rounds;
     public static int current_round;
     public static boolean is_paused = true;
+    public static boolean is_round_finished = false;
     public static boolean is_finished = false;
     public static boolean sound_on = true;
 
@@ -44,6 +45,7 @@ public class Game {
         current_round = 1;
         is_paused = true;
         is_finished = false;
+        is_round_finished = false;
     }
 
     public static void refreshForRound(){
@@ -70,6 +72,7 @@ public class Game {
         }
         //endregion
         is_paused = false;
+        is_round_finished = false;
     }
 
     public static int getNumberOfAlivePlayers(){
