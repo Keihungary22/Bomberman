@@ -338,6 +338,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                     dispose();
                     timer.cancel();
                     Game.is_paused = true;
+                    Game.is_round_finished = true;
                     new RoundResultScreen_GUI();
                 } else {
                     short_time--;
@@ -369,6 +370,7 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
         }else if(e.getSource() == FinishButton) {
             this.dispose();
             Game.is_paused = true;
+            Game.is_round_finished = true;
             new RoundResultScreen_GUI();
         }
     }
@@ -426,7 +428,11 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                         Game.players.get(0).explodeDetonatorBomb();
                     }else if (Game.players.get(0).isBombPlaceable()){
                         newBomb = playerPutBomb(0);
-                        newBomb.setBombExplodeListener(this);
+                        if(newBomb instanceof NormalBomb){//if generated bomb is NormalBomb, start thread
+                            Thread normalBombThread = new Thread((NormalBomb)newBomb);
+                            normalBombThread.start();
+                        }
+                        newBomb.setBombExplodeListener(this);//set GameScreen_GUI to the listener of explosion of newBomb
                         for(Player player: Game.players){
                             newBomb.setBombExplodeListener(player);
                         }
