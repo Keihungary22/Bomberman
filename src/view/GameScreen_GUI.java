@@ -143,7 +143,10 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
 
         try{
             JLabel target_label = getTargetStatusLabel(player_id, treasure_type);
-            target_label.setIcon(new ImageIcon(image_path));
+            if(target_label != null){
+                target_label.setIcon(new ImageIcon(image_path));
+            }
+
         }
         catch (Exception e){
             System.err.println("error: " + e.getMessage());
@@ -260,6 +263,11 @@ public class GameScreen_GUI extends JFrame implements ActionListener, KeyListene
                 case OBSTACLE -> Player1Obstacle;
                 case INVINCIBILITY -> Player1Invincibility;
                 case DETONATOR -> Player1Detonator;
+                case BOMB_POWER_UP -> null;
+                case BOMB_INCREASE -> null;
+                case BOMB_POWER_DOWN -> null;
+                case FORBIDDEN -> null;
+                case SPEED_DOWN -> null;
                 default -> throw new Exception("Invalid Treasure type : " + treasure_type);
             };
         }else if(player_id == 2){
